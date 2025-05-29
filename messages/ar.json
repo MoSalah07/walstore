@@ -1,0 +1,44 @@
+{
+  "Header": {
+    "Search": "ابحث عن كل شيء في وولستور على الإنترنت وفي المتجر",
+    "Languages": "اللغات",
+    "Currency": "العملات",
+    "Menu": "القائمة",
+    "Help": "المساعدة",
+    "About": "عنـا",
+    "Customer Service": "خدمة العملاء",
+    "Best Sellers": "الأكثر مبيعًا",
+    "New Arrivals": "الوصول الجديد",
+    "All": "الكل"
+  },
+  "Home": {
+    "Categories to explore": "فئات للاستكشاف",
+    "See More": "شاهد المزيد",
+    "Explore New Arrivals": "اكتشف الوافدين الجدد",
+    "Discover Best Sellers": "اكتشف الأكثر مبيعًا",
+    "Featured Products": "المنتجات المميزة",
+    "View All": "عرض الكل",
+    "Shop Now": "تسوق الآن",
+    "Today's Deals": "عروض اليوم",
+    "Most Popular Shoes For Sale": "الأحذية الأكثر شهرة للبيع",
+    "Best Deals on Wrist Watches": "أفضل التخفيضات على ساعات اليد"
+  },
+  "Product": {
+    "Limited time deal": "صفقة محدودة الوقت",
+    "Off": "خصم",
+    "Brand": "العلامة التجارية",
+    "Was": "كان",
+    "Color": "اللون",
+    "Size": "الحجم",
+    "Description": "الوصف",
+    "In Stock": "في المخزن",
+    "Out of Stock": "نفد المخزون",
+    "Add to Cart": "أضف إلى السلة",
+    "Quantity": "الكمية",
+    "Buy Now": "اشتري الآن",
+    "Only Left": "لم يتبقَّ سوى{count} في المخزون – سارع بالطلب"
+  },
+  "Loading": {
+    "Loading": "جاري التحميل..."
+  }
+}

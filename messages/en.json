@@ -1,0 +1,44 @@
+{
+  "Header": {
+    "Search": "Search everything at walstore online and in store",
+    "Languages": "Languages",
+    "Currency": "Currencies",
+    "Menu": "Menu",
+    "Help": "Help",
+    "About": "About Us",
+    "Customer Service": "Customer Service",
+    "Best Sellers": "Best Sellers",
+    "New Arrivals": "New Arrivals",
+    "All": "All"
+  },
+  "Home": {
+    "Categories to explore": "Categories to explore",
+    "See More": "See More",
+    "Explore New Arrivals": "Explore New Arrivals",
+    "Discover Best Sellers": "Discover Best Sellers",
+    "Featured Products": "Featured Products",
+    "View All": "View All",
+    "Shop Now": "Shop Now",
+    "Today's Deals": "Today's Deals",
+    "Most Popular Shoes For Sale": "Most Popular Shoes For Sale",
+    "Best Deals on Wrist Watches": "Best Deals on Wrist Watches"
+  },
+  "Product": {
+    "Limited time deal": "Limited time deal",
+    "Off": "Off",
+    "Brand": "Brand",
+    "Was": "Was",
+    "Color": "Color",
+    "Size": "Size",
+    "Description": "Description",
+    "In Stock": "In Stock",
+    "Out of Stock": "Out of Stock",
+    "Add to Cart": "Add to Cart",
+    "Quantity": "Quantity",
+    "Buy Now": "Buy Now",
+    "Only Left": "Only {stock} left in stock – order soon"
+  },
+  "Loading": {
+    "Loading": "Loading..."
+  }
+}
