@@ -32,7 +32,7 @@ export default function ProductSlider({
 
   return (
     <Container className="py-6">
-      <Card className="w-full rounded-md">
+      <Card className="w-full rounded-md shadow-xl">
         <CardContent className="p-4 items-center gap-3">
           <div className="w-full bg-background">
             <h2 className="text-primary-color font-bold text-lg md:text-xl mb-5">

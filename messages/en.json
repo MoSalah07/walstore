@@ -21,7 +21,10 @@
     "Shop Now": "Shop Now",
     "Today's Deals": "Today's Deals",
     "Most Popular Shoes For Sale": "Most Popular Shoes For Sale",
-    "Best Deals on Wrist Watches": "Best Deals on Wrist Watches"
+    "Best Deals on Wrist Watches": "Best Deals on Wrist Watches",
+    "Related to items that you've viewed": "Related to items that you've viewed",
+    "Your browsing history": "Your browsing history",
+    "Best Selling Products": "Best Selling Products"
   },
   "Product": {
     "Limited time deal": "Limited time deal",
@@ -36,9 +39,34 @@
     "Add to Cart": "Add to Cart",
     "Quantity": "Quantity",
     "Buy Now": "Buy Now",
-    "Only Left": "Only {stock} left in stock – order soon"
+    "Only Left": "Only {stock} left in stock – order soon",
+    "Product Not Found": "The product is not available",
+    "Product Not Access": "The product you are trying to access is not available",
+    "Best Sellers in": "Best Sellers in {name}"
   },
   "Loading": {
     "Loading": "Loading..."
+  },
+  "Footer": {
+    "Select a currency": "Select a currency",
+    "Select a language": "Select a language",
+    "Back to top": "Back to top",
+    "Get to Know Us": "Get to Know Us",
+    "Careers": "Careers",
+    "Blog": "Blog",
+    "About name": "About {name}",
+    "Make Money with Us": "Make Money with Us",
+    "Sell products on": "Sell products on {name}",
+    "Become an Affiliate": "Become an Affiliate",
+    "Advertise Your Products": "Advertise Your Products",
+    "Let Us Help You": "Let Us Help You",
+    "Shipping Rates & Policies": "Shipping Rates & Policies",
+    "Returns & Replacements": "Returns & Replacements",
+    "Conditions of Use": "Conditions of Use",
+    "Privacy Notice": "Privacy Notice",
+    "Help": "Help",
+    "Copyright": "Copyright All rights reserved",
+    "Year": "Year",
+    "Design by": "Design by {name}"
   }
 }

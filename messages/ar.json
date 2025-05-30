@@ -21,7 +21,10 @@
     "Shop Now": "تسوق الآن",
     "Today's Deals": "عروض اليوم",
     "Most Popular Shoes For Sale": "الأحذية الأكثر شهرة للبيع",
-    "Best Deals on Wrist Watches": "أفضل التخفيضات على ساعات اليد"
+    "Best Deals on Wrist Watches": "أفضل التخفيضات على ساعات اليد",
+    "Related to items that you've viewed": "ذات صلة بالعناصر التي عرضتها",
+    "Your browsing history": "سجل التصفح الخاص بك",
+    "Best Selling Products": "المنتجات الأكثر مبيعًا"
   },
   "Product": {
     "Limited time deal": "صفقة محدودة الوقت",
@@ -36,9 +39,34 @@
     "Add to Cart": "أضف إلى السلة",
     "Quantity": "الكمية",
     "Buy Now": "اشتري الآن",
-    "Only Left": "لم يتبقَّ سوى{count} في المخزون – سارع بالطلب"
+    "Only Left": "لم يتبقَّ سوى{count} في المخزون – سارع بالطلب",
+    "Product Not Found": "المنتج غير موجود",
+    "Product Not Access": "المنتج الذي تحاول الوصول إليه غير موجود",
+    "Best Sellers in": "الأكثر مبيعًا في {name}"
   },
   "Loading": {
     "Loading": "جاري التحميل..."
+  },
+  "Footer": {
+    "Select a currency": "حدد عملة",
+    "Select a language": "حدد لغة",
+    "Back to top": "العودة إلى الأعلى",
+    "Get to Know Us": "تعرف علينا",
+    "Careers": "وظائف",
+    "Blog": "مدونة",
+    "About name": "حول {name}",
+    "Make Money with Us": "اكسب المال معنا",
+    "Sell products on": "بيع المنتجات على {name}",
+    "Become an Affiliate": "انضم كشريك تسويق",
+    "Advertise Your Products": "أعلن عن منتجاتك",
+    "Let Us Help You": "دعنا نساعدك",
+    "Shipping Rates & Policies": "أسعار وسياسات الشحن",
+    "Returns & Replacements": "المرتجعات والاستبدالات",
+    "Conditions of Use": "شروط الاستخدام",
+    "Privacy Notice": "إشعار الخصوصية",
+    "Help": "مساعدة",
+    "Copyright": "حقوق الطبع والنشر",
+    "Year": "لعام",
+    "Design by": "التصميم بواسطة {name}"
   }
 }

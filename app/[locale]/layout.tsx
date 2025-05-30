@@ -8,9 +8,10 @@ import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 import { getDirection } from "@/i18n/i18n-confige";
 import clsx from "clsx";
+import { WEBSITE_NAME } from "@/constants";
 
 export const metadata: Metadata = {
-  title: "walstore",
+  title: `${WEBSITE_NAME} | Save Money`,
   description: "walstore for all products",
 };
 

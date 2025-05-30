@@ -31,7 +31,33 @@ export default function AddToCart({ item, minimal = false }: IProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const t = useTranslations("Product");
   return minimal ? (
-    ""
+    <Button
+      className="rounded-full w-auto"
+      // onClick={() => {
+      //   try {
+      //     addItem(item, 1);
+      //     toast({
+      //       description: t("Product.Added to Cart"),
+      //       action: (
+      //         <Button
+      //           onClick={() => {
+      //             router.push("/cart");
+      //           }}
+      //         >
+      //           {t("Product.Go to Cart")}
+      //         </Button>
+      //       ),
+      //     });
+      //   } catch (error: any) {
+      //     toast({
+      //       variant: "destructive",
+      //       description: error.message,
+      //     });
+      //   }
+      // }}
+    >
+      {t("Add to Cart")}
+    </Button>
   ) : (
     <div className="w-full space-y-2">
       <Select
