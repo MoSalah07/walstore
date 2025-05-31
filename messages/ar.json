@@ -9,7 +9,19 @@
     "Customer Service": "خدمة العملاء",
     "Best Sellers": "الأكثر مبيعًا",
     "New Arrivals": "الوصول الجديد",
-    "All": "الكل"
+    "All": "الكل",
+    "Shop By Department": "التسوق حسب القسم",
+    "Account & Orders": "الحساب والطلبات",
+    "Sign up": "اشتراك",
+    "Sign in": "تسجيل الدخول",
+    "Sign out": "تسجيل الخروج",
+    "Admin": "مدير",
+    "Hello": "مرحباً",
+    "sign in": "تسجيل الدخول",
+    "Your account": "حسابك",
+    "Your orders": "طلباتك",
+    "New Customer": "عميل جديد",
+    "Help & Settings": "المساعدة والإعدادات"
   },
   "Home": {
     "Categories to explore": "فئات للاستكشاف",

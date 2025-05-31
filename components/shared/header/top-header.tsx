@@ -6,6 +6,7 @@ import SwitcherMode from "./SwitcherMode";
 import ShoppingCart from "./shopping-cart";
 import MainSwitcher from "./main-switcher";
 import MenuDesktop from "./menu-desktop";
+import UserButton from "./user-button";
 
 export default function TopHeader() {
   return (
@@ -16,6 +17,7 @@ export default function TopHeader() {
         <div className="hidden md:flex items-center gap-6">
           <SwitcherMode />
           <MainSwitcher />
+          <UserButton />
           <ShoppingCart />
         </div>
         <MenuDesktop />
