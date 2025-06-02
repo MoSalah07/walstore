@@ -9,6 +9,7 @@ import { getMessages } from "next-intl/server";
 import { getDirection } from "@/i18n/i18n-confige";
 import clsx from "clsx";
 import { WEBSITE_NAME } from "@/constants";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: `${WEBSITE_NAME} | Save Money`,
@@ -56,7 +57,10 @@ export default async function RootLayout({
         )}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <Toaster position="top-center" />
+            {children}
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

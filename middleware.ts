@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/${locale}/not-allowed`, req.url));
   }
 
-  const secret_Key = process.env.NEXTAUTH_SECRET;
+  const secret_Key = process.env.AUTH_SECRET;
   const session = await getToken({ req, secret: secret_Key });
 
   const protectedRoutes = [

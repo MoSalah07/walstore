@@ -1,9 +1,13 @@
 import { z } from "zod";
-import { UserInputSchema, UserSignInSchema } from "./validator/validator";
+import {
+  UserInputSchema,
+  UserSignInSchema,
+  UserSignUpSchema,
+} from "./validator/validator";
 
 export type IUserInput = z.infer<typeof UserInputSchema>;
 export type IUserSignIn = z.infer<typeof UserSignInSchema>;
-export type IUserSignUp = z.infer<typeof UserInputSchema>;
+export type IUserSignUp = z.infer<typeof UserSignUpSchema>;
 
 export enum UserRole {
   CUSTOMER = "Customer",

@@ -1,12 +1,13 @@
-import NextAuth, { DefaultSession } from "next-auth";
-import authConfig from "./auth.config";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import connectToDatabase from "./lib/connect.db";
-import CredentialsProvider from "next-auth/providers/credentials";
-import User from "./models/user.model";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import connectToDatabase from "@/lib/connect.db";
 import bcrypt from "bcryptjs";
-import { UserRole } from "./interfaces/user.type";
 
+import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth, { type DefaultSession } from "next-auth";
+import authConfig from "./auth.config";
+import User from "./models/user.model";
+
+// تعريف Session و User في NextAuth
 declare module "next-auth" {
   interface Session {
     user: {
@@ -21,83 +22,89 @@ declare module "next-auth" {
   }
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  debug: process.env.NODE_ENV === "development",
   secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/sign-in",
     newUser: "/sign-up",
-    error: "/sign-in",
+    // error: "/sign-in",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 1 * 24 * 60 * 60,
   },
-  adapter: MongoDBAdapter(connectToDatabase),
   providers: [
     CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
       credentials: {
-        email: {
-          type: "email",
-        },
-        password: {
-          type: "password",
-        },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-
       async authorize(credentials) {
-        await connectToDatabase();
-        if (credentials == null) return null;
-        const user = await User.findOne({ email: credentials.email });
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
 
-        if (!user) {
-          throw new Error(`User Is Not Found Please Try Again`);
-        }
+          await connectToDatabase();
+          const user = await User.findOne({ email: credentials.email });
 
-        const isMatch = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
-        if (!isMatch) {
-          throw new Error(`Passwords do not match`);
-        } else {
+          if (!user) {
+            console.log("User not found");
+            return null;
+          }
+
+          const isPasswordCorrect = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+
+          if (!isPasswordCorrect) {
+            console.log("Incorrect password");
+            return null;
+          }
+
           return {
             id: user._id.toString(),
-            name: user.name,
             email: user.email,
-            role: user.role as UserRole,
+            name: user.name,
+            role: user.role || "user",
           };
+        } catch (error) {
+          console.error("Error in authorize:", error);
+          return null;
         }
       },
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        if (!user.name) {
-          await connectToDatabase();
-          await User.findByIdAndUpdate(user.id, {
-            name: user.name || user.email!.split("@")[0],
-            role: "user",
-          });
-        }
-        token.name = user.name || user.email!.split("@")[0];
-        token.role = (user as { role: string }).role;
+        token.sub = user.id;
+        token.name = user.name || user.email?.split("@")[0];
+        token.role = (user as any).role ?? "user";
       }
 
-      if (session?.user?.name && trigger === "update") {
+      if (trigger === "update" && session?.user?.name) {
         token.name = session.user.name;
       }
+
       return token;
     },
-    session: async ({ session, user, trigger, token }) => {
-      session.user.id = token.sub as string;
-      session.user.role = token.role as string;
-      session.user.name = token.name;
-      if (trigger === "update") {
+
+    async session({ session, token, user, trigger }) {
+      if (session.user) {
+        session.user.id = token.sub as string;
+        session.user.role = token.role as string;
+        session.user.name = token.name;
+      }
+
+      if (trigger === "update" && user?.name) {
         session.user.name = user.name;
       }
+
       return session;
     },
   },
