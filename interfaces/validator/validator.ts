@@ -1,9 +1,18 @@
+import { formatNumberWithDecimal } from "@/lib/utils";
 import { z } from "zod";
 
 // User
 const MongoId = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid MongoDB ID" });
+
+const Price = (field: string) =>
+  z.coerce
+    .number()
+    .refine(
+      (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(value)),
+      `${field} must have exactly two decimal places (e.g., 49.99)`
+    );
 
 const UserName = z
   .string()
@@ -58,4 +67,32 @@ export const UserSignUpSchema = UserSignInSchema.extend({
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
+});
+
+// Order
+export const OrderItemsSchema = z.object({
+  clientId: z.string().min(1, "Client ID is required"),
+  product: z.string().min(1, "Product ID is required"),
+  name: z.string().min(1, "Product name is required"),
+  slug: z.string().min(1, "Product slug is required"),
+  image: z.string().min(1, "Product image is required"),
+  price: Price("Price"),
+  quantity: z
+    .number()
+    .int()
+    .nonnegative("Quantity must be a non-negative number"),
+  countInStock: z
+    .number()
+    .int()
+    .nonnegative("Quantity must be a non-negative number"),
+  size: z.string().optional(),
+  color: z.string().optional(),
+  category: z.string().min(1, "Product category is required"),
+});
+
+// Cart
+export const CartSchema = z.object({
+  items: z
+    .array(OrderItemsSchema)
+    .min(1, "Order must contain at least on item"),
 });

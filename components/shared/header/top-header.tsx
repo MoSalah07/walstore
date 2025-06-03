@@ -10,17 +10,29 @@ import UserButton from "./user-button";
 
 export default function TopHeader() {
   return (
+    // DeskTop
     <div className="h-[70%] bg-blue-700 ">
-      <Container className="flex items-center justify-between">
+      <Container className="max-sm:hidden flex items-center justify-between">
         <Logo />
         <Search />
-        <div className="hidden md:flex items-center gap-6">
+        {/*  */}
+        <div className="hidden lg:flex items-center gap-6">
           <SwitcherMode />
           <MainSwitcher />
           <UserButton />
           <ShoppingCart />
         </div>
         <MenuDesktop />
+      </Container>
+      {/* Mobile */}
+      <Container className="hidden max-sm:flex max-sm:flex-col gap-y-2 pb-3 h-full w-full">
+        <div className="flex items-center justify-between h-full w-full">
+          <Logo />
+          <MenuDesktop />
+        </div>
+        <div>
+          <Search />
+        </div>
       </Container>
     </div>
   );

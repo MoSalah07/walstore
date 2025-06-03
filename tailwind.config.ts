@@ -58,6 +58,18 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+        "max-sm": { max: "639px" },
+
+        // ميديا كويري raw (يمكن تخصيص أي كويري)
+        portrait: { raw: "(orientation: portrait)" },
+        "hover-hover": { raw: "(hover: hover)" },
+      },
     },
   },
 

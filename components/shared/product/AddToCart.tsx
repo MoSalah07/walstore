@@ -7,54 +7,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Orderitem } from "@/interfaces/types";
+import useCartStore from "@/store/use-cart-store";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface IProps {
-  item: {
-    clientId: string;
-    product: string;
-    name: string;
-    slug: string;
-    image: string;
-    price: number;
-    countInStock: number;
-    quantity: number;
-    size: string;
-    color: string;
-    category: string;
-  };
+  item: Orderitem;
   minimal?: boolean;
 }
 
 export default function AddToCart({ item, minimal = false }: IProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const t = useTranslations("Product");
+  const { addItem } = useCartStore();
+  const { push } = useRouter();
+
   return minimal ? (
     <Button
       className="rounded-full w-auto"
-      // onClick={() => {
-      //   try {
-      //     addItem(item, 1);
-      //     toast({
-      //       description: t("Product.Added to Cart"),
-      //       action: (
-      //         <Button
-      //           onClick={() => {
-      //             router.push("/cart");
-      //           }}
-      //         >
-      //           {t("Product.Go to Cart")}
-      //         </Button>
-      //       ),
-      //     });
-      //   } catch (error: any) {
-      //     toast({
-      //       variant: "destructive",
-      //       description: error.message,
-      //     });
-      //   }
-      // }}
+      onClick={() => {
+        addItem(item, quantity);
+        toast.success(t("product has been successfully"));
+        push(`/cart`);
+      }}
     >
       {t("Add to Cart")}
     </Button>
@@ -80,33 +58,21 @@ export default function AddToCart({ item, minimal = false }: IProps) {
       <Button
         className="rounded-full w-full"
         type="button"
-        // onClick={async () => {
-        //   try {
-        //     const itemId = await addItem(item, quantity);
-        //     router.push(`/cart/${itemId}`);
-        //   } catch (error: any) {
-        //     toast({
-        //       variant: "destructive",
-        //       description: error.message,
-        //     });
-        //   }
-        // }}
+        onClick={() => {
+          const itemId = addItem(item, quantity);
+          toast.success(t("product has been successfully"));
+          push(`/cart/${itemId}`);
+        }}
       >
         {t("Add to Cart")}
       </Button>
       <Button
         variant="secondary"
-        // onClick={() => {
-        //   try {
-        //     addItem(item, quantity);
-        //     router.push(`/checkout`);
-        //   } catch (error: any) {
-        //     toast({
-        //       variant: "destructive",
-        //       description: error.message,
-        //     });
-        //   }
-        // }}
+        onClick={() => {
+          addItem(item, quantity);
+          toast.success(t("product has been successfully"));
+          push(`/checkout`);
+        }}
         className="w-full rounded-full "
       >
         {t("Buy Now")}

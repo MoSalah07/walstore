@@ -21,7 +21,8 @@
     "Your account": "حسابك",
     "Your orders": "طلباتك",
     "New Customer": "عميل جديد",
-    "Help & Settings": "المساعدة والإعدادات"
+    "Help & Settings": "المساعدة والإعدادات",
+    "Cart": "السلة"
   },
   "Home": {
     "Categories to explore": "فئات للاستكشاف",
@@ -39,6 +40,7 @@
     "Best Selling Products": "المنتجات الأكثر مبيعًا"
   },
   "Product": {
+    "Added to Cart": "أضيف إلى السلة",
     "Limited time deal": "صفقة محدودة الوقت",
     "Off": "خصم",
     "Brand": "العلامة التجارية",
@@ -54,7 +56,32 @@
     "Only Left": "لم يتبقَّ سوى{count} في المخزون – سارع بالطلب",
     "Product Not Found": "المنتج غير موجود",
     "Product Not Access": "المنتج الذي تحاول الوصول إليه غير موجود",
-    "Best Sellers in": "الأكثر مبيعًا في {name}"
+    "Best Sellers in": "الأكثر مبيعًا في {name}",
+    "product has been successfully": "تم اضافة المنتج بنجاح الى السلة"
+  },
+  "Cart": {
+    "Shopping Cart": "عربة التسوق",
+    "Price": "السعر",
+    "Quantity": "الكمية",
+    "items": "العناصر",
+    "Your Shopping Cart is empty": "عربة التسوق فارغة.",
+    "Your order qualifies for FREE Shipping": "طلبك مؤهل للشحن المجاني.",
+    "of eligible items to your order to qualify for FREE Shipping": "من العناصر المؤهلة لطلبك للتأهل للشحن المجاني.",
+    "Continue shopping on": "متابعة التسوق على <home>{name} الصفحة الرئيسية</home>",
+    "Add": "إضافة",
+    "Added to cart": "تمت الإضافة إلى السلة",
+    "Color": "اللون",
+    "Size": "الحجم",
+    "Go to Cart": "اذهب إلى السلة",
+    "Choose this option at checkout": "اختر هذا الخيار عند الخروج.",
+    "Items": "العناصر",
+    "Subtotal": "المجموع الفرعي",
+    "Shipping": "الشحن",
+    "Tax": "الضريبة",
+    "Proceed to Checkout": "المتابعة إلى الخروج",
+    "Delete": "حذف",
+    "Update": "تحديث",
+    "Checkout": "الخروج"
   },
   "Loading": {
     "Loading": "جاري التحميل..."

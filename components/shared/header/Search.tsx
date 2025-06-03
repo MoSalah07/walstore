@@ -25,7 +25,7 @@ export default function Search() {
   return (
     <form
       onSubmit={handleSearch}
-      className="w-[65%] md:w-[40%] rounded-xl h-12 relative"
+      className="max-sm:w-full w-[65%] md:w-[40%] rounded-xl h-12 relative"
     >
       <Input
         type="search"

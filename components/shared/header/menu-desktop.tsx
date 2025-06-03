@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,19 +9,21 @@ import {
 } from "@/components/ui/sheet";
 import { getDirection } from "@/i18n/i18n-confige";
 import { Menu } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+
 import SwitcherMode from "./SwitcherMode";
 import MainSwitcher from "./main-switcher";
 import ShoppingCart from "./shopping-cart";
+import UserButton from "./user-button";
+import { getTranslations, getLocale } from "next-intl/server";
 
-export default function MenuDesktop() {
-  const locale = useLocale();
+export default async function MenuDesktop() {
+  const locale = await getLocale();
   const dir = getDirection(locale);
-  const t = useTranslations("Header");
+  const t = await getTranslations("Header");
 
   return (
     <Sheet>
-      <SheetTrigger asChild className="md:hidden">
+      <SheetTrigger asChild className="lg:hidden">
         <Button variant={"secondary"} size={"icon"}>
           <Menu />
         </Button>
@@ -30,7 +31,7 @@ export default function MenuDesktop() {
       <SheetContent
         side={dir === "ltr" ? "right" : "left"}
         dir={dir === "ltr" ? "ltr" : "rtl"}
-        className="bg-slate-500 dark:bg-black"
+        className="bg-primary-color dark:bg-black [&>button]:text-white"
       >
         <SheetHeader>
           <SheetTitle className="text-white">{t("Menu")}</SheetTitle>
@@ -40,6 +41,7 @@ export default function MenuDesktop() {
         <div className="flex flex-col justify-center gap-y-4">
           <SwitcherMode />
           <MainSwitcher />
+          <UserButton />
           <ShoppingCart />
         </div>
       </SheetContent>
