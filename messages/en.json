@@ -108,5 +108,32 @@
     "Copyright": "Copyright All rights reserved",
     "Year": "Year",
     "Design by": "Design by {name}"
+  },
+  "Search": {
+    "for": "for",
+    "Search": "Search",
+    "Results": "Results",
+    "No results found": "No results found",
+    "Search for": "Search for",
+    "Department": "Department",
+    "Price": "Price",
+    "Tag": "Tag",
+    "Category": "Category",
+    "Rating": "Rating",
+    "Search Products": "Search Products",
+    "No": "No",
+    "of": "of",
+    "results": "results",
+    "up": "up",
+    "Clear": "Clear",
+    "Filters": "Filters",
+    "All": "All",
+    "Customer Review": "Customer Review",
+    "& Up": "& Up",
+    "Check each product page for other buying options": "Check each product page for other buying options.",
+    "No product found": "No product found",
+    "Next": "Next",
+    "Previous": "Previous",
+    "Page": "Page"
   }
 }

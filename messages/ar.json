@@ -108,5 +108,32 @@
     "Copyright": "حقوق الطبع والنشر",
     "Year": "لعام",
     "Design by": "التصميم بواسطة {name}"
+  },
+  "Search": {
+    "for": "لـ",
+    "Search": "بحث",
+    "Results": "النتائج",
+    "No results found": "لم يتم العثور على نتائج",
+    "Search for": "ابحث عن",
+    "Department": "القسم",
+    "Price": "السعر",
+    "Tag": "علامة",
+    "Category": "الفئة",
+    "Rating": "التقييم",
+    "Search Products": "البحث عن المنتجات",
+    "No": "لا",
+    "of": "من",
+    "results": "النتائج",
+    "up": "وما فوق",
+    "Clear": "مسح",
+    "Filters": "الفلاتر",
+    "All": "الكل",
+    "Customer Review": "مراجعة العملاء",
+    "& Up": "وما فوق",
+    "Check each product page for other buying options": "تحقق من صفحة كل منتج لمعرفة خيارات الشراء الأخرى.",
+    "No product found": "لم يتم العثور على منتج",
+    "Next": "التالي",
+    "Previous": "السابق",
+    "Page": "الصفحة"
   }
 }
