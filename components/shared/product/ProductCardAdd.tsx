@@ -22,7 +22,7 @@ export default async function ProductCardAdd({
   return (
     <Card className=" h-[40vh] mt-4 md:mt-0">
       <CardContent className="p-4 flex flex-col gap-4">
-        <ProductPrice price={price} showDetails />
+        <ProductPrice price={price} />
 
         {product?.countInStock > 0 && product?.countInStock <= 3 && (
           <div className="text-destructive font-bold">

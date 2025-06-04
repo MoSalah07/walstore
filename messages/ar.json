@@ -57,7 +57,8 @@
     "Product Not Found": "المنتج غير موجود",
     "Product Not Access": "المنتج الذي تحاول الوصول إليه غير موجود",
     "Best Sellers in": "الأكثر مبيعًا في {name}",
-    "product has been successfully": "تم اضافة المنتج بنجاح الى السلة"
+    "product has been successfully": "تم اضافة المنتج بنجاح الى السلة",
+    "List price": "سعر القائمة"
   },
   "Cart": {
     "Shopping Cart": "عربة التسوق",
@@ -73,15 +74,15 @@
     "Color": "اللون",
     "Size": "الحجم",
     "Go to Cart": "اذهب إلى السلة",
-    "Choose this option at checkout": "اختر هذا الخيار عند الخروج.",
+    "Choose this option at checkout": "اختر هذا الخيار عند الدفع.",
     "Items": "العناصر",
     "Subtotal": "المجموع الفرعي",
     "Shipping": "الشحن",
     "Tax": "الضريبة",
-    "Proceed to Checkout": "المتابعة إلى الخروج",
+    "Proceed to Checkout": "المتابعة إلى الدفع",
     "Delete": "حذف",
     "Update": "تحديث",
-    "Checkout": "الخروج"
+    "Checkout": "الدفع"
   },
   "Loading": {
     "Loading": "جاري التحميل..."

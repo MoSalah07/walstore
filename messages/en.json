@@ -57,7 +57,8 @@
     "Product Not Found": "The product is not available",
     "Product Not Access": "The product you are trying to access is not available",
     "Best Sellers in": "Best Sellers in {name}",
-    "product has been successfully": "product has been successfully added to cart"
+    "product has been successfully": "product has been successfully added to cart",
+    "List price": "List price"
   },
   "Cart": {
     "Shopping Cart": "Shopping Cart",

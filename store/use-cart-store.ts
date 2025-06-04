@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 
 const initialState: Cart = {
   items: [],
+  itemsPrice: 0,
 };
 
 interface CartState {
@@ -11,6 +12,7 @@ interface CartState {
   addItem: (item: Orderitem, quantity: number) => string;
   removeItem: (item: Orderitem) => void;
   updateItem: (item: Orderitem, quantity: number) => void;
+  totalItemsPrice: (items: Orderitem[]) => number;
   // clear: () => void;
 }
 
@@ -91,6 +93,11 @@ const useCartStore = create(
             items: updatedItems,
           },
         });
+      },
+      totalItemsPrice: (items: Orderitem[]) => {
+        const total = items.reduce((acc, x) => acc + x.price * x.quantity, 0);
+        // set({ cart: { ...get().cart, itemsPrice: total } });
+        return total;
       },
     }),
     {

@@ -95,4 +95,5 @@ export const CartSchema = z.object({
   items: z
     .array(OrderItemsSchema)
     .min(1, "Order must contain at least on item"),
+  itemsPrice: z.number(),
 });

@@ -30,6 +30,7 @@ export default async function ProductDescription({
             <ProductPrice
               price={product?.price}
               listPrice={product?.listPrice}
+              plain
             />
           </div>
         </div>

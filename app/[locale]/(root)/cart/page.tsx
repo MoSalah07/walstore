@@ -17,20 +17,27 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const {
     cart: { items },
     removeItem,
     updateItem,
+    totalItemsPrice,
   } = useCartStore();
 
   const t = useTranslations();
+  const { push } = useRouter();
+
+  const itemsPrice: number = totalItemsPrice(items);
+
+  const freeShippingMinPrice: number = 300;
 
   return (
     <div>
       <Container className="py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4 px-4 mb-8">
           {items.length === 0 ? (
             <Card className="col-span-4 rounded-none">
               <CardHeader className="text-3xl  ">
@@ -146,11 +153,62 @@ export default function CartPage() {
                       </div>
                     </div>
                   ))}
+
+                  <div className="flex justify-end text-lg my-2">
+                    {t("Cart.Subtotal")} (
+                    {items.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+                    {t("Cart.Items")}):{" "}
+                    <span className="font-bold ml-1">
+                      <ProductPrice price={itemsPrice} plain />
+                    </span>{" "}
+                  </div>
                 </CardContent>
               </Card>
             </div>
           )}
+          <div className="col-span-1 mt-4 sm:mt-0">
+            <Card className="rounded-none">
+              <CardContent className="py-4 space-y-4">
+                {itemsPrice < freeShippingMinPrice ? (
+                  <div className="flex-1">
+                    {t("Cart.Add")}{" "}
+                    <span className="text-green-700">
+                      <ProductPrice
+                        price={freeShippingMinPrice - itemsPrice}
+                        plain
+                      />
+                    </span>{" "}
+                    {t(
+                      "Cart.of eligible items to your order to qualify for FREE Shipping"
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex-1">
+                    <span className="text-green-700">
+                      {t("Cart.Your order qualifies for FREE Shipping")}
+                    </span>{" "}
+                    {t("Cart.Choose this option at checkout")}
+                  </div>
+                )}
+                <div className="text-lg">
+                  {t("Cart.Subtotal")} (
+                  {items.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+                  {t("Cart.items")}):{" "}
+                  <span className="font-bold">
+                    <ProductPrice price={itemsPrice} plain />
+                  </span>{" "}
+                </div>
+                <Button
+                  onClick={() => push("/checkout")}
+                  className="rounded-full w-full bg-primary-color text-white hover:bg-primary-color/90 dark:bg-gray-800 dark:hover:bg-gray-900 hover-effect"
+                >
+                  {t("Cart.Proceed to Checkout")}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
+
         <BrowsingHistoryList />
       </Container>
     </div>
