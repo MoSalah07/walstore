@@ -107,3 +107,35 @@ export const CartSchema = z.object({
     .min(1, "Order must contain at least on item"),
   itemsPrice: z.number(),
 });
+
+// Checkout
+export const ShippingAddressSchema = z.object({
+  fullName: z.string().trim().min(1, "Full name is required").max(80),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
+    .regex(/^[+\d][\d\s-]{6,19}$/, "Enter a valid phone number"),
+  street: z.string().trim().min(1, "Street is required").max(120),
+  city: z.string().trim().min(1, "City is required").max(60),
+  province: z.string().trim().min(1, "Province is required").max(60),
+  postalCode: z.string().trim().min(1, "Postal code is required").max(12),
+  country: z.string().trim().min(1, "Country is required"),
+});
+
+export const CheckoutSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        product: MongoId,
+        quantity: z.number().int().min(1).max(99),
+        size: z.string().optional(),
+        color: z.string().optional(),
+      })
+    )
+    .min(1, "Order must contain at least on item"),
+  shippingAddress: ShippingAddressSchema,
+  shippingMethod: z.enum(["standard", "express"]),
+  paymentMethod: z.enum(["cod"]),
+  saveAddress: z.boolean().optional(),
+});
