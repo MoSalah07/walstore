@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 import { CheckoutSchema } from "@/interfaces/validator/validator";
 import connectToDatabase from "@/lib/connect.db";
 import { calcPrices } from "@/lib/pricing";
+import { logActivity } from "@/lib/activity";
 import { isAdmin } from "@/lib/roles";
 import { getPricingConfig } from "@/lib/settings";
 import { nextSequence } from "@/models/counter.model";
@@ -113,6 +114,13 @@ export async function createOrder(input: z.infer<typeof CheckoutSchema>): Promis
       }
     }
 
+    await logActivity({
+      actor: session.user,
+      action: "placed order",
+      entity: "order",
+      entityId: String(order._id),
+      entityLabel: `#${order.orderNumber}`,
+    });
     return { ok: true, orderId: String(order._id) };
   } catch (err) {
     console.error("createOrder", err);
@@ -180,6 +188,14 @@ export async function cancelMyOrder(id: string): Promise<{ ok: boolean }> {
     { new: true }
   );
   if (!order) return { ok: false };
+  await logActivity({
+    actor: session.user,
+    action: "cancelled order",
+    entity: "order",
+    entityId: String(order._id),
+    entityLabel: `#${order.orderNumber}`,
+    diff: "status: processing → cancelled",
+  });
   await Promise.all(
     order.items.map((i) =>
       Product.updateOne({ _id: i.product }, { $inc: { countInStock: i.quantity, numSales: -i.quantity } })

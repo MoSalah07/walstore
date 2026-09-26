@@ -66,6 +66,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
             return null;
           }
 
+          // Deactivated accounts cannot sign in.
+          if (user.isActive === false) return null;
+          await User.updateOne({ _id: user._id }, { $set: { lastLoginAt: new Date() } });
+
           return {
             id: user._id.toString(),
             email: user.email,

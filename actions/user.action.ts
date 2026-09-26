@@ -6,6 +6,7 @@ import { UserSignUpSchema } from "@/interfaces/validator/validator";
 
 import connectToDatabase from "@/lib/connect.db";
 import User from "@/models/user.model";
+import { logActivity } from "@/lib/activity";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
@@ -25,11 +26,18 @@ export async function registerUser(userSignUp: IUserSignUp) {
     if (existingUser) {
       return { success: false, error: "User already exists" };
     }
-    await User.create({
+    const created = await User.create({
       name: user.name,
       email: user.email.toLowerCase(),
       role: "user",
       password: await bcrypt.hash(userSignUp.password, 10),
+    });
+    await logActivity({
+      actor: { id: String(created._id), name: created.name },
+      action: "created an account",
+      entity: "user",
+      entityId: String(created._id),
+      entityLabel: created.email,
     });
     return { success: true, message: "User created successfully" };
   } catch (error) {
