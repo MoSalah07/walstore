@@ -1,269 +1,207 @@
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import {
-  getAllCategories,
-  getAllProducts,
-  getAllTags,
-} from "@/actions/product.action";
-
-import { getFilterUrl, toSlug } from "@/lib/utils";
-
+import { SearchX, X } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import CollapsibleOnMobile from "@/components/shared/collapsible-on-mobile/collapsible-on-mobile";
+
+import { getAllCategories, getAllProducts, getAllTags } from "@/actions/product.action";
+import ProductSortSelector from "@/components/shared/add-to-browsing-history/product-sort-selector";
+import Container from "@/components/shared/container";
 import ProductCard from "@/components/shared/home/ProductCard";
 import Pagination from "@/components/shared/pagination/pagination";
-import ProductSortSelector from "@/components/shared/add-to-browsing-history/product-sort-selector";
-import { IProduct } from "@/interfaces/product.interface";
-import Container from "@/components/shared/container";
+import Price from "@/components/shared/price";
+import FilterPanel from "@/components/shared/search/filter-panel";
+import FilterSheet from "@/components/shared/search/filter-sheet";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Link } from "@/i18n/routing";
+import { PRICE_RANGES, SearchParams, activeFilters, searchHref } from "@/lib/search";
 
-const sortOrders = [
-  { value: "price-low-to-high", name: "Price: Low to high" },
-  { value: "price-high-to-low", name: "Price: High to low" },
-  { value: "newest-arrivals", name: "Newest arrivals" },
-  { value: "avg-customer-review", name: "Avg. customer review" },
-  { value: "best-selling", name: "Best selling" },
-];
+type Props = { searchParams: Promise<SearchParams> };
 
-const prices = [
-  {
-    name: "$1 to $20",
-    value: "1-20",
-  },
-  {
-    name: "$21 to $50",
-    value: "21-50",
-  },
-  {
-    name: "$51 to $1000",
-    value: "51-1000",
-  },
-];
-
-export async function generateMetadata(props: {
-  searchParams: Promise<{
-    q: string;
-    category: string;
-    tag: string;
-    price: string;
-    rating: string;
-    sort: string;
-    page: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  const t = await getTranslations();
-  const {
-    q = "all",
-    category = "all",
-    tag = "all",
-    price = "all",
-    rating = "all",
-  } = searchParams;
-
-  if (
-    (q !== "all" && q !== "") ||
-    category !== "all" ||
-    tag !== "all" ||
-    rating !== "all" ||
-    price !== "all"
-  ) {
-    return {
-      title: `${t("Search.Search")} ${q !== "all" ? q : ""}
-          ${category !== "all" ? ` : ${t("Search.Category")} ${category}` : ""}
-          ${tag !== "all" ? ` : ${t("Search.Tag")} ${tag}` : ""}
-          ${price !== "all" ? ` : ${t("Search.Price")} ${price}` : ""}
-          ${rating !== "all" ? ` : ${t("Search.Rating")} ${rating}` : ""}`,
-    };
-  } else {
-    return {
-      title: t("Search.Search Products"),
-    };
-  }
+async function getLabels() {
+  const [t, tc, tt] = await Promise.all([
+    getTranslations("Search"),
+    getTranslations("Categories"),
+    getTranslations("Tags"),
+  ]);
+  return {
+    t,
+    category: (c: string) => (tc.has(c) ? tc(c) : c),
+    tag: (x: string) => (tt.has(x) ? tt(x) : x),
+  };
 }
 
-export default async function SearchPage(props: {
-  searchParams: Promise<{
-    q: string;
-    category: string;
-    tag: string;
-    price: string;
-    rating: string;
-    sort: string;
-    page: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
+export async function generateMetadata(props: Props) {
+  const params = await props.searchParams;
+  const { t, category, tag } = await getLabels();
+  const title =
+    params.q && params.q !== "all"
+      ? t("Results for", { q: params.q })
+      : params.category && params.category !== "all"
+        ? category(params.category)
+        : params.tag && params.tag !== "all"
+          ? tag(params.tag)
+          : t("Search Products");
+  return { title };
+}
 
-  const {
-    q = "all",
-    category = "all",
-    tag = "all",
-    price = "all",
-    rating = "all",
-    sort = "best-selling",
-    page = "1",
-  } = searchParams;
+export default async function SearchPage(props: Props) {
+  const raw = await props.searchParams;
+  const params: SearchParams = {
+    q: raw.q,
+    category: raw.category,
+    tag: raw.tag,
+    price: raw.price,
+    rating: raw.rating,
+    sort: raw.sort,
+    page: raw.page,
+  };
+  const sort = params.sort ?? "best-selling";
+  const page = Math.max(1, Number(params.page) || 1);
 
-  const params = { q, category, tag, price, rating, sort, page };
+  const [{ t, category, tag }, categories, tags, data] = await Promise.all([
+    getLabels(),
+    getAllCategories(),
+    getAllTags(),
+    getAllProducts({
+      category: params.category ?? "all",
+      tag: params.tag ?? "all",
+      query: params.q ?? "all",
+      price: params.price ?? "all",
+      rating: params.rating ?? "all",
+      page,
+      sort,
+    }),
+  ]);
 
-  const categories = await getAllCategories();
-  const tags = await getAllTags();
-  const data = await getAllProducts({
-    category,
-    tag,
-    query: q,
-    price,
-    rating,
-    page: Number(page),
-    sort,
-  });
-  const t = await getTranslations();
+  const active = activeFilters(params);
+  const title =
+    params.q && params.q !== "all"
+      ? t("Results for", { q: params.q })
+      : params.category && params.category !== "all"
+        ? category(params.category)
+        : params.tag && params.tag !== "all"
+          ? tag(params.tag)
+          : t("All products");
+
+  const chipLabel = (k: (typeof active)[number]): React.ReactNode => {
+    const v = params[k]!;
+    if (k === "q") return `“${v}”`;
+    if (k === "category") return `${t("Category")}: ${category(v)}`;
+    if (k === "tag") return `${t("Tag")}: ${tag(v)}`;
+    if (k === "rating") return `${t("Rating")}: ${t("n stars & up", { n: Number(v) })}`;
+    const r = PRICE_RANGES.find((x) => x.value === v);
+    return r ? (
+      <span className="inline-flex gap-1">
+        {t("Price")}: <Price amount={r.from} whole /> – <Price amount={r.to} whole />
+      </span>
+    ) : `${t("Price")}: ${v}`;
+  };
+
+  const countText =
+    data.totalProducts === 0
+      ? t("No results count")
+      : t("range of total", { from: data.from, to: data.to, total: data.totalProducts });
+
   return (
-    <Container className="pt-4 pb-8">
-      <div>
-        <div className="my-2 bg-card md:border-b  flex-between flex-col md:flex-row ">
-          <div className="flex items-center">
-            {data.totalProducts === 0
-              ? t("Search.No")
-              : `${data.from}-${data.to} ${t("Search.of")} ${
-                  data.totalProducts
-                }`}{" "}
-            {t("Search.results")}
-            {(q !== "all" && q !== "") ||
-            (category !== "all" && category !== "") ||
-            (tag !== "all" && tag !== "") ||
-            rating !== "all" ||
-            price !== "all"
-              ? ` ${t("Search.for")} `
-              : null}
-            {q !== "all" && q !== "" && '"' + q + '"'}
-            {category !== "all" &&
-              category !== "" &&
-              `   ${t("Search.Category")}: ` + category}
-            {tag !== "all" && tag !== "" && `   ${t("Search.Tag")}: ` + tag}
-            {price !== "all" && `    ${t("Search.Price")}: ` + price}
-            {rating !== "all" &&
-              `    ${t("Search.Rating")}: ` + rating + ` & ${t("Search.up")}`}
-            &nbsp;
-            {(q !== "all" && q !== "") ||
-            (category !== "all" && category !== "") ||
-            (tag !== "all" && tag !== "") ||
-            rating !== "all" ||
-            price !== "all" ? (
-              <Button variant={"link"} asChild>
-                <Link href="/search">{t("Search.Clear")}</Link>
-              </Button>
-            ) : null}
-          </div>
-          <div>
-            <ProductSortSelector
-              sortOrders={sortOrders}
-              sort={sort}
-              params={params}
-            />
-          </div>
-        </div>
-        <div className="bg-card grid md:grid-cols-5 md:gap-4">
-          <CollapsibleOnMobile title={t("Search.Filters")}>
-            <div className="space-y-4">
-              <div>
-                <div className="font-bold">{t("Search.Department")}</div>
-                <ul>
-                  <li>
-                    <Link
-                      className={`${
-                        ("all" === category || "" === category) &&
-                        "text-primary"
-                      }`}
-                      href={getFilterUrl({ category: "all", params })}
-                    >
-                      {t("Search.All")}
-                    </Link>
-                  </li>
-                  {categories.map((c: string) => (
-                    <li key={c}>
-                      <Link
-                        className={`${c === category && "text-primary"}`}
-                        href={getFilterUrl({ category: c, params })}
-                      >
-                        {c}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="font-bold">{t("Search.Price")}</div>
-                <ul>
-                  <li>
-                    <Link
-                      className={`${"all" === price && "text-primary"}`}
-                      href={getFilterUrl({ price: "all", params })}
-                    >
-                      {t("Search.All")}
-                    </Link>
-                  </li>
-                  {prices.map((p) => (
-                    <li key={p.value}>
-                      <Link
-                        href={getFilterUrl({ price: p.value, params })}
-                        className={`${p.value === price && "text-primary"}`}
-                      >
-                        {p.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="font-bold">{t("Search.Tag")}</div>
-                <ul>
-                  <li>
-                    <Link
-                      className={`${
-                        ("all" === tag || "" === tag) && "text-primary"
-                      }`}
-                      href={getFilterUrl({ tag: "all", params })}
-                    >
-                      {t("Search.All")}
-                    </Link>
-                  </li>
-                  {tags.map((t: string) => (
-                    <li key={t}>
-                      <Link
-                        className={`${toSlug(t) === tag && "text-primary"}`}
-                        href={getFilterUrl({ tag: t, params })}
-                      >
-                        {t}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </CollapsibleOnMobile>
+    <Container className="flex flex-col pb-16 pt-4 md:pb-20 md:pt-8">
+      <Breadcrumb
+        className="hidden md:block"
+        label={t("Breadcrumb")}
+        items={[
+          { label: t("Home"), href: "/" },
+          { label: t("Search"), href: "/search" },
+          ...(title !== t("All products") ? [{ label: title }] : []),
+        ]}
+      />
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 md:mt-3">
+        <h1 className="type-h1 text-[26px] leading-8 md:text-[44px]">{title}</h1>
+        <span className="text-[13px] text-foreground-secondary tabular-nums md:text-[15px]">{countText}</span>
+      </div>
 
-          <div className="md:col-span-4 space-y-4">
-            <div>
-              <div className="font-bold text-xl">{t("Search.Results")}</div>
-              <div>
-                {t("Search.Check each product page for other buying options")}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2  lg:grid-cols-3  ">
-              {data.products.length === 0 && (
-                <div>{t("Search.No product found")}</div>
-              )}
-              {data.products.map((product: IProduct) => (
-                <ProductCard key={product._id.toString()} product={product} />
+      {/* Toolbar: chips + sort (desktop) / filters + sort buttons (phone, tablet). */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 md:mt-6 md:min-h-12">
+        <div className="flex flex-wrap items-center gap-2">
+          <FilterSheet
+            total={data.totalProducts}
+            activeCount={active.length}
+            clearHref="/search"
+          >
+            <FilterPanel params={params} categories={categories} tags={tags} variant="chips" />
+          </FilterSheet>
+          {active.length > 0 && (
+            <>
+              <span className="me-1 hidden text-sm font-semibold lg:inline">{t("Filters")}:</span>
+              {active.map((k) => (
+                <Link
+                  key={k}
+                  href={searchHref(params, { [k]: "all" })}
+                  className="hidden h-9 items-center gap-1.5 rounded-full border border-primary bg-secondary pe-2.5 ps-3.5 text-sm font-semibold text-primary-hover transition-colors duration-fast hover:bg-border dark:text-foreground md:flex"
+                >
+                  {chipLabel(k)}
+                  <X className="size-3.5" strokeWidth={2.4} aria-hidden />
+                  <span className="sr-only">{t("Remove filter")}</span>
+                </Link>
               ))}
-            </div>
-            {data.totalPages > 1 && (
-              <Pagination page={page} totalPages={data.totalPages} />
-            )}
-          </div>
+              <Link href="/search" className="ms-2 hidden text-sm font-semibold underline-offset-4 hover:underline md:inline">
+                {t("Clear")}
+              </Link>
+            </>
+          )}
+        </div>
+        <ProductSortSelector sort={sort} params={params} />
+      </div>
+
+      <div className="mt-4 flex items-start gap-8 md:mt-6">
+        <aside aria-label={t("Filters")} className="hidden w-[280px] shrink-0 rounded-lg border border-border bg-card lg:block">
+          <FilterPanel params={params} categories={categories} tags={tags} />
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
+          {data.products.length === 0 ? (
+            <EmptyState
+              className="rounded-xl border border-border bg-card py-16"
+              icon={<SearchX />}
+              title={params.q ? t("No results for", { q: params.q }) : t("No product found")}
+              description={t("Check the spelling")}
+              actions={
+                <>
+                  {categories.map((c: string) => (
+                    <Link
+                      key={c}
+                      href={`/search?category=${encodeURIComponent(c)}`}
+                      className="flex h-9 items-center rounded-full border border-input px-3.5 text-[13px] font-semibold hover:border-foreground"
+                    >
+                      {category(c)}
+                    </Link>
+                  ))}
+                  {active.length > 0 && (
+                    <Link href="/search" className="basis-full pt-1.5 text-sm font-bold underline-offset-4 hover:underline">
+                      {t("Clear all filters")}
+                    </Link>
+                  )}
+                </>
+              }
+            />
+          ) : (
+            <ul className="grid grid-cols-2 gap-3 md:gap-6 xl:grid-cols-3">
+              {data.products.map((product, i) => (
+                <li key={product._id.toString()}>
+                  <ProductCard product={product} priority={i < 3} hideAddOnMobile />
+                </li>
+              ))}
+            </ul>
+          )}
+          {data.totalPages > 1 && (
+            <Pagination
+              page={page}
+              totalPages={data.totalPages}
+              hrefFor={(p) => searchHref(params, { page: String(p) })}
+            />
+          )}
+          {data.products.length > 0 && (
+            <p className="text-sm text-foreground-secondary">
+              {t("Check each product page for other buying options")}
+            </p>
+          )}
         </div>
       </div>
     </Container>

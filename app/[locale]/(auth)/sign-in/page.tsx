@@ -1,17 +1,23 @@
-import Container from "@/components/shared/container";
+import { getTranslations } from "next-intl/server";
+
+import AuthShell from "@/components/shared/auth/auth-shell";
 import { WEBSITE_NAME } from "@/constants";
-import React from "react";
 import FormSignIn from "./form-sign-in";
 
-export const metadata = {
-  title: `Sign In - ${WEBSITE_NAME}`,
-  description: "Login to access your account and explore our services.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Auth");
+  return { title: `${t("Sign in")} · ${WEBSITE_NAME}`, description: t("Sign in body") };
+}
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) {
+  const [{ callbackUrl }, t] = await Promise.all([searchParams, getTranslations("Auth")]);
   return (
-    <Container className="w-full h-full flex-center">
-      <FormSignIn />
-    </Container>
+    <AuthShell title={t("Welcome back")} body={t("Sign in body")}>
+      <FormSignIn callbackUrl={callbackUrl} />
+    </AuthShell>
   );
 }

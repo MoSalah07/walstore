@@ -12,6 +12,8 @@ export default function MobileTabBar() {
   const t = useTranslations("Header");
   const pathname = usePathname();
   const count = useCartCount();
+  // Product pages and a filled cart show their own sticky action bar instead.
+  const hidden = pathname.startsWith("/product/") || (pathname === "/cart" && count > 0);
 
   const tabs = [
     { href: "/", label: t("Home"), icon: House, match: (p: string) => p === "/" },
@@ -19,6 +21,8 @@ export default function MobileTabBar() {
     { href: "/cart", label: t("Cart"), icon: ShoppingBag, match: (p: string) => p.startsWith("/cart"), badge: count },
     { href: "/account", label: t("Account"), icon: CircleUserRound, match: (p: string) => p.startsWith("/account") },
   ];
+
+  if (hidden) return null;
 
   return (
     <nav

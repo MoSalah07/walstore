@@ -17,6 +17,9 @@ const productSchema = new Schema<IProduct>(
     description: { type: String, trim: true },
     sizes: { type: [String], default: [] },
     colors: { type: [String], default: [] },
+    // Filled from approved reviews (see models/review.model.ts).
+    avgRating: { type: Number, default: 0 },
+    numReviews: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Fragment } from "react";
 
 import { cn } from "@/lib/utils";

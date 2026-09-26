@@ -26,11 +26,14 @@ export default function ProductCard({
   product,
   className,
   hideAddToCart = false,
+  hideAddOnMobile = false,
   priority = false,
 }: {
   product: ProductCardData;
   className?: string;
   hideAddToCart?: boolean;
+  /** Phone rails show the compact 164px card without the button. */
+  hideAddOnMobile?: boolean;
   priority?: boolean;
   /** @deprecated kept for older call sites */
   hideDetails?: boolean;
@@ -123,18 +126,18 @@ export default function ProductCard({
         </button>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="type-overline truncate font-semibold tracking-[0.06em] text-muted-foreground">
+      <div className="flex flex-1 flex-col gap-1.5 p-3 md:gap-2 md:p-4">
+        <div className="type-overline truncate text-[11px] font-semibold tracking-[0.06em] text-muted-foreground md:text-xs">
           {product.brand}
         </div>
         <Link
           href={href}
-          className="line-clamp-2 min-h-[42px] text-[15px] leading-[21px] text-foreground hover:underline hover:underline-offset-2"
+          className="line-clamp-2 min-h-[35px] text-[13px] leading-[18px] text-foreground hover:underline hover:underline-offset-2 md:min-h-[42px] md:text-[15px] md:leading-[21px]"
         >
           {product.name}
         </Link>
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2">
-          <Price amount={product.price} className="type-price" />
+          <Price amount={product.price} className="type-price text-lg md:text-[22px]" />
           {off > 0 && (
             <Price amount={product.listPrice} strike className="text-[13px] text-muted-foreground" />
           )}
@@ -144,7 +147,7 @@ export default function ProductCard({
             variant="outline"
             onClick={add}
             disabled={soldOut}
-            className="mt-1 w-full font-semibold"
+            className={cn("mt-1 w-full font-semibold", hideAddOnMobile && "hidden md:inline-flex")}
           >
             {!soldOut && <Plus aria-hidden />}
             {soldOut ? t("Out of Stock") : t("Add to cart short")}

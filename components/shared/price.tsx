@@ -12,10 +12,13 @@ export default function Price({
   amount,
   className,
   strike = false,
+  whole = false,
 }: {
   amount: number;
   className?: string;
   strike?: boolean;
+  /** No cents: "$300" for thresholds and ranges. */
+  whole?: boolean;
 }) {
   const locale = useLocale();
   const { rate, currencyName, isReady } = useCurrency({ from: "USD" });
@@ -32,7 +35,12 @@ export default function Price({
     );
   }
 
-  const value = formatMoney(round2((rate as number) * amount), currencyName, locale);
+  const value = formatMoney(
+    whole ? Math.round((rate as number) * amount) : round2((rate as number) * amount),
+    currencyName,
+    locale,
+    whole
+  );
   return strike ? (
     <del dir="ltr" className={cn("tabular-nums", className)}>{value}</del>
   ) : (

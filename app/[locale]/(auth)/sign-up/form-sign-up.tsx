@@ -1,181 +1,153 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { registerUser, signInWithCredentials } from "@/actions/user.action";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { IUserSignUp } from "@/interfaces/user.type";
+
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSignUpSchema } from "@/interfaces/validator/validator";
+import { useTranslations } from "next-intl";
+import { useForm, useWatch } from "react-hook-form";
+
+import { registerUser, signInWithCredentials } from "@/actions/user.action";
+import { PasswordInput, StrengthMeter } from "@/components/shared/auth/password-input";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import toast from "react-hot-toast";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { WEBSITE_NAME } from "@/constants";
-import Image from "next/image";
+import { Link } from "@/i18n/routing";
+import { IUserSignUp } from "@/interfaces/user.type";
+import { UserSignUpSchema } from "@/interfaces/validator/validator";
 
 const signUpDefaultValues =
   process.env.NODE_ENV === "development"
-    ? {
-        name: "john doe",
-        email: "john@me.com",
-        password: "Password123",
-        confirmPassword: "Password123",
-      }
-    : {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      };
+    ? { name: "john doe", email: "john@me.com", password: "Password123", confirmPassword: "Password123" }
+    : { name: "", email: "", password: "", confirmPassword: "" };
 
-export default function FormSignUp() {
-  const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+const safeCallback = (url?: string) => (url && url.startsWith("/") && !url.startsWith("//") ? url : "/");
+
+export default function FormSignUp({ callbackUrl }: { callbackUrl?: string }) {
+  const t = useTranslations("Auth");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
     defaultValues: signUpDefaultValues,
   });
+  const password = useWatch({ control: form.control, name: "password" });
 
-  const { control, handleSubmit, reset } = form;
-
-  const handleRegister = async (data: IUserSignUp) => {
+  const onSubmit = async (data: IUserSignUp) => {
     setLoading(true);
+    setError(null);
     try {
       const res = await registerUser(data);
       if (!res.success) {
-        toast.error(res.error as string);
-      } else {
-        toast.success(res.message as string);
-        await signInWithCredentials({
-          email: data.email,
-          password: data.password,
-        });
-        reset();
+        setError(res.error === "User already exists" ? t("Email taken") : t("Something went wrong"));
         setLoading(false);
-        router.push(`/`);
+        return;
       }
-    } catch (err) {
-      console.log(err);
+      await signInWithCredentials({ email: data.email, password: data.password });
+      window.location.assign(safeCallback(callbackUrl));
+    } catch {
+      setError(t("Something went wrong"));
       setLoading(false);
-      toast.error(`Something went wrong ${err}`);
     }
   };
+
+  const field = "h-[52px] text-base";
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={handleSubmit(handleRegister)}
-        className="w-[95%] sm:w-[80%] lg:w-[60%] xl:w-1/2 bg-black/15 text-white py-12 px-6 md:px-32 min-h-[90vh] rounded-md"
-      >
-        <div className="w-full h-full bg-black/5 rounded-md px-6 py-4">
-          <div className="text-white font-bold text-center mb-2 flex-center gap-1">
-            <span>{WEBSITE_NAME}</span>
-            <Image src={"/images/logo.svg"} alt="logo" width={42} height={42} />
-          </div>
-          <h2 className="text-white text-lg font-bold capitalize tracking-wide mb-4">
-            Register
-          </h2>
-          <div className="h-full w-full">
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="bg-white caret-primary-color text-black font-medium"
-                      placeholder="Enter name address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="bg-white caret-primary-color text-black font-medium"
-                      placeholder="Enter email address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      className="bg-white caret-primary-color text-black font-medium"
-                      placeholder="Enter password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      className="bg-white caret-primary-color text-black font-medium"
-                      placeholder="Confirm Password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="my-6">
-              <Button
-                disabled={loading}
-                variant={"default"}
-                type="submit"
-                className="bg-primary-color hover:bg-primary-color/50 w-full"
-              >
-                {loading ? "Registering..." : "Register"}
-              </Button>
-            </div>
-            <p className="text-white/60 font-normal sm:font-medium text-[10px] sm:text-[13px] flex-center">
-              Already have an account ?{" "}
-              <Link
-                className="font-bold text-white ml-1 hover:underline hover:text-white/90 hovcer-effect"
-                href={`/sign-in`}
-              >
-                login now
-              </Link>
-            </p>
-          </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+        <div className="flex flex-col gap-2">
+          <h1 className="font-display text-[34px] font-extrabold tracking-[-0.035em] md:text-[40px]">{t("Create account")}</h1>
+          <p className="text-[15px] text-foreground-secondary">
+            {t.rich("Have account", {
+              link: (chunks) => (
+                <Link
+                  href={callbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/sign-in"}
+                  className="font-bold text-foreground underline-offset-4 hover:underline"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
         </div>
+
+        {error && <Alert variant="error">{error}</Alert>}
+
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field: f }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Name")}</FormLabel>
+              <FormControl>
+                <Input autoComplete="name" className={field} {...f} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field: f }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Email")}</FormLabel>
+              <FormControl>
+                <Input type="email" autoComplete="email" placeholder="you@example.com" className={field} {...f} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field: f }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Password")}</FormLabel>
+              <FormControl>
+                <PasswordInput autoComplete="new-password" {...f} />
+              </FormControl>
+              <StrengthMeter value={password ?? ""} />
+              <FormDescription>{t("Password rule")}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field: f }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Confirm password")}</FormLabel>
+              <FormControl>
+                <PasswordInput autoComplete="new-password" {...f} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" size="xl" loading={loading}>
+          {loading ? t("Creating account") : t("Create account")}
+        </Button>
+
+        <p className="text-[13px] leading-relaxed text-foreground-secondary">
+          {t.rich("Agree create", {
+            name: WEBSITE_NAME,
+            terms: (c) => <Link href="/page/conditions-of-use" className="font-semibold text-foreground underline-offset-4 hover:underline">{c}</Link>,
+            privacy: (c) => <Link href="/page/privacy-policy" className="font-semibold text-foreground underline-offset-4 hover:underline">{c}</Link>,
+          })}
+        </p>
       </form>
     </Form>
   );

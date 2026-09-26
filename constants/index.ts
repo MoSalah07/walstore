@@ -26,3 +26,7 @@ export const PAGE_SLUGS = [
   "help",
 ] as const;
 export type PageSlug = (typeof PAGE_SLUGS)[number];
+
+// Checkout defaults until the admin Settings page overrides them (USD).
+export const SHIPPING_RATES = { standard: 9.99, express: 19.99 } as const;
+export const TAX_RATE: number = 0;

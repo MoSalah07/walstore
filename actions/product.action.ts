@@ -239,3 +239,66 @@ export async function getAllTags() {
       ) as string[]) || []
   );
 }
+
+// Home: one tile per category with its product count and cover photo.
+const CATEGORY_COVERS: Record<string, string> = {
+  "T-Shirts": "/images/t-shirts.jpg",
+  Jeans: "/images/jeans.jpg",
+  Shoes: "/images/shoes.jpg",
+  "Wrist Watches": "/images/wrist-watches.jpg",
+};
+
+export async function getCategorySummaries(): Promise<
+  { name: string; count: number; image: string }[]
+> {
+  try {
+    await connectToDatabase();
+    const rows = await Product.aggregate<{
+      _id: string;
+      count: number;
+      image: string;
+    }>([
+      { $match: { isPublished: true } },
+      { $sort: { numSales: -1 } },
+      {
+        $group: {
+          _id: "$category",
+          count: { $sum: 1 },
+          image: { $first: { $arrayElemAt: ["$images", 0] } },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+    return rows.map((r) => ({
+      name: r._id,
+      count: r.count,
+      image: CATEGORY_COVERS[r._id] ?? r.image,
+    }));
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
+export async function getBestSellers(limit = 8): Promise<IProduct[]> {
+  try {
+    await connectToDatabase();
+    const products = await Product.find({ isPublished: true })
+      .sort({ numSales: -1 })
+      .limit(limit)
+      .lean();
+    return JSON.parse(JSON.stringify(products));
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
+export async function getPublishedCount(): Promise<number> {
+  try {
+    await connectToDatabase();
+    return await Product.countDocuments({ isPublished: true });
+  } catch {
+    return 0;
+  }
+}

@@ -4,14 +4,15 @@ export function formatMoney(
   amount: number,
   currency: string = "USD",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _locale: string = "en"
+  _locale: string = "en",
+  whole = false
 ) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     currencyDisplay: "narrowSymbol",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: whole ? 0 : 2,
   }).format(Number.isFinite(amount) ? amount : 0);
 }
 

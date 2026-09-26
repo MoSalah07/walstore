@@ -1,121 +1,98 @@
-'use client'
-import BrowsingHistoryList from '@/components/shared/browsing-history-list'
+"use client";
 
-import { buttonVariants } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { CheckCircle2Icon } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import Image from "next/image";
+import { Check, SearchX } from "lucide-react";
+import { useTranslations } from "next-intl";
 
+import BrowsingHistoryList from "@/components/shared/browsing-history-list";
+import FreeShippingMeter from "@/components/shared/cart/free-shipping-meter";
+import Price from "@/components/shared/price";
+import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "@/i18n/routing";
+import useMounted from "@/hooks/use-mounted";
+import { PricingConfig, calcPrices } from "@/lib/pricing";
+import { cn } from "@/lib/utils";
+import useCartStore from "@/store/use-cart-store";
 
-import { useTranslations } from 'next-intl'
-import useCartStore from '@/store/use-cart-store'
-import ProductPrice from '@/components/shared/home/ProductPrice'
+export default function CartAddItem({ itemId, pricing }: { itemId: string; pricing: PricingConfig }) {
+  const t = useTranslations("Cart");
+  const mounted = useMounted();
+  const items = useCartStore((s) => s.cart.items);
+  const item = items.find((x) => x.clientId === itemId);
+  const count = items.reduce((n, i) => n + i.quantity, 0);
+  const p = calcPrices(items, "standard", pricing);
 
-export default function CartAddItem({ itemId }: { itemId: string }) {
-  const {
-    cart: { items },
-    totalItemsPrice
-  } = useCartStore()
+  if (!mounted) return <Skeleton className="h-[220px] rounded-xl" />;
 
-    const itemsPrice: number = totalItemsPrice(items);
+  if (!item) {
+    return (
+      <EmptyState
+        className="rounded-xl border border-border bg-card"
+        icon={<SearchX />}
+        title={t("Item not in cart")}
+        description={t("Item not in cart help")}
+        actions={
+          <Link href="/cart" className={buttonVariants()}>
+            {t("Go to Cart")}
+          </Link>
+        }
+      />
+    );
+  }
 
-  const freeShippingMinPrice: number = 300;
+  const meta = [
+    item.color && `${t("Color")}: ${item.color}`,
+    item.size && `${t("Size")}: ${item.size}`,
+    `${t("Qty")} ${item.quantity}`,
+  ].filter(Boolean);
 
-  const item = items.find((x) => x.clientId === itemId)
-
-  const t = useTranslations()
-  if (!item) return notFound()
   return (
-    <div>
-      <div className='grid grid-cols-1 md:grid-cols-2 md:gap-4'>
-        <Card className='w-full rounded-none'>
-          <CardContent className='flex h-full items-center justify-center  gap-3 py-4'>
-            <Link href={`/product/${item.slug}`}>
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={80}
-                height={80}
-                style={{
-                  maxWidth: '100%',
-                  height: 'auto',
-                }}
-              />
+    <div className="flex flex-col gap-12 md:gap-[72px]">
+      <section className="grid gap-4 md:gap-6 lg:grid-cols-2">
+        <div role="status" className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 md:gap-6 md:p-7">
+          <span className="relative flex size-24 shrink-0 items-center justify-center rounded-lg bg-sunken dark:bg-[#E9ECF1] md:size-[140px]">
+            <span className="relative size-[80%]">
+              <Image src={item.image} alt="" fill sizes="140px" className="object-contain mix-blend-multiply" />
+            </span>
+          </span>
+          <div className="flex min-w-0 flex-col gap-2">
+            <span className="flex items-center gap-2.5 text-lg font-bold text-success-fg md:text-[22px]">
+              <span className="flex size-7 items-center justify-center rounded-full bg-success md:size-8">
+                <Check className="size-4 text-white" strokeWidth={3} aria-hidden />
+              </span>
+              {t("Added to cart")}
+            </span>
+            <Link href={`/product/${item.slug}`} className="line-clamp-2 font-semibold hover:underline">
+              {item.name}
             </Link>
-            <div>
-              <h3 className='text-xl font-bold flex gap-2 my-2'>
-                <CheckCircle2Icon className='h-6 w-6 text-green-700' />
-                {t('Cart.Added to cart')}
-              </h3>
-              <p className='text-sm'>
-                <span className='font-bold'> {t('Cart.Color')}: </span>{' '}
-                {item.color ?? '-'}
-              </p>
-              <p className='text-sm'>
-                <span className='font-bold'> {t('Cart.Size')}: </span>{' '}
-                {item.size ?? '-'}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className='w-full rounded-none'>
-          <CardContent className='p-4 h-full'>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-              <div className='flex justify-center items-center'>
-                {itemsPrice < freeShippingMinPrice ? (
-                  <div className='text-center '>
-                    {t('Cart.Add')}{' '}
-                    <span className='text-green-700'>
-                      <ProductPrice
-                        price={freeShippingMinPrice - itemsPrice}
-                        plain
-                      />
-                    </span>{' '}
-                    {t(
-                      'Cart.of eligible items to your order to qualify for FREE Shipping'
-                    )}
-                  </div>
-                ) : (
-                  <div className='flex items-center'>
-                    <div>
-                      <span className='text-green-700'>
-                        Your order qualifies for FREE Shipping.
-                      </span>{' '}
-                      Choose this option at checkout.
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className='lg:border-l lg:border-muted lg:pl-3 flex flex-col items-center gap-3  '>
-                <div className='flex gap-3'>
-                  <span className='text-lg font-bold'>Cart Subtotal:</span>
-                  <ProductPrice className='text-2xl' price={itemsPrice} />
-                </div>
-                <Link
-                  href='/checkout'
-                  className={cn(buttonVariants(), 'rounded-full w-full')}
-                >
-                  Proceed to checkout (
-                  {items.reduce((a, c) => a + c.quantity, 0)} items)
-                </Link>
-                <Link
-                  href='/cart'
-                  className={cn(
-                    buttonVariants({ variant: 'outline' }),
-                    'rounded-full w-full'
-                  )}
-                >
-                  {t('Cart.Go to Cart')}
-                </Link>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      <BrowsingHistoryList />
+            <span className="text-sm text-foreground-secondary">
+              {meta.join(" · ")} · <Price amount={item.price} />
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center md:gap-7 md:p-7">
+          <div className="flex flex-1 flex-col gap-2.5">
+            <FreeShippingMeter remaining={p.remainingForFree} progress={p.progress} />
+            <span className="mt-1.5 text-base">
+              {t("Cart subtotal")}{" "}
+              <Price amount={p.itemsPrice} className="ms-1.5 font-display text-[26px] font-extrabold" />
+            </span>
+          </div>
+          <div className="flex flex-col gap-2.5 sm:w-60">
+            <Link href="/checkout" className={cn(buttonVariants({ size: "lg" }), "w-full")}>
+              {t("Proceed to checkout n", { count })}
+            </Link>
+            <Link href="/cart" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "w-full")}>
+              {t("Go to Cart")}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <BrowsingHistoryList excludeId={item.product} />
     </div>
-  )
+  );
 }

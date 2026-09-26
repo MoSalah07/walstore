@@ -16,6 +16,8 @@ export interface IProduct extends Document {
   description: string;
   sizes: string[];
   colors: string[];
+  avgRating?: number;
+  numReviews?: number;
   createdAt: Date;
   updatedAt: Date;
 }

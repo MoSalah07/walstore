@@ -1,16 +1,26 @@
-import Container from "@/components/shared/container";
+import { getTranslations } from "next-intl/server";
+
+import AuthShell from "@/components/shared/auth/auth-shell";
 import { WEBSITE_NAME } from "@/constants";
 import FormSignUp from "./form-sign-up";
 
-export const metadata = {
-  title: `Sign Up - ${WEBSITE_NAME}`,
-  description: "Register to access your account and explore our services.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Auth");
+  return { title: `${t("Create account")} · ${WEBSITE_NAME}` };
+}
 
-export default function SignupPage() {
+export default async function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) {
+  const [{ callbackUrl }, t] = await Promise.all([searchParams, getTranslations("Auth")]);
   return (
-    <Container className="w-full h-full flex-center">
-      <FormSignUp />
-    </Container>
+    <AuthShell
+      title={t("Your account your way")}
+      perks={[t("Perk orders"), t("Perk wishlist"), t("Perk checkout")]}
+    >
+      <FormSignUp callbackUrl={callbackUrl} />
+    </AuthShell>
   );
 }

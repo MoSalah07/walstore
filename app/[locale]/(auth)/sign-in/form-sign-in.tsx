@@ -1,140 +1,112 @@
 "use client";
+
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+
 import { signInWithCredentials } from "@/actions/user.action";
+import { PasswordInput } from "@/components/shared/auth/password-input";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { WEBSITE_NAME } from "@/constants";
+import { Link } from "@/i18n/routing";
 import { IUserSignIn } from "@/interfaces/user.type";
 import { UserSignInSchema } from "@/interfaces/validator/validator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { WEBSITE_NAME } from "@/constants";
 
 const signInDefaultValues =
   process.env.NODE_ENV === "development"
-    ? {
-        email: "admin@example.com",
-        password: "123456",
-      }
-    : {
-        email: "",
-        password: "",
-      };
+    ? { email: "admin@example.com", password: "123456" }
+    : { email: "", password: "" };
 
-export default function FormSignIn() {
-  const [loading, setLoading] = useState<boolean>(false);
+// Only same-site paths are allowed as a post-login destination.
+const safeCallback = (url?: string) => (url && url.startsWith("/") && !url.startsWith("//") ? url : "/");
 
-  const { push } = useRouter();
-
+export default function FormSignIn({ callbackUrl }: { callbackUrl?: string }) {
+  const t = useTranslations("Auth");
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
   const form = useForm<IUserSignIn>({
     resolver: zodResolver(UserSignInSchema),
     defaultValues: signInDefaultValues,
   });
 
-  const { control, handleSubmit } = form;
-
-  const handlerOnSubmit = async (data: IUserSignIn) => {
+  const onSubmit = async (data: IUserSignIn) => {
     setLoading(true);
+    setFailed(false);
     try {
-      await signInWithCredentials({
-        email: data.email,
-        password: data.password,
-      });
-      setLoading(false);
-      toast.success("Login successfully");
-      push(`/`);
-    } catch (error) {
-      if (isRedirectError(error)) {
-        throw error;
-      }
-      toast.error("Invalid email or password");
+      const res = await signInWithCredentials(data);
+      if (!res.ok) throw new Error("auth");
+      // Full reload so the header and session pick up the new cookie.
+      window.location.assign(safeCallback(callbackUrl));
+    } catch {
+      setFailed(true);
       setLoading(false);
     }
   };
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={handleSubmit(handlerOnSubmit)}
-        className="w-[95%] sm:w-[80%] lg:w-[60%] xl:w-1/2 bg-black/15 text-white py-12 px-6 sm:px-32 min-h-[60vh] rounded-md"
-      >
-        <div className="w-full h-full bg-black/5 rounded-md px-6 py-6">
-          <div className="text-white font-bold text-center mb-8 flex-center gap-1">
-            <span>{WEBSITE_NAME}</span>
-            <Image src={"/images/logo.svg"} alt="logo" width={42} height={42} />
-          </div>
-          <h2 className="text-white text-lg font-bold capitalize tracking-wide mb-8">
-            login
-          </h2>
-          <div className="flex flex-col gap-4">
-            <FormField
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="bg-white caret-primary-color text-black font-medium"
-                      placeholder="Enter email address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="bg-white caret-primary-color text-black font-medium"
-                      type="password"
-                      placeholder="Enter password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="mt-4">
-              <Button
-                disabled={loading}
-                variant={"default"}
-                type="submit"
-                className="bg-primary-color hover:bg-primary-color/50 w-full text-white"
-              >
-                {loading ? "Loading..." : "Sign in"}
-              </Button>
-            </div>
-            <p className="text-white/60 font-normal sm:font-medium text-[10px] sm:text-[13px] flex-center">
-              dont have an account yet ?{" "}
-              <Link
-                className="font-bold text-white ml-1 hover:underline hover:text-white/90 hovcer-effect"
-                href={`/sign-up`}
-              >
-                Register Now
-              </Link>
-            </p>
-          </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+        <div className="flex flex-col gap-2">
+          <h1 className="font-display text-[34px] font-extrabold tracking-[-0.035em] md:text-[40px]">{t("Sign in")}</h1>
+          <p className="text-[15px] text-foreground-secondary">
+            {t.rich("New to", {
+              name: WEBSITE_NAME,
+              link: (chunks) => (
+                <Link
+                  href={callbackUrl ? `/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/sign-up"}
+                  className="font-bold text-foreground underline-offset-4 hover:underline"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
         </div>
+
+        {failed && <Alert variant="error">{t("Invalid credentials")}</Alert>}
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Email")}</FormLabel>
+              <FormControl>
+                <Input type="email" autoComplete="email" placeholder="you@example.com" className="h-[52px] text-base" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem className="gap-2">
+              <FormLabel>{t("Password")}</FormLabel>
+              <FormControl>
+                <PasswordInput autoComplete="current-password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" size="xl" loading={loading}>
+          {loading ? t("Signing in") : t("Sign in")}
+        </Button>
+
+        <p className="text-[13px] leading-relaxed text-foreground-secondary">
+          {t.rich("Agree", {
+            name: WEBSITE_NAME,
+            terms: (c) => <Link href="/page/conditions-of-use" className="font-semibold text-foreground underline-offset-4 hover:underline">{c}</Link>,
+            privacy: (c) => <Link href="/page/privacy-policy" className="font-semibold text-foreground underline-offset-4 hover:underline">{c}</Link>,
+          })}
+        </p>
       </form>
     </Form>
   );

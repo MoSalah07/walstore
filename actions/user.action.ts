@@ -1,5 +1,6 @@
 "use server";
 import { signIn, signOut } from "@/auth";
+import { AuthError } from "next-auth";
 import { IUserSignIn, IUserSignUp } from "@/interfaces/user.type";
 import { UserSignUpSchema } from "@/interfaces/validator/validator";
 
@@ -45,11 +46,16 @@ export async function registerUser(userSignUp: IUserSignUp) {
   }
 }
 
-export async function signInWithCredentials(user: IUserSignIn) {
-  return await signIn("credentials", {
-    ...user,
-    redirect: false,
-  });
+export async function signInWithCredentials(
+  user: IUserSignIn
+): Promise<{ ok: boolean }> {
+  try {
+    await signIn("credentials", { ...user, redirect: false });
+    return { ok: true };
+  } catch (error) {
+    if (error instanceof AuthError) return { ok: false };
+    throw error;
+  }
 }
 
 export const SignOut = async () => {

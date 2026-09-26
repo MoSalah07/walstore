@@ -1,106 +1,153 @@
-import {
-  getProductBySlug,
-  getRelatedProductsByCategory,
-} from "@/actions/product.action";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+
+import { getProductBySlug, getRelatedProductsByCategory } from "@/actions/product.action";
 import AddToBrowsingHistory from "@/components/shared/add-to-browsing-history";
 import BrowsingHistoryList from "@/components/shared/browsing-history-list";
 import Container from "@/components/shared/container";
-import ProductSlider from "@/components/shared/home/ProductSlider";
-import ProductCardAdd from "@/components/shared/product/ProductCardAdd";
-import ProductDescription from "@/components/shared/product/ProductDescription";
+import ProductRail from "@/components/shared/home/product-rail";
 import ProductGallery from "@/components/shared/product/ProductGallery";
-import { Separator } from "@/components/ui/separator";
-import { IProduct } from "@/interfaces/product.interface";
-import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import React from "react";
+import BuyBox from "@/components/shared/product/buy-box";
+import ProductDetails from "@/components/shared/product/product-details";
+import ProductReviews from "@/components/shared/product/product-reviews";
+import { Badge } from "@/components/ui/badge";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { FREE_SHIPPING_MIN_PRICE } from "@/constants";
+import { Link } from "@/i18n/routing";
+import { discountPercent } from "@/lib/format";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations("Product");
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-
-  if (!product) {
-    return {
-      title: t("Product Not Found"),
-      description: t("Product Not Access"),
-    };
-  }
-
+  if (!product) return { title: t("Product Not Found"), description: t("Product Not Access") };
+  const description = product.description?.slice(0, 150);
   return {
-    title: `${product.name}`,
-    description: product.description?.slice(0, 150),
-    openGraph: {
-      title: `${product.name}`,
-      description: product.description?.slice(0, 150),
-      images: product.images?.[0] ? [product.images[0]] : [],
-    },
+    title: product.name,
+    description,
+    openGraph: { title: product.name, description, images: product.images?.[0] ? [product.images[0]] : [] },
   };
 }
 
-export default async function ProductDetailsPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page: string; color: string; size: string }>;
-}) {
+export default async function ProductDetailsPage({ params }: Props) {
   const { slug } = await params;
-  const { color, size } = await searchParams;
-  const t = await getTranslations("Product");
   const product = await getProductBySlug(slug);
+  if (!product) notFound();
 
-  const relatedProducts = await getRelatedProductsByCategory({
-    category: product?.category as string,
-    productId: product?._id.toString() as string,
-    page: Number("1"),
-  });
+  const [t, tc, tt, related] = await Promise.all([
+    getTranslations("Product"),
+    getTranslations("Categories"),
+    getTranslations("Tags"),
+    getRelatedProductsByCategory({
+      category: product.category,
+      productId: product._id.toString(),
+      page: 1,
+      limit: 8,
+    }),
+  ]);
+  const id = product._id.toString();
+  const category = tc.has(product.category) ? tc(product.category) : product.category;
+  const off = discountPercent(product.price, product.listPrice);
+  const isDeal = product.tags.includes("todays-deal");
+  const shortName = product.name.split(/[,(]/)[0].split(" ").slice(0, 5).join(" ");
+
+  const specs = [
+    { k: t("Brand"), v: product.brand },
+    { k: t("Category"), v: category },
+    ...(product.colors.length ? [{ k: t("Colors"), v: product.colors.join(", ") }] : []),
+    ...(product.sizes.length ? [{ k: t("Sizes"), v: product.sizes.join(", ") }] : []),
+    {
+      k: t("Availability"),
+      v: product.countInStock > 0 ? t("n in stock", { count: product.countInStock }) : t("Out of Stock"),
+    },
+  ];
 
   return (
-    <div>
-      <AddToBrowsingHistory
-        id={product?._id.toString() as string}
-        category={product?.category as string}
+    <Container className="flex flex-col pb-16 pt-4 md:pb-20 md:pt-8">
+      <AddToBrowsingHistory id={id} category={product.category} />
+      <Breadcrumb
+        label={t("Breadcrumb")}
+        items={[
+          { label: t("Home"), href: "/" },
+          { label: category, href: `/search?category=${encodeURIComponent(product.category)}` },
+          { label: shortName },
+        ]}
       />
-      <section>
-        <Container className="py-5">
-          <div className="grid grid-cols-1 md:grid-cols-5">
-            <div className="col-span-2">
-              <ProductGallery images={product?.images as string[]} />
-            </div>
-            <div className="flex flex-col gap-2 md:p-5 col-span-2 w-full mt-8 md:mt-0">
-              <ProductDescription
-                product={product as IProduct}
-                color={color}
-                size={size}
-              />
-            </div>
-            <ProductCardAdd
-              price={product?.price as number}
-              product={product as IProduct}
-              size={size}
-              color={color}
-            />
-          </div>
-          <Separator className="mt-4" />
-        </Container>
 
-        <section>
-          <ProductSlider
-            products={relatedProducts?.data as IProduct[]}
-            title={t("Best Sellers in", {
-              name: product?.category as string,
-            })}
+      <section className="mt-4 grid grid-cols-1 gap-6 md:mt-6 md:gap-8 lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)] lg:gap-12">
+        <ProductGallery
+          images={product.images}
+          name={product.name}
+          badge={
+            off > 0 ? (
+              <Badge variant="deal" className="px-3 py-1.5 text-[13px]">
+                -{off}%{isDeal && ` · ${t("Limited time deal")}`}
+              </Badge>
+            ) : undefined
+          }
+        />
+
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Link
+                href={`/search?q=${encodeURIComponent(product.brand)}`}
+                className="type-overline text-[13px] tracking-[0.06em] hover:underline"
+              >
+                {product.brand}
+              </Link>
+              {product.tags
+                .filter((x) => x !== "todays-deal")
+                .map((x) => (
+                  <Badge key={x} variant={x === "new-arrival" ? "neutral" : "muted"} size="sm">
+                    {tt.has(x) ? tt(x) : x}
+                  </Badge>
+                ))}
+            </div>
+            <h1 className="font-display text-[26px] font-extrabold leading-[1.12] tracking-[-0.03em] md:text-4xl md:leading-[1.1]">
+              {product.name}
+            </h1>
+          </div>
+          <BuyBox
+            freeShippingMin={FREE_SHIPPING_MIN_PRICE}
+            product={{
+              _id: id,
+              name: product.name,
+              slug: product.slug,
+              category: product.category,
+              images: product.images,
+              price: product.price,
+              listPrice: product.listPrice,
+              countInStock: product.countInStock,
+              colors: product.colors,
+              sizes: product.sizes,
+            }}
           />
-        </section>
-        <section>
-          <BrowsingHistoryList />
-        </section>
+        </div>
       </section>
-    </div>
+
+      <section className="mt-10 md:mt-[72px]">
+        <ProductDetails
+          description={product.description}
+          specs={specs}
+          reviewCount={product.numReviews ?? 0}
+          reviews={<ProductReviews avgRating={product.avgRating} numReviews={product.numReviews} />}
+        />
+      </section>
+
+      {related?.data && related.data.length > 0 && (
+        <ProductRail
+          className="mt-12 md:mt-[72px]"
+          title={t("Best Sellers in", { name: category })}
+          products={related.data}
+          action={{ label: t("View all"), href: `/search?category=${encodeURIComponent(product.category)}` }}
+        />
+      )}
+
+      <BrowsingHistoryList excludeId={id} className="mt-12 md:mt-[72px]" />
+    </Container>
   );
 }

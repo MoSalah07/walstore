@@ -13,7 +13,7 @@ interface CartState {
   removeItem: (item: Orderitem) => void;
   updateItem: (item: Orderitem, quantity: number) => void;
   totalItemsPrice: (items: Orderitem[]) => number;
-  // clear: () => void;
+  clear: () => void;
 }
 
 const useCartStore = create(
@@ -99,6 +99,7 @@ const useCartStore = create(
         // set({ cart: { ...get().cart, itemsPrice: total } });
         return total;
       },
+      clear: () => set({ cart: initialState }),
     }),
     {
       name: "cart-store",
