@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 import Container from "@/components/shared/container";
 import Logo from "@/components/shared/logo";
 import Price from "@/components/shared/price";
-import { FREE_SHIPPING_MIN_PRICE } from "@/constants";
+import { getStoreSettings } from "@/lib/settings";
 import { Link } from "@/i18n/routing";
 import CartButton from "./cart-button";
 import LocaleCurrencyMenu from "./locale-currency-menu";
@@ -28,11 +28,12 @@ async function safeCategories() {
 // Desktop (≥1024): 36px top bar + 80px main row + 44px nav = 160px.
 // Tablet: 72px row + 48px nav. Phone: menu/logo/icons, search, quick chips.
 export default async function Header() {
-  const [t, tc, categories, session] = await Promise.all([
+  const [t, tc, categories, session, settings] = await Promise.all([
     getTranslations("Header"),
     getTranslations("Categories"),
     safeCategories(),
     auth(),
+    getStoreSettings(),
   ]);
 
   return (
@@ -42,7 +43,7 @@ export default async function Header() {
           <p className="flex items-center gap-2">
             <Truck className="size-4" aria-hidden />
             {t.rich("Free shipping over", {
-              price: () => <Price amount={FREE_SHIPPING_MIN_PRICE} />,
+              price: () => <Price amount={settings.pricing.freeShippingMin} whole />,
             })}
           </p>
           <div className="flex items-center gap-6">

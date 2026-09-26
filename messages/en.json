@@ -164,7 +164,24 @@
     "Sizes": "Sizes",
     "Availability": "Availability",
     "n in stock": "{count} in stock",
-    "View all": "View all"
+    "View all": "View all",
+    "Sign in to review": "Sign in to write a review",
+    "Review pending": "Thanks — your review is waiting for approval.",
+    "You reviewed": "You've reviewed this product.",
+    "Review after delivery": "You can review this product after it's delivered to you.",
+    "Verified purchase": "Verified purchase",
+    "Store reply": "Reply from WalStore",
+    "Your rating": "Your rating",
+    "n stars": "{count, plural, one {# star} other {# stars}}",
+    "Review title": "Title",
+    "Review body": "Your review",
+    "Review help": "What did you like or dislike? At least 10 characters.",
+    "Submit review": "Submit review",
+    "Pick a rating": "Choose a star rating first.",
+    "Review invalid": "Add a title and at least 10 characters.",
+    "Already reviewed": "You've already reviewed this product.",
+    "Review failed": "Couldn't send your review. Please try again.",
+    "Review thanks": "Thanks! Your review will appear once it's approved."
   },
   "Cart": {
     "Shopping Cart": "Shopping Cart",
@@ -366,7 +383,20 @@
     "Country is required": "Country is required",
     "Phone number is required": "Phone number is required",
     "Payment method is required": "Payment method is required",
-    "Role is required": "Role is required"
+    "Role is required": "Role is required",
+    "Enter a valid phone number": "Enter a valid phone number",
+    "Name must be at least 3 characters": "Name must be at least 3 characters",
+    "Slug must be at least 3 characters": "Slug must be at least 3 characters",
+    "Use lowercase letters, numbers and dashes": "Use lowercase letters, numbers and dashes",
+    "Category is required": "Category is required",
+    "Brand is required": "Brand is required",
+    "Description is required": "Description is required",
+    "Add at least one image": "Add at least one image",
+    "Price must be more than 0": "Price must be more than 0",
+    "List price can't be negative": "List price can't be negative",
+    "Stock must be a whole number": "Stock must be a whole number",
+    "Stock can't be negative": "Stock can't be negative",
+    "List price must be 0 or at least the price": "List price must be 0 or at least the price"
   },
   "Checkout": {
     "Checkout": "Checkout",
@@ -706,7 +736,11 @@
       "created user": "created user",
       "deactivated": "deactivated",
       "reactivated": "reactivated",
-      "deleted user": "deleted user"
+      "deleted user": "deleted user",
+      "wrote a review of": "wrote a review of",
+      "approved a review of": "approved a review of",
+      "rejected a review of": "rejected a review of",
+      "updated store settings": "updated store settings"
     },
     "Units by category": "Units sold by category",
     "Units note": "From product sales counts · {total} units",
@@ -787,7 +821,10 @@
     "Payment": "Payment",
     "Paid at": "Paid {date}",
     "COD collect": "Collect {total} in cash on delivery.",
-    "greeting": "{greet}, {name}"
+    "greeting": "{greet}, {name}",
+    "reviews waiting": "{count, plural, one {# review to moderate} other {# reviews to moderate}}",
+    "Waiting approval": "Waiting for approval",
+    "Moderate": "Moderate"
   },
   "AdminProducts": {
     "Products": "Products",
@@ -986,5 +1023,152 @@
     "See all orders": "See all matching orders",
     "See all products": "See all matching products",
     "See all users": "See all matching users"
+  },
+  "AdminReviews": {
+    "Reviews": "Reviews",
+    "Reviews sub": "Approve reviews before they appear on product pages.",
+    "Review status": "Review status",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "empty": {
+      "pending": "No reviews waiting",
+      "approved": "No approved reviews yet",
+      "rejected": "No rejected reviews"
+    },
+    "Empty help": "Customers can review products after delivery.",
+    "Review details": "Review details",
+    "Verified purchase": "Verified purchase",
+    "rating label": "{n} out of 5 stars",
+    "Public reply": "Public reply",
+    "optional": "optional",
+    "Reply placeholder": "Thank the customer or answer a question…",
+    "Reject": "Reject",
+    "Approve publish": "Approve & publish",
+    "Update reply": "Save reply",
+    "Approved toast": "Review published",
+    "Rejected toast": "Review rejected"
+  },
+  "AdminRoles": {
+    "Title": "Roles & permissions",
+    "Sub": "Control who can see and change each part of WalStore.",
+    "Role history": "Role history",
+    "Add an admin": "Add an admin",
+    "Roles": "Roles",
+    "System roles": "System roles · {count}",
+    "role": {
+      "admin": {
+        "name": "Administrator",
+        "desc": "Full access to /admin — products, orders, users, reviews and store settings. Give this role only to people who run the store."
+      },
+      "user": {
+        "name": "Customer",
+        "desc": "Given to everyone on sign-up. Can shop, check out, and manage only their own account and orders."
+      }
+    },
+    "members": {
+      "admin": "{count, plural, one {# admin} other {{n} admins}}",
+      "user": "{count, plural, one {# customer} other {{n} customers}}"
+    },
+    "Default": "Default",
+    "Access": "Access",
+    "Custom roles": "Custom roles",
+    "Custom roles body": "Roles are fixed as “user” and “admin”. Custom roles such as Support or Inventory need per-permission checks in the code first.",
+    "New role later": "+ New role · coming later",
+    "Role details": "Role details",
+    "System role": "System role",
+    "View": "View",
+    "view": {
+      "detail": "Detail",
+      "matrix": "Matrix"
+    },
+    "granted": "<b>{n} of {total}</b> permissions granted",
+    "scope": {
+      "all": "All",
+      "own": "Own only",
+      "none": "None"
+    },
+    "group": {
+      "storefront": "Storefront",
+      "store": "Store management",
+      "system": "People & system"
+    },
+    "Permission": "Permission",
+    "perm": {
+      "catalog_read": "Browse, search and view products",
+      "checkout_create": "Cart and checkout",
+      "account_self": "Account, addresses and own orders",
+      "reviews_write": "Review products they received",
+      "admin_access": "Open the admin dashboard",
+      "products_write": "Create, edit and publish products",
+      "products_delete": "Delete products",
+      "orders_manage": "View and update orders",
+      "reviews_moderate": "Moderate reviews",
+      "users_manage": "View and edit users",
+      "users_role": "Change a user's role",
+      "settings_manage": "Store settings",
+      "activity_read": "View activity log"
+    }
+  },
+  "AdminSettings": {
+    "Settings": "Settings",
+    "Sections": "Settings sections",
+    "section": {
+      "store": "Store profile",
+      "shipping": "Shipping & tax",
+      "locale": "Languages & currencies",
+      "profile": "Your profile"
+    },
+    "Store help": "Shown on the Help page for customers who need to reach you.",
+    "Store name": "Store name",
+    "Support email": "Support email",
+    "Support phone": "Support phone",
+    "Invalid email": "Enter a valid email or leave it empty.",
+    "Shipping help": "Used by the cart, checkout and every “free shipping” message.",
+    "Free shipping from": "Free shipping from",
+    "Free help": "Standard shipping is free at or above this subtotal.",
+    "Standard price": "Standard shipping",
+    "Express price": "Express shipping",
+    "Tax rate": "Tax rate",
+    "Tax help": "Added at checkout. 0 = no tax line charged.",
+    "Invalid number": "Enter a number of 0 or more.",
+    "Locale help": "Set in the code (i18n routing and constants/currency.ts). Prices are stored in USD and converted for display.",
+    "Languages": "Languages",
+    "Currencies": "Currencies",
+    "Default": "Default",
+    "RTL": "Right-to-left",
+    "Base": "Base currency",
+    "Profile help": "Your name, password and addresses live in your account.",
+    "Open account": "Open your account",
+    "Cancel": "Cancel",
+    "Save settings": "Save settings",
+    "Saved": "Settings saved",
+    "Fix errors": "Some fields need attention."
+  },
+  "AdminActivity": {
+    "Title": "Activity log",
+    "Sub": "Every change made by admins and important customer events.",
+    "Type": "Type",
+    "Period": "Period",
+    "entity": {
+      "all": "All",
+      "order": "Order",
+      "product": "Product",
+      "user": "User",
+      "review": "Review",
+      "settings": "Settings"
+    },
+    "period": {
+      "1d": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days",
+      "all": "All"
+    },
+    "Today": "Today",
+    "Yesterday": "Yesterday",
+    "Empty": "Nothing happened in this period",
+    "Empty help": "Try a longer period or another type."
   }
 }

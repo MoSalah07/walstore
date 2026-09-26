@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, Clock, PackageCheck, Plus, TriangleAlert } from "lucide-react";
+import { ArrowRight, Clock, PackageCheck, Plus, Star, TriangleAlert } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { getDashboard } from "@/actions/admin-order.action";
@@ -49,6 +49,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
   const attention = [
     d.attention.toShip > 0 && { icon: PackageCheck, title: t("orders to ship", { count: d.attention.toShip }), sub: t("Processing not shipped"), cta: t("Review"), href: "/admin/orders?status=processing", tone: "bg-secondary text-foreground" },
     d.attention.lowStock > 0 && { icon: TriangleAlert, title: t("low stock", { count: d.attention.lowStock }), sub: t("15 or fewer"), cta: t("Restock"), href: "/admin/products?stock=low", tone: "bg-deal-subtle text-deal" },
+    d.attention.reviews > 0 && { icon: Star, title: t("reviews waiting", { count: d.attention.reviews }), sub: t("Waiting approval"), cta: t("Moderate"), href: "/admin/reviews", tone: "bg-warning-bg text-warning-fg" },
     d.attention.unpaid > 0 && { icon: Clock, title: t("unpaid orders", { count: d.attention.unpaid }), sub: t("Awaiting payment"), cta: t("Review"), href: "/admin/orders?status=unpaid", tone: "bg-warning-bg text-warning-fg" },
   ].filter(Boolean) as { icon: typeof Clock; title: string; sub: string; cta: string; href: string; tone: string }[];
   const chartTotal = d.series.reduce((a, s) => a + s.revenue, 0);

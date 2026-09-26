@@ -16,7 +16,7 @@ import ProductRail from "@/components/shared/home/product-rail";
 import SectionHeading from "@/components/shared/home/section-heading";
 import Price from "@/components/shared/price";
 import { Badge } from "@/components/ui/badge";
-import { FREE_SHIPPING_MIN_PRICE } from "@/constants";
+import { getPricingConfig } from "@/lib/settings";
 import { getDirection } from "@/i18n/i18n-confige";
 import { Link } from "@/i18n/routing";
 import { ProductTags } from "@/interfaces/product.interface";
@@ -32,14 +32,16 @@ export default async function Home() {
   ]);
   const dir = getDirection(locale);
 
-  const [deals, bestSellers, newArrivals, featured, categories, total] = await Promise.all([
+  const [deals, bestSellers, newArrivals, featured, categories, total, pricing] = await Promise.all([
     getProductByTag({ tag: ProductTags["todays-deal"], limit: 8 }),
     getBestSellers(8),
     getProductByTag({ tag: ProductTags["new-arrival"], limit: 4 }),
     getProductByTag({ tag: ProductTags["featured"], limit: 4 }),
     getCategorySummaries(),
     getPublishedCount(),
+    getPricingConfig(),
   ]);
+  const freeMin = pricing.freeShippingMin;
 
   const heroPhotos = Array.from(
     new Set([...deals, ...bestSellers, ...newArrivals].map((p) => p.images[0]))
@@ -56,7 +58,7 @@ export default async function Home() {
   ].filter((c) => c.items.length > 0);
 
   const perks = [
-    { icon: Truck, title: t("Free shipping"), sub: t.rich("On orders over", { price: () => <Price amount={FREE_SHIPPING_MIN_PRICE} /> }) },
+    { icon: Truck, title: t("Free shipping"), sub: t.rich("On orders over", { price: () => <Price amount={freeMin} whole /> }) },
     { icon: RotateCcw, title: t("Easy returns"), sub: t("Returns & replacements") },
     { icon: ShieldCheck, title: t("Secure checkout"), sub: t("Protected payments") },
     { icon: Headset, title: t("Customer service"), sub: t("Here to help") },
@@ -125,7 +127,7 @@ export default async function Home() {
               {[
                 { v: String(total), l: t("products") },
                 { v: String(categories.length), l: t("categories") },
-                { v: <Price amount={FREE_SHIPPING_MIN_PRICE} whole className="!font-display" />, l: t("ships free") },
+                { v: <Price amount={freeMin} whole className="!font-display" />, l: t("ships free") },
               ].map((s, i) => (
                 <div key={i} className="flex flex-col-reverse gap-0.5">
                   <dt>{s.l}</dt>

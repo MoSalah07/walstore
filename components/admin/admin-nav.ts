@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type AdminNavItem = { key: string; href: string; icon: LucideIcon; badge?: "toShip" };
+export type AdminNavItem = { key: string; href: string; icon: LucideIcon; badge?: "toShip" | "reviews" };
 
 // Sidebar groups; labels live under messages Admin.nav.*.
 export const ADMIN_NAV: { group: string | null; items: AdminNavItem[] }[] = [
@@ -20,7 +20,7 @@ export const ADMIN_NAV: { group: string | null; items: AdminNavItem[] }[] = [
     items: [
       { key: "orders", href: "/admin/orders", icon: Package, badge: "toShip" },
       { key: "products", href: "/admin/products", icon: Tag },
-      { key: "reviews", href: "/admin/reviews", icon: Star },
+      { key: "reviews", href: "/admin/reviews", icon: Star, badge: "reviews" },
     ],
   },
   {

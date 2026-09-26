@@ -81,6 +81,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
   const t = useTranslations("AdminProducts");
   const tc = useTranslations("Categories");
   const tt = useTranslations("Tags");
+  const tv = useTranslations("Validation");
   const router = useRouter();
   const initial: Form = useMemo(
     () =>
@@ -111,7 +112,10 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
   const price = Number(f.price) || 0;
   const listPrice = Number(f.listPrice) || 0;
   const off = discountPercent(price, listPrice);
-  const err = (k: string) => errors[k]?.[0];
+  const err = (k: string) => {
+    const m = errors[k]?.[0];
+    return m && tv.has(m) ? tv(m) : m;
+  };
 
   const changes = product
     ? [

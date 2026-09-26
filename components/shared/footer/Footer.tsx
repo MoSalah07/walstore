@@ -4,13 +4,14 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/shared/container";
 import Logo from "@/components/shared/logo";
 import Price from "@/components/shared/price";
-import { FREE_SHIPPING_MIN_PRICE, WEBSITE_NAME } from "@/constants";
+import { WEBSITE_NAME } from "@/constants";
+import { getStoreSettings } from "@/lib/settings";
 import { Link } from "@/i18n/routing";
 import LocaleCurrencyMenu from "../header/locale-currency-menu";
 import ScrollTop from "./ScrollTop";
 
 export default async function Footer() {
-  const t = await getTranslations("Footer");
+  const [t, settings] = await Promise.all([getTranslations("Footer"), getStoreSettings()]);
 
   const columns = [
     {
@@ -48,7 +49,7 @@ export default async function Footer() {
           <Logo tone="inverse" />
           <p className="max-w-[260px] leading-relaxed">
             {t.rich("Tagline", {
-              price: () => <Price amount={FREE_SHIPPING_MIN_PRICE} />,
+              price: () => <Price amount={settings.pricing.freeShippingMin} whole />,
             })}
           </p>
           <div className="flex gap-2">

@@ -21,7 +21,7 @@ import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { ADMIN_NAV, activeKey } from "./admin-nav";
 
-type Counts = { toShip: number; lowStock: number };
+type Counts = { toShip: number; lowStock: number; reviews: number };
 
 function NavLinks({ collapsed, counts, onNavigate }: { collapsed: boolean; counts: Counts; onNavigate?: () => void }) {
   const t = useTranslations("Admin");
@@ -184,7 +184,7 @@ function AdminSearch({ className }: { className?: string }) {
 
 function Notifications({ counts }: { counts: Counts }) {
   const t = useTranslations("Admin");
-  const total = (counts.toShip > 0 ? 1 : 0) + (counts.lowStock > 0 ? 1 : 0);
+  const total = [counts.toShip, counts.lowStock, counts.reviews].filter((n) => n > 0).length;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -205,6 +205,11 @@ function Notifications({ counts }: { counts: Counts }) {
         {counts.lowStock > 0 && (
           <DropdownMenuItem asChild>
             <Link href="/admin/products?stock=low">{t("low stock", { count: counts.lowStock })}</Link>
+          </DropdownMenuItem>
+        )}
+        {counts.reviews > 0 && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin/reviews">{t("reviews waiting", { count: counts.reviews })}</Link>
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

@@ -13,7 +13,7 @@ import ProductDetails from "@/components/shared/product/product-details";
 import ProductReviews from "@/components/shared/product/product-reviews";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { FREE_SHIPPING_MIN_PRICE } from "@/constants";
+import { getPricingConfig } from "@/lib/settings";
 import { Link } from "@/i18n/routing";
 import { discountPercent } from "@/lib/format";
 
@@ -37,7 +37,7 @@ export default async function ProductDetailsPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [t, tc, tt, related] = await Promise.all([
+  const [t, tc, tt, related, pricing] = await Promise.all([
     getTranslations("Product"),
     getTranslations("Categories"),
     getTranslations("Tags"),
@@ -47,6 +47,7 @@ export default async function ProductDetailsPage({ params }: Props) {
       page: 1,
       limit: 8,
     }),
+    getPricingConfig(),
   ]);
   const id = product._id.toString();
   const category = tc.has(product.category) ? tc(product.category) : product.category;
@@ -112,7 +113,7 @@ export default async function ProductDetailsPage({ params }: Props) {
             </h1>
           </div>
           <BuyBox
-            freeShippingMin={FREE_SHIPPING_MIN_PRICE}
+            freeShippingMin={pricing.freeShippingMin}
             product={{
               _id: id,
               name: product.name,
@@ -134,7 +135,7 @@ export default async function ProductDetailsPage({ params }: Props) {
           description={product.description}
           specs={specs}
           reviewCount={product.numReviews ?? 0}
-          reviews={<ProductReviews avgRating={product.avgRating} numReviews={product.numReviews} />}
+          reviews={<ProductReviews productId={id} slug={product.slug} avgRating={product.avgRating} numReviews={product.numReviews} />}
         />
       </section>
 

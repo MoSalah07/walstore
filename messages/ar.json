@@ -164,7 +164,24 @@
     "Sizes": "المقاسات",
     "Availability": "التوفر",
     "n in stock": "{count} في المخزون",
-    "View all": "عرض الكل"
+    "View all": "عرض الكل",
+    "Sign in to review": "سجّل الدخول لكتابة تقييم",
+    "Review pending": "شكرًا — تقييمك بانتظار الموافقة.",
+    "You reviewed": "لقد قيّمت هذا المنتج.",
+    "Review after delivery": "يمكنك تقييم هذا المنتج بعد استلامه.",
+    "Verified purchase": "شراء مؤكَّد",
+    "Store reply": "رد وولستور",
+    "Your rating": "تقييمك",
+    "n stars": "{count, plural, one {نجمة واحدة} two {نجمتان} few {# نجوم} many {# نجمة} other {# نجمة}}",
+    "Review title": "العنوان",
+    "Review body": "تقييمك بالتفصيل",
+    "Review help": "ما الذي أعجبك أو لم يعجبك؟ 10 أحرف على الأقل.",
+    "Submit review": "إرسال التقييم",
+    "Pick a rating": "اختر عدد النجوم أولًا.",
+    "Review invalid": "أضف عنوانًا و10 أحرف على الأقل.",
+    "Already reviewed": "لقد قيّمت هذا المنتج من قبل.",
+    "Review failed": "تعذّر إرسال تقييمك، حاول مرة أخرى.",
+    "Review thanks": "شكرًا! سيظهر تقييمك بعد الموافقة عليه."
   },
   "Cart": {
     "Shopping Cart": "سلة التسوق",
@@ -366,7 +383,20 @@
     "Country is required": "الدولة مطلوبة",
     "Phone number is required": "رقم الهاتف مطلوب",
     "Payment method is required": "طريقة الدفع مطلوبة",
-    "Role is required": "الدور مطلوب"
+    "Role is required": "الدور مطلوب",
+    "Enter a valid phone number": "أدخل رقم هاتف صحيحًا",
+    "Name must be at least 3 characters": "يجب ألا يقل الاسم عن 3 أحرف",
+    "Slug must be at least 3 characters": "يجب ألا يقل الرابط عن 3 أحرف",
+    "Use lowercase letters, numbers and dashes": "استخدم حروفًا إنجليزية صغيرة وأرقامًا وشرطات",
+    "Category is required": "القسم مطلوب",
+    "Brand is required": "العلامة التجارية مطلوبة",
+    "Description is required": "الوصف مطلوب",
+    "Add at least one image": "أضف صورة واحدة على الأقل",
+    "Price must be more than 0": "يجب أن يكون السعر أكبر من 0",
+    "List price can't be negative": "لا يمكن أن يكون السعر الأصلي سالبًا",
+    "Stock must be a whole number": "يجب أن تكون الكمية عددًا صحيحًا",
+    "Stock can't be negative": "لا يمكن أن تكون الكمية سالبة",
+    "List price must be 0 or at least the price": "يجب أن يكون السعر الأصلي 0 أو أكبر من السعر"
   },
   "Checkout": {
     "Checkout": "إتمام الشراء",
@@ -706,7 +736,11 @@
       "created user": "أنشأ المستخدم",
       "deactivated": "عطّل حساب",
       "reactivated": "أعاد تفعيل حساب",
-      "deleted user": "حذف المستخدم"
+      "deleted user": "حذف المستخدم",
+      "wrote a review of": "كتب تقييمًا لـ",
+      "approved a review of": "وافق على تقييم",
+      "rejected a review of": "رفض تقييم",
+      "updated store settings": "حدّث إعدادات المتجر"
     },
     "Units by category": "القطع المباعة حسب القسم",
     "Units note": "من عدد مبيعات المنتجات · {total} قطعة",
@@ -787,7 +821,10 @@
     "Payment": "الدفع",
     "Paid at": "تم الدفع {date}",
     "COD collect": "حصّل {total} نقدًا عند التسليم.",
-    "greeting": "{greet}، {name}"
+    "greeting": "{greet}، {name}",
+    "reviews waiting": "{count, plural, one {تقييم واحد ينتظر المراجعة} two {تقييمان ينتظران المراجعة} few {# تقييمات تنتظر المراجعة} many {# تقييمًا ينتظر المراجعة} other {# تقييم ينتظر المراجعة}}",
+    "Waiting approval": "بانتظار الموافقة",
+    "Moderate": "مراجعة"
   },
   "AdminProducts": {
     "Products": "المنتجات",
@@ -986,5 +1023,152 @@
     "See all orders": "عرض كل الطلبات المطابقة",
     "See all products": "عرض كل المنتجات المطابقة",
     "See all users": "عرض كل المستخدمين المطابقين"
+  },
+  "AdminReviews": {
+    "Reviews": "التقييمات",
+    "Reviews sub": "وافق على التقييمات قبل ظهورها في صفحات المنتجات.",
+    "Review status": "حالة التقييم",
+    "status": {
+      "pending": "بانتظار المراجعة",
+      "approved": "مقبول",
+      "rejected": "مرفوض"
+    },
+    "empty": {
+      "pending": "لا توجد تقييمات بانتظار المراجعة",
+      "approved": "لا توجد تقييمات مقبولة بعد",
+      "rejected": "لا توجد تقييمات مرفوضة"
+    },
+    "Empty help": "يمكن للعملاء تقييم المنتجات بعد التوصيل.",
+    "Review details": "تفاصيل التقييم",
+    "Verified purchase": "شراء مؤكَّد",
+    "rating label": "{n} من 5 نجوم",
+    "Public reply": "رد علني",
+    "optional": "اختياري",
+    "Reply placeholder": "اشكر العميل أو أجب عن سؤاله…",
+    "Reject": "رفض",
+    "Approve publish": "قبول ونشر",
+    "Update reply": "حفظ الرد",
+    "Approved toast": "تم نشر التقييم",
+    "Rejected toast": "تم رفض التقييم"
+  },
+  "AdminRoles": {
+    "Title": "الأدوار والصلاحيات",
+    "Sub": "تحكّم في من يمكنه رؤية وتعديل كل جزء من وولستور.",
+    "Role history": "سجل الأدوار",
+    "Add an admin": "إضافة مشرف",
+    "Roles": "الأدوار",
+    "System roles": "أدوار النظام · {count}",
+    "role": {
+      "admin": {
+        "name": "مشرف",
+        "desc": "صلاحية كاملة للوحة التحكم — المنتجات والطلبات والمستخدمين والتقييمات والإعدادات. امنحه فقط لمن يدير المتجر."
+      },
+      "user": {
+        "name": "عميل",
+        "desc": "يُمنح للجميع عند التسجيل. يتسوّق ويشتري ويدير حسابه وطلباته فقط."
+      }
+    },
+    "members": {
+      "admin": "{count, plural, one {مشرف واحد} two {مشرفان} few {{n} مشرفين} many {{n} مشرفًا} other {{n} مشرف}}",
+      "user": "{count, plural, one {عميل واحد} two {عميلان} few {{n} عملاء} many {{n} عميلًا} other {{n} عميل}}"
+    },
+    "Default": "الافتراضي",
+    "Access": "الصلاحيات",
+    "Custom roles": "أدوار مخصصة",
+    "Custom roles body": "الأدوار حاليًا «مستخدم» و«مشرف» فقط. الأدوار المخصصة مثل الدعم أو المخزون تحتاج أولًا لفحص كل صلاحية في الكود.",
+    "New role later": "+ دور جديد · لاحقًا",
+    "Role details": "تفاصيل الدور",
+    "System role": "دور نظام",
+    "View": "العرض",
+    "view": {
+      "detail": "تفصيلي",
+      "matrix": "جدول"
+    },
+    "granted": "<b>{n} من {total}</b> صلاحيات ممنوحة",
+    "scope": {
+      "all": "كامل",
+      "own": "الخاص به فقط",
+      "none": "لا يوجد"
+    },
+    "group": {
+      "storefront": "واجهة المتجر",
+      "store": "إدارة المتجر",
+      "system": "الأشخاص والنظام"
+    },
+    "Permission": "الصلاحية",
+    "perm": {
+      "catalog_read": "تصفّح المنتجات والبحث فيها",
+      "checkout_create": "السلة وإتمام الشراء",
+      "account_self": "الحساب والعناوين والطلبات الخاصة",
+      "reviews_write": "تقييم المنتجات التي استلمها",
+      "admin_access": "فتح لوحة التحكم",
+      "products_write": "إنشاء المنتجات وتعديلها ونشرها",
+      "products_delete": "حذف المنتجات",
+      "orders_manage": "عرض الطلبات وتحديثها",
+      "reviews_moderate": "مراجعة التقييمات",
+      "users_manage": "عرض المستخدمين وتعديلهم",
+      "users_role": "تغيير دور المستخدم",
+      "settings_manage": "إعدادات المتجر",
+      "activity_read": "عرض سجل النشاط"
+    }
+  },
+  "AdminSettings": {
+    "Settings": "الإعدادات",
+    "Sections": "أقسام الإعدادات",
+    "section": {
+      "store": "ملف المتجر",
+      "shipping": "الشحن والضريبة",
+      "locale": "اللغات والعملات",
+      "profile": "ملفك الشخصي"
+    },
+    "Store help": "تظهر في صفحة المساعدة للعملاء الذين يريدون التواصل معك.",
+    "Store name": "اسم المتجر",
+    "Support email": "بريد الدعم",
+    "Support phone": "هاتف الدعم",
+    "Invalid email": "أدخل بريدًا صحيحًا أو اتركه فارغًا.",
+    "Shipping help": "تُستخدم في السلة والدفع وكل رسائل «الشحن المجاني».",
+    "Free shipping from": "شحن مجاني ابتداءً من",
+    "Free help": "الشحن العادي مجاني عند هذا المبلغ أو أكثر.",
+    "Standard price": "الشحن العادي",
+    "Express price": "الشحن السريع",
+    "Tax rate": "نسبة الضريبة",
+    "Tax help": "تُضاف عند الدفع. 0 = بدون ضريبة.",
+    "Invalid number": "أدخل رقمًا يساوي 0 أو أكثر.",
+    "Locale help": "محددة في الكود (توجيه اللغات وconstants/currency.ts). الأسعار محفوظة بالدولار وتُحوَّل للعرض.",
+    "Languages": "اللغات",
+    "Currencies": "العملات",
+    "Default": "الافتراضية",
+    "RTL": "من اليمين لليسار",
+    "Base": "العملة الأساسية",
+    "Profile help": "اسمك وكلمة المرور والعناوين موجودة في حسابك.",
+    "Open account": "فتح حسابك",
+    "Cancel": "إلغاء",
+    "Save settings": "حفظ الإعدادات",
+    "Saved": "تم حفظ الإعدادات",
+    "Fix errors": "بعض الحقول تحتاج مراجعة."
+  },
+  "AdminActivity": {
+    "Title": "سجل النشاط",
+    "Sub": "كل تغيير قام به المشرفون وأهم أحداث العملاء.",
+    "Type": "النوع",
+    "Period": "الفترة",
+    "entity": {
+      "all": "الكل",
+      "order": "طلب",
+      "product": "منتج",
+      "user": "مستخدم",
+      "review": "تقييم",
+      "settings": "إعدادات"
+    },
+    "period": {
+      "1d": "24 ساعة",
+      "7d": "7 أيام",
+      "30d": "30 يومًا",
+      "all": "الكل"
+    },
+    "Today": "اليوم",
+    "Yesterday": "أمس",
+    "Empty": "لم يحدث شيء في هذه الفترة",
+    "Empty help": "جرّب فترة أطول أو نوعًا آخر."
   }
 }

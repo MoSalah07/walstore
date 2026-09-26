@@ -2,12 +2,15 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import Container from "@/components/shared/container";
 import { SUPPORT } from "@/content/pages";
+import { getStoreSettings } from "@/lib/settings";
 import { formatMoney, ltr } from "@/lib/format";
-import { getPricingConfig } from "@/lib/settings";
 import HelpSearch from "./help-search";
 
 export default async function HelpCenter() {
-  const [t, locale, pricing] = await Promise.all([getTranslations("Help"), getLocale(), getPricingConfig()]);
+  const [t, locale, settings] = await Promise.all([getTranslations("Help"), getLocale(), getStoreSettings()]);
+  const pricing = settings.pricing;
+  // Settings win; content/pages.ts placeholders show until they are filled in.
+  const support = { email: settings.supportEmail || SUPPORT.email, phone: settings.supportPhone || SUPPORT.phone };
   const free = ltr(formatMoney(pricing.freeShippingMin, "USD", locale, true));
 
   const topics = [
@@ -33,7 +36,7 @@ export default async function HelpCenter() {
       <HelpSearch
         topics={topics}
         faqs={faqs}
-        support={SUPPORT}
+        support={support}
         labels={{
           eyebrow: t("Customer Service"),
           title: t("How can we help"),
@@ -45,7 +48,7 @@ export default async function HelpCenter() {
           faqSub: t("FAQ sub"),
           noMatch: t("No match"),
           stillTitle: t("Still need help"),
-          stillBody: t("Still body", { email: SUPPORT.email, phone: SUPPORT.phone }),
+          stillBody: t("Still body", { email: support.email, phone: support.phone }),
           email: t("Email us"),
           orders: t("Your orders"),
         }}

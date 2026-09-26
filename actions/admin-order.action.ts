@@ -11,6 +11,7 @@ import { isAdmin } from "@/lib/roles";
 import Activity from "@/models/activity.model";
 import Order, { OrderStatus } from "@/models/order.model";
 import Product from "@/models/product.model";
+import Review from "@/models/review.model";
 import User from "@/models/user.model";
 
 async function assertAdmin() {
@@ -227,10 +228,11 @@ export async function getDashboard(period = "30d") {
     return { date: key, revenue: Math.round((byDay.get(key) ?? 0) * 100) / 100 };
   });
 
-  const [toShip, unpaid, lowStock, recent, activity, categories, top] = await Promise.all([
+  const [toShip, unpaid, lowStock, reviewsPending, recent, activity, categories, top] = await Promise.all([
     Order.countDocuments({ status: "processing" }),
     Order.countDocuments({ status: "unpaid" }),
     Product.countDocuments({ isPublished: true, countInStock: { $lte: 15 } }),
+    Review.countDocuments({ status: "pending" }),
     Order.find().sort({ createdAt: -1 }).limit(5).populate("user", "name").lean(),
     Activity.find().sort({ createdAt: -1 }).limit(6).lean(),
     Product.aggregate<{ _id: string; units: number }>([
@@ -251,7 +253,7 @@ export async function getDashboard(period = "30d") {
       prev: prev ? { revenue: prev.revenue, orders: prev.orders, aov: prev.orders ? prev.revenue / prev.orders : 0, units: prev.units } : null,
     },
     series,
-    attention: { toShip, unpaid, lowStock },
+    attention: { toShip, unpaid, lowStock, reviews: reviewsPending },
     recent: recent.map((o) => ({
       _id: String(o._id),
       orderNumber: o.orderNumber,
@@ -268,11 +270,12 @@ export async function getDashboard(period = "30d") {
 
 export async function getAdminBadgeCounts() {
   const session = await auth();
-  if (!session?.user?.id || !isAdmin(session.user.role)) return { toShip: 0, lowStock: 0 };
+  if (!session?.user?.id || !isAdmin(session.user.role)) return { toShip: 0, lowStock: 0, reviews: 0 };
   await connectToDatabase();
-  const [toShip, lowStock] = await Promise.all([
+  const [toShip, lowStock, reviews] = await Promise.all([
     Order.countDocuments({ status: "processing" }),
     Product.countDocuments({ isPublished: true, countInStock: { $lte: 15 } }),
+    Review.countDocuments({ status: "pending" }),
   ]);
-  return { toShip, lowStock };
+  return { toShip, lowStock, reviews };
 }
