@@ -95,6 +95,22 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         token.name = session.user.name;
       }
 
+      // Re-read role/name at most once a minute so admin changes (role,
+      // deactivation, deletion) apply without waiting for the token to expire.
+      const checked = Number(token.checkedAt ?? 0);
+      if (!user && token.sub && Date.now() - checked > 60_000) {
+        try {
+          await connectToDatabase();
+          const fresh = await User.findById(token.sub).select("name role isActive").lean();
+          if (!fresh || fresh.isActive === false) return null;
+          token.role = fresh.role ?? "user";
+          token.name = fresh.name;
+          token.checkedAt = Date.now();
+        } catch {
+          // Keep the current token if the database is briefly unavailable.
+        }
+      }
+
       return token;
     },
 

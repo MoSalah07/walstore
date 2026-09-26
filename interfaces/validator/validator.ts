@@ -139,3 +139,36 @@ export const CheckoutSchema = z.object({
   paymentMethod: z.enum(["cod"]),
   saveAddress: z.boolean().optional(),
 });
+
+// Admin product form
+export const ProductInputSchema = z
+  .object({
+    name: z.string().trim().min(3, "Name must be at least 3 characters").max(200),
+    slug: z
+      .string()
+      .trim()
+      .min(3, "Slug must be at least 3 characters")
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and dashes"),
+    category: z.string().trim().min(1, "Category is required"),
+    brand: z.string().trim().min(1, "Brand is required"),
+    description: z.string().trim().min(1, "Description is required").max(4000),
+    images: z.array(z.string().min(1)).min(1, "Add at least one image").max(8),
+    price: Price("Price").refine((v) => v > 0, "Price must be more than 0"),
+    listPrice: Price("List price").refine((v) => v >= 0, "List price can't be negative"),
+    countInStock: z.coerce.number().int("Stock must be a whole number").min(0, "Stock can't be negative"),
+    sizes: z.array(z.string().trim().min(1)).max(20),
+    colors: z.array(z.string().trim().min(1)).max(20),
+    tags: z.array(z.enum(["new-arrival", "best-seller", "todays-deal", "featured"])),
+    isPublished: z.boolean(),
+  })
+  .refine((d) => d.listPrice === 0 || d.listPrice >= d.price, {
+    message: "List price must be 0 or at least the price",
+    path: ["listPrice"],
+  });
+
+// Admin user form
+export const AdminUserSchema = z.object({
+  name: UserName,
+  email: Email,
+  role: z.enum(["user", "admin"]),
+});
