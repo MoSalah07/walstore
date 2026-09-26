@@ -540,5 +540,73 @@
     "Wishlist help": "Items you saved on this device.",
     "Wishlist empty": "Your wishlist is empty",
     "Wishlist empty help": "Tap the heart on any product to save it here."
+  },
+  "Help": {
+    "Help title": "Help & Customer Service",
+    "Help": "Help",
+    "Policies": "Policies",
+    "On this page": "On this page",
+    "Last updated": "Last updated {date}",
+    "Questions": "Questions about this page?",
+    "Contact Customer Service": "Contact Customer Service",
+    "Customer Service": "Customer Service",
+    "How can we help": "How can we help?",
+    "Search help": "Search help",
+    "Search placeholder": "Search for shipping, returns, orders…",
+    "Search": "Search",
+    "Browse topics": "Browse help topics",
+    "FAQ": "Frequently asked questions",
+    "FAQ sub": "Can't find what you need? Our customer service team is one message away.",
+    "No match": "Nothing matches that search. Try another word.",
+    "Still need help": "Still need help?",
+    "Still body": "Contact Customer Service by email at {email} or by phone at {phone}.",
+    "Email us": "Email us",
+    "Your orders": "Your orders",
+    "topic": {
+      "orders": "Your orders",
+      "orders sub": "Track orders, cancel before shipping or buy again.",
+      "shipping": "Shipping Rates & Policies",
+      "shipping sub": "Free shipping on orders over {free}.",
+      "returns": "Returns & Replacements",
+      "returns sub": "Send items back or swap a size or color.",
+      "payments": "Payments & currencies",
+      "payments sub": "Cash on delivery · USD / EUR / EGP.",
+      "account": "Account & sign in",
+      "account sub": "Password, profile and saved addresses.",
+      "about": "About WalStore",
+      "about sub": "Who we are, careers and our blog."
+    },
+    "faq": {
+      "shipping q": "How much does shipping cost?",
+      "shipping a": "Standard shipping is free on orders over {free}. Below that, the shipping cost is shown at checkout before you place the order.",
+      "where q": "Where is my order?",
+      "where a": "Open Your orders from the account menu to see the status of every order — processing, shipped or delivered.",
+      "cancel q": "Can I cancel an order?",
+      "cancel a": "Yes, until it ships. Open the order in Your orders and choose Cancel order.",
+      "returns q": "How do I return or replace an item?",
+      "returns a": "[Your return policy — return window, item condition and how refunds are issued.]",
+      "pay q": "How can I pay?",
+      "pay a": "Pay in cash when your order arrives. Card and PayPal payments are not available yet.",
+      "currency q": "Which currencies can I shop in?",
+      "currency a": "Prices can be shown in USD, EUR or EGP. Switch currency from the header or the footer.",
+      "arabic q": "Is WalStore available in Arabic?",
+      "arabic a": "Yes. Choose العربية from the language menu and the whole store switches to right-to-left."
+    }
+  },
+  "NotFound": {
+    "Error 404": "Error 404",
+    "Title": "This page wandered off.",
+    "Body": "The link may be broken or the product is no longer available. Try a search, or head back to the home page.",
+    "Back to home": "Back to home",
+    "Today's Deals": "Today's Deals",
+    "Image alt": "A single sneaker"
+  },
+  "NotAllowed": {
+    "Error 403": "Error 403",
+    "Title": "This page isn't available to you",
+    "Body": "Your request looked automated, or your account doesn't have permission for this area. If you think this is a mistake, sign in with the right account or contact us.",
+    "Go home": "Go to home page",
+    "Switch account": "Switch account",
+    "Contact": "Contact Customer Service"
   }
 }

@@ -8,6 +8,7 @@ import connectToDatabase from "@/lib/connect.db";
 import User from "@/models/user.model";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import { ZodError } from "zod";
 
 // CREATE
@@ -61,4 +62,10 @@ export async function signInWithCredentials(
 export const SignOut = async () => {
   const redirectTo = await signOut({ redirect: false });
   redirect(redirectTo.redirect);
+};
+
+// Signs out and lands on sign-in (used by "Switch account" on the 403 page).
+export const SwitchAccount = async () => {
+  const locale = await getLocale();
+  await signOut({ redirectTo: `/${locale}/sign-in` });
 };
