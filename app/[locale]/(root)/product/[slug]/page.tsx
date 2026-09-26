@@ -129,7 +129,7 @@ export default async function ProductDetailsPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="mt-10 md:mt-[72px]">
+      <section id="reviews" className="mt-10 scroll-mt-44 md:mt-[72px]">
         <ProductDetails
           description={product.description}
           specs={specs}

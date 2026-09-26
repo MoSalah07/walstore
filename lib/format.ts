@@ -42,3 +42,6 @@ export function discountPercent(price: number, listPrice?: number) {
   if (!listPrice || listPrice <= price) return 0;
   return Math.round(100 - (price / listPrice) * 100);
 }
+
+// Keeps "#WS-10001" in reading order inside Arabic sentences.
+export const ltr = (s: string) => `⁦${s}⁩`;
