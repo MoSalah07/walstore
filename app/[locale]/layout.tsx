@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "../globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import AppProviders from "@/components/providers/app-providers";
 import { Bricolage_Grotesque, Instrument_Sans, Cairo } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -9,7 +9,6 @@ import { getMessages } from "next-intl/server";
 import { getDirection } from "@/i18n/i18n-confige";
 import clsx from "clsx";
 import { WEBSITE_NAME } from "@/constants";
-import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: `${WEBSITE_NAME} | Save Money`,
@@ -70,16 +69,7 @@ export default async function RootLayout({
     >
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider>
-            <Toaster
-              position="top-center"
-              toastOptions={{
-                className:
-                  "!rounded-md !bg-inverse !text-inverse-foreground !shadow-md !text-sm !font-sans",
-              }}
-            />
-            {children}
-          </ThemeProvider>
+          <AppProviders dir={dir}>{children}</AppProviders>
         </NextIntlClientProvider>
       </body>
     </html>
