@@ -1,28 +1,56 @@
 {
   "Header": {
-    "Search": "ابحث عن كل شيء في وولستور على الإنترنت وفي المتجر",
+    "Search": "ابحث عن أي شيء في وولستور",
     "Languages": "اللغات",
     "Currency": "العملات",
     "Menu": "القائمة",
     "Help": "المساعدة",
-    "About": "عنـا",
+    "About": "من نحن",
     "Customer Service": "خدمة العملاء",
-    "Best Sellers": "الأكثر مبيعًا",
-    "New Arrivals": "الوصول الجديد",
+    "Best Sellers": "الأكثر مبيعًا",
+    "New Arrivals": "وصل حديثًا",
     "All": "الكل",
     "Shop By Department": "التسوق حسب القسم",
     "Account & Orders": "الحساب والطلبات",
-    "Sign up": "اشتراك",
+    "Sign up": "إنشاء حساب",
     "Sign in": "تسجيل الدخول",
     "Sign out": "تسجيل الخروج",
-    "Admin": "مدير",
+    "Admin": "لوحة التحكم",
     "Hello": "مرحباً",
     "sign in": "تسجيل الدخول",
     "Your account": "حسابك",
     "Your orders": "طلباتك",
     "New Customer": "عميل جديد",
     "Help & Settings": "المساعدة والإعدادات",
-    "Cart": "السلة"
+    "Cart": "السلة",
+    "Free shipping over": "شحن مجاني للطلبات فوق <price></price>",
+    "All departments": "كل الأقسام",
+    "Today's Deals": "عروض اليوم",
+    "Search short": "ابحث في وولستور",
+    "Search label": "بحث",
+    "Search in": "البحث في",
+    "Clear search": "مسح البحث",
+    "Hello sign in": "مرحبًا، سجّل الدخول",
+    "Hello name": "مرحبًا، {name}",
+    "Account": "الحساب",
+    "Cart items": "السلة، {count, plural, =0 {فارغة} one {منتج واحد} two {منتجان} few {# منتجات} many {# منتجًا} other {# منتج}}",
+    "Dark mode": "التبديل إلى الوضع الداكن",
+    "Light mode": "التبديل إلى الوضع الفاتح",
+    "Open menu": "فتح القائمة",
+    "Close": "إغلاق",
+    "Quick links": "روابط سريعة",
+    "Main": "القائمة الرئيسية",
+    "New customer start here": "عميل جديد؟ <link>ابدأ من هنا</link>",
+    "Shop": "تسوّق",
+    "Language": "اللغة",
+    "Currency label": "العملة",
+    "Theme": "المظهر",
+    "Light": "فاتح",
+    "Dark": "داكن",
+    "System": "تلقائي",
+    "Categories": "الأقسام",
+    "Home": "الرئيسية",
+    "Tabs": "التبويبات"
   },
   "Home": {
     "Categories to explore": "فئات للاستكشاف",
@@ -40,7 +68,7 @@
     "Best Selling Products": "المنتجات الأكثر مبيعًا"
   },
   "Product": {
-    "Added to Cart": "أضيف إلى السلة",
+    "Added to Cart": "أُضيف إلى السلة",
     "Limited time deal": "صفقة محدودة الوقت",
     "Off": "خصم",
     "Brand": "العلامة التجارية",
@@ -58,7 +86,14 @@
     "Product Not Access": "المنتج الذي تحاول الوصول إليه غير موجود",
     "Best Sellers in": "الأكثر مبيعًا في {name}",
     "product has been successfully": "تم اضافة المنتج بنجاح الى السلة",
-    "List price": "سعر القائمة"
+    "List price": "سعر القائمة",
+    "New": "جديد",
+    "Add to cart short": "أضف إلى السلة",
+    "Save to wishlist": "حفظ في المفضلة",
+    "Remove from wishlist": "إزالة من المفضلة",
+    "Saved to wishlist": "تم الحفظ في المفضلة",
+    "Removed from wishlist": "تمت الإزالة من المفضلة",
+    "Not enough stock": "الكمية المتاحة غير كافية"
   },
   "Cart": {
     "Shopping Cart": "عربة التسوق",
@@ -107,7 +142,10 @@
     "Help": "مساعدة",
     "Copyright": "حقوق الطبع والنشر",
     "Year": "لعام",
-    "Design by": "التصميم بواسطة {name}"
+    "Design by": "التصميم بواسطة {name}",
+    "Tagline": "تيشيرتات وجينز وأحذية وساعات — شحن مجاني للطلبات فوق <price></price>.",
+    "Rights": "© {year} وولستور. جميع الحقوق محفوظة.",
+    "Your orders": "طلباتك"
   },
   "Search": {
     "for": "لـ",
@@ -135,5 +173,16 @@
     "Next": "التالي",
     "Previous": "السابق",
     "Page": "الصفحة"
+  },
+  "Categories": {
+    "T-Shirts": "تيشيرتات",
+    "Jeans": "جينز",
+    "Shoes": "أحذية",
+    "Wrist Watches": "ساعات يد"
+  },
+  "Currency": {
+    "USD": "دولار أمريكي",
+    "EUR": "يورو",
+    "EGP": "جنيه مصري"
   }
 }

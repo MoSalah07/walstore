@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import { itemsCarousel } from "@/constants/data";
+import { itemsCarousel } from "@/constants/carousel";
 import { useTranslations } from "next-intl";
 
 export function CarouselHome() {

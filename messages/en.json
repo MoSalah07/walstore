@@ -1,6 +1,6 @@
 {
   "Header": {
-    "Search": "Search everything at walstore online and in store",
+    "Search": "Search everything at WalStore online and in store",
     "Languages": "Languages",
     "Currency": "Currencies",
     "Menu": "Menu",
@@ -12,7 +12,7 @@
     "All": "All",
     "Shop By Department": "Shop By Department",
     "Account & Orders": "Account & Orders",
-    "Sign up": "Sign up",
+    "Sign up": "Create account",
     "Sign in": "Sign in",
     "Sign out": "Sign out",
     "Admin": "Admin",
@@ -22,7 +22,35 @@
     "Your orders": "Your orders",
     "New Customer": "New Customer",
     "Help & Settings": "Help & Settings",
-    "Cart": "Cart"
+    "Cart": "Cart",
+    "Free shipping over": "Free shipping on orders over <price></price>",
+    "All departments": "All departments",
+    "Today's Deals": "Today's Deals",
+    "Search short": "Search WalStore",
+    "Search label": "Search",
+    "Search in": "Search in",
+    "Clear search": "Clear search",
+    "Hello sign in": "Hello, sign in",
+    "Hello name": "Hello, {name}",
+    "Account": "Account",
+    "Cart items": "Cart, {count, plural, =0 {empty} one {# item} other {# items}}",
+    "Dark mode": "Switch to dark mode",
+    "Light mode": "Switch to light mode",
+    "Open menu": "Open menu",
+    "Close": "Close",
+    "Quick links": "Quick links",
+    "Main": "Main",
+    "New customer start here": "New customer? <link>Start here</link>",
+    "Shop": "Shop",
+    "Language": "Language",
+    "Currency label": "Currency",
+    "Theme": "Theme",
+    "Light": "Light",
+    "Dark": "Dark",
+    "System": "System",
+    "Categories": "Categories",
+    "Home": "Home",
+    "Tabs": "Tabs"
   },
   "Home": {
     "Categories to explore": "Categories to explore",
@@ -58,7 +86,14 @@
     "Product Not Access": "The product you are trying to access is not available",
     "Best Sellers in": "Best Sellers in {name}",
     "product has been successfully": "product has been successfully added to cart",
-    "List price": "List price"
+    "List price": "List price",
+    "New": "New",
+    "Add to cart short": "Add to cart",
+    "Save to wishlist": "Save to wishlist",
+    "Remove from wishlist": "Remove from wishlist",
+    "Saved to wishlist": "Saved to your wishlist",
+    "Removed from wishlist": "Removed from your wishlist",
+    "Not enough stock": "Not enough items in stock"
   },
   "Cart": {
     "Shopping Cart": "Shopping Cart",
@@ -107,7 +142,10 @@
     "Help": "Help",
     "Copyright": "Copyright All rights reserved",
     "Year": "Year",
-    "Design by": "Design by {name}"
+    "Design by": "Design by {name}",
+    "Tagline": "T-shirts, jeans, shoes and watches — shipped free on orders over <price></price>.",
+    "Rights": "© {year} WalStore. All rights reserved.",
+    "Your orders": "Your orders"
   },
   "Search": {
     "for": "for",
@@ -135,5 +173,16 @@
     "Next": "Next",
     "Previous": "Previous",
     "Page": "Page"
+  },
+  "Categories": {
+    "T-Shirts": "T-Shirts",
+    "Jeans": "Jeans",
+    "Shoes": "Shoes",
+    "Wrist Watches": "Wrist Watches"
+  },
+  "Currency": {
+    "USD": "US Dollar",
+    "EUR": "Euro",
+    "EGP": "Egyptian Pound"
   }
 }

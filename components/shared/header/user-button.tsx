@@ -1,97 +1,104 @@
+import { ChevronDown, CircleUserRound, LogOut } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+
 import { SignOut } from "@/actions/user.action";
 import { auth } from "@/auth";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "@/i18n/routing";
+import { isAdmin } from "@/lib/roles";
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon } from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import Link from "next/link";
-import React from "react";
 
-export default async function UserButton() {
+// Desktop: icon + "Hello, …" / "Account & Orders". Compact: icon only.
+export default async function UserButton({ compact = false }: { compact?: boolean }) {
   const session = await auth();
-  const t = await getTranslations();
-  return (
-    <div className="text-white w-fit border border-white py-1 px-2 rounded-md">
-      <DropdownMenu>
-        <DropdownMenuTrigger className="border-none outline-none focus:outline-none focus:border-none">
-          {" "}
-          <div className="flex items-center">
-            <div className="flex flex-col text-xs text-left">
-              <span>
-                {t("Header.Hello")},{" "}
-                {session ? session.user.name : t("Header.sign in")}
-              </span>
-              <span className="font-bold">{t("Header.Account & Orders")}</span>
-            </div>
-            <ChevronDownIcon />
-          </div>
-        </DropdownMenuTrigger>
-        {session ? (
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  {session.user.name}
-                </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {session.user.email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuGroup>
-              <Link className="w-full" href="/account">
-                <DropdownMenuItem>{t("Header.Your account")}</DropdownMenuItem>
-              </Link>
-              <Link className="w-full" href="/account/orders">
-                <DropdownMenuItem>{t("Header.Your orders")}</DropdownMenuItem>
-              </Link>
+  const t = await getTranslations("Header");
+  const name = session?.user?.name;
 
-              {session.user.role === "Admin" && (
-                <Link className="w-full" href="/admin/overview">
-                  <DropdownMenuItem>{t("Header.Admin")}</DropdownMenuItem>
-                </Link>
-              )}
-            </DropdownMenuGroup>
-            <DropdownMenuItem className="p-0 mb-1">
-              <form action={SignOut} className="w-full">
-                <Button
-                  className="w-full py-4 px-2 h-4 justify-start"
-                  variant="ghost"
-                >
-                  {t("Header.Sign out")}
-                </Button>
-              </form>
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label={t("Account")}
+        className={cn(
+          "flex items-center rounded-md text-start text-foreground transition-colors duration-fast hover:bg-sunken data-[state=open]:bg-sunken",
+          compact ? "size-11 justify-center" : "h-12 gap-2.5 px-3"
+        )}
+      >
+        <CircleUserRound className={compact ? "size-[22px]" : "size-[22px]"} strokeWidth={1.8} />
+        {!compact && (
+          <>
+            <span className="flex flex-col leading-tight">
+              <span className="max-w-[140px] truncate text-xs text-muted-foreground">
+                {name ? t("Hello name", { name: name.split(" ")[0] }) : t("Hello sign in")}
+              </span>
+              <span className="text-sm font-bold">{t("Account & Orders")}</span>
+            </span>
+            <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
+          </>
+        )}
+      </DropdownMenuTrigger>
+
+      {session ? (
+        <DropdownMenuContent className="w-[260px]" align="end">
+          <DropdownMenuLabel className="mb-1 flex flex-col border-b border-border-soft px-2.5 pb-2.5 pt-2">
+            <span className="truncate font-bold">{name}</span>
+            <span className="truncate text-xs font-normal text-muted-foreground">
+              {session.user.email}
+            </span>
+          </DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href="/account">{t("Your account")}</Link>
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        ) : (
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  className={cn(buttonVariants(), "w-full")}
-                  href="/sign-in"
-                >
-                  {t("Header.Sign in")}
+            <DropdownMenuItem asChild>
+              <Link href="/account/orders">{t("Your orders")}</Link>
+            </DropdownMenuItem>
+            {isAdmin(session.user.role) && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin/overview" className="justify-between">
+                  {t("Admin")}
+                  <Badge variant="ink" size="sm">
+                    admin
+                  </Badge>
                 </Link>
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuLabel>
-              <div className="font-normal">
-                {t("Header.New Customer")}?{" "}
-                <Link href="/sign-up">{t("Header.Sign up")}</Link>
-              </div>
-            </DropdownMenuLabel>
-          </DropdownMenuContent>
-        )}
-      </DropdownMenu>
-    </div>
+            )}
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <form action={SignOut}>
+            <DropdownMenuItem asChild>
+              <button type="submit" className="w-full font-semibold text-destructive">
+                <LogOut aria-hidden />
+                {t("Sign out")}
+              </button>
+            </DropdownMenuItem>
+          </form>
+        </DropdownMenuContent>
+      ) : (
+        <DropdownMenuContent className="w-[260px] p-3" align="end">
+          <Link href="/sign-in" className={cn(buttonVariants(), "w-full")}>
+            {t("Sign in")}
+          </Link>
+          <p className="mt-3 text-center text-[13px] text-foreground-secondary">
+            {t.rich("New customer start here", {
+              link: (chunks) => (
+                <Link href="/sign-up" className="font-bold text-foreground underline-offset-4 hover:underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
+        </DropdownMenuContent>
+      )}
+    </DropdownMenu>
   );
 }

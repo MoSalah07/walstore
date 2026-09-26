@@ -1,92 +1,156 @@
-import { IProduct } from "@/interfaces/product.interface";
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import ImageHover from "./ImageHover";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import ProductPrice from "./ProductPrice";
+import { Heart, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
-interface IProps {
-  product: IProduct;
-  hideDetails?: boolean;
-  hideBorder?: boolean;
-  hideAddToCart?: boolean;
-}
+import Price from "@/components/shared/price";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { IProduct } from "@/interfaces/product.interface";
+import { Link } from "@/i18n/routing";
+import useMounted from "@/hooks/use-mounted";
+import { discountPercent } from "@/lib/format";
+import { cn, generateId, round2 } from "@/lib/utils";
+import useCartStore from "@/store/use-cart-store";
+import useWishlist from "@/store/use-wishlist";
 
+export type ProductCardData = Pick<
+  IProduct,
+  "name" | "slug" | "brand" | "images" | "price" | "listPrice" | "tags" | "countInStock" | "category" | "sizes" | "colors"
+> & { _id: string | { toString(): string } };
+
+// Image well · deal/new badge · wishlist · brand · 2-line name · price · add.
 export default function ProductCard({
   product,
-  hideBorder = false,
-  hideDetails = false,
-}: IProps) {
-  const ProductImage = () => (
-    <Link href={`/product/${product.slug}`}>
-      <div className="relative h-52 w-full">
-        {product.images.length > 1 ? (
-          <ImageHover
-            src={product.images[0]}
-            hoverSrc={product.images[1]}
-            alt={product.name}
-          />
-        ) : (
-          <div className="relative h-52">
+  className,
+  hideAddToCart = false,
+  priority = false,
+}: {
+  product: ProductCardData;
+  className?: string;
+  hideAddToCart?: boolean;
+  priority?: boolean;
+  /** @deprecated kept for older call sites */
+  hideDetails?: boolean;
+  /** @deprecated kept for older call sites */
+  hideBorder?: boolean;
+}) {
+  const t = useTranslations("Product");
+  const id = product._id.toString();
+  const off = discountPercent(product.price, product.listPrice);
+  const isNew = product.tags?.includes("new-arrival");
+  const href = `/product/${product.slug}`;
+  const addItem = useCartStore((s) => s.addItem);
+  const mounted = useMounted();
+  const saved = useWishlist((s) => s.ids.includes(id)) && mounted;
+  const toggleWish = useWishlist((s) => s.toggle);
+  const soldOut = product.countInStock <= 0;
+
+  const add = () => {
+    try {
+      addItem(
+        {
+          clientId: generateId(),
+          product: id,
+          countInStock: product.countInStock,
+          name: product.name,
+          slug: product.slug,
+          category: product.category,
+          price: round2(product.price),
+          quantity: 1,
+          image: product.images[0],
+          size: product.sizes?.[0],
+          color: product.colors?.[0],
+        },
+        1
+      );
+      toast.success(
+        <span className="flex flex-col gap-0.5">
+          <strong>{t("Added to Cart")}</strong>
+          <span className="line-clamp-1 text-inverse-muted">{product.name}</span>
+        </span>
+      );
+    } catch {
+      toast.error(t("Not enough stock"));
+    }
+  };
+
+  return (
+    <article
+      className={cn(
+        "group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-[box-shadow,transform] duration-base ease-standard hover:-translate-y-0.5 hover:shadow-md",
+        className
+      )}
+    >
+      <div className="relative aspect-[302/280] shrink-0 bg-sunken dark:bg-[#E9ECF1]">
+        <Link href={href} tabIndex={-1} aria-hidden className="absolute inset-0 flex items-center justify-center p-[13%]">
+          <span className="relative size-full">
             <Image
               src={product.images[0]}
-              alt={product.name}
+              alt=""
               fill
-              sizes="80vw"
-              className="object-contain"
+              priority={priority}
+              sizes="(min-width: 1280px) 300px, (min-width: 768px) 30vw, 50vw"
+              className="object-contain mix-blend-multiply transition-transform duration-slow ease-standard group-hover:scale-[1.04]"
             />
-          </div>
+          </span>
+        </Link>
+        {off > 0 ? (
+          <Badge variant="deal" className="absolute start-3.5 top-3.5">
+            -{off}%
+          </Badge>
+        ) : (
+          isNew && (
+            <Badge className="absolute start-3.5 top-3.5">{t("New")}</Badge>
+          )
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            const now = toggleWish(id);
+            toast.success(now ? t("Saved to wishlist") : t("Removed from wishlist"));
+          }}
+          aria-pressed={saved}
+          aria-label={saved ? t("Remove from wishlist") : t("Save to wishlist")}
+          className="absolute end-2.5 top-2.5 flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors duration-fast hover:border-foreground"
+        >
+          <Heart
+            className={cn("size-[18px]", saved && "fill-deal text-deal")}
+            strokeWidth={1.8}
+          />
+        </button>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <div className="type-overline truncate font-semibold tracking-[0.06em] text-muted-foreground">
+          {product.brand}
+        </div>
+        <Link
+          href={href}
+          className="line-clamp-2 min-h-[42px] text-[15px] leading-[21px] text-foreground hover:underline hover:underline-offset-2"
+        >
+          {product.name}
+        </Link>
+        <div className="mt-auto flex flex-wrap items-baseline gap-x-2">
+          <Price amount={product.price} className="type-price" />
+          {off > 0 && (
+            <Price amount={product.listPrice} strike className="text-[13px] text-muted-foreground" />
+          )}
+        </div>
+        {!hideAddToCart && (
+          <Button
+            variant="outline"
+            onClick={add}
+            disabled={soldOut}
+            className="mt-1 w-full font-semibold"
+          >
+            {!soldOut && <Plus aria-hidden />}
+            {soldOut ? t("Out of Stock") : t("Add to cart short")}
+          </Button>
         )}
       </div>
-    </Link>
-  );
-
-  const ProductDetails = () => (
-    <div className="flex-1 space-y-2">
-      <p className="font-bold">{product.brand}</p>
-      <Link
-        href={`/product/${product.slug}`}
-        className="overflow-hidden text-ellipsis"
-        style={{
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-        }}
-      >
-        {product.name}
-      </Link>
-      <ProductPrice
-        price={product.price}
-        listPrice={product.listPrice}
-        isDeal={product.tags.includes("todays-deal")}
-      />
-    </div>
-  );
-
-  return hideBorder ? (
-    <div className="flex flex-col">
-      <ProductImage />
-      {!hideDetails && (
-        <>
-          <div className="p-3 flex-1 text-center">
-            <ProductDetails />
-          </div>
-        </>
-      )}
-    </div>
-  ) : (
-    <Card className="flex flex-col  ">
-      <CardHeader className="p-3">
-        <ProductImage />
-      </CardHeader>
-      {!hideDetails && (
-        <>
-          <CardContent className="p-3 flex-1  text-center">
-            <ProductDetails />
-          </CardContent>
-        </>
-      )}
-    </Card>
+    </article>
   );
 }

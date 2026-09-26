@@ -1,25 +1,18 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import { ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React from "react";
 
 export default function ScrollTop() {
   const t = useTranslations("Footer");
   return (
-    <Button
-      variant={"ghost"}
-      className="rounded-none w-full bg-blue-950 hover:bg-blue-800 hover:text-white text-white "
-      onClick={() =>
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        })
-      }
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="flex h-12 w-full items-center justify-center gap-2 bg-inverse-raised font-semibold text-inverse-foreground transition-colors duration-fast hover:bg-inverse-raised/80"
     >
-      {" "}
-      <ChevronUp className="mr-2 h-4 w-4" />
+      <ChevronUp className="size-4" aria-hidden />
       {t("Back to top")}
-    </Button>
+    </button>
   );
 }

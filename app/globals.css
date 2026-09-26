@@ -88,11 +88,12 @@
     --popover: 28 32 41; /* #1C2029 */
     --popover-foreground: 242 244 247;
     --sunken: 16 18 23; /* #101217 */
-    --inverse: 242 244 247;
-    --inverse-foreground: 11 13 18;
-    --inverse-muted: 71 84 103;
-    --inverse-raised: 228 231 236;
-    --inverse-border: 208 213 221;
+    /* Footer, top bar, hero stay dark: a raised ink instead of flipping to light. */
+    --inverse: 20 23 29; /* #14171D */
+    --inverse-foreground: 242 244 247;
+    --inverse-muted: 164 172 185;
+    --inverse-raised: 28 32 41;
+    --inverse-border: 38 43 54;
 
     --border: 38 43 54; /* #262B36 */
     --border-soft: 28 32 41;
