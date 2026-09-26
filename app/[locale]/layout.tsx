@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Poppins, Cairo } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, Cairo } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -16,16 +16,33 @@ export const metadata: Metadata = {
   description: "walstore for all products",
 };
 
-const poppins = Poppins({
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F5F6F8" },
+    { media: "(prefers-color-scheme: dark)", color: "#090B0F" },
+  ],
+};
+
+// Display: headings and prices.
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  axes: ["opsz"],
   display: "swap",
+  variable: "--font-display",
 });
 
-const cairo = Cairo({
+// UI and body text.
+const instrument = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
+  variable: "--font-sans",
+});
+
+// All Arabic text.
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  display: "swap",
+  variable: "--font-cairo",
 });
 
 export default async function RootLayout({
@@ -46,19 +63,21 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={dir}
       suppressHydrationWarning
-      dir={dir === "rtl" ? "rtl" : "ltr"}
+      className={clsx(bricolage.variable, instrument.variable, cairo.variable)}
     >
-      <body
-        className={clsx(
-          locale === "ar" ? cairo.className : poppins.className,
-          "antialiased"
-        )}
-      >
+      <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <Toaster position="top-center" />
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                className:
+                  "!rounded-md !bg-inverse !text-inverse-foreground !shadow-md !text-sm !font-sans",
+              }}
+            />
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>
