@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useMemo } from "react";
 import { useCurrency } from "@/hooks/useCurrency";
 import { cn, round2 } from "@/lib/utils";
@@ -9,7 +10,6 @@ interface IProps {
   listPrice?: number;
   className?: string;
   isDeal?: boolean;
-
   plain?: boolean;
   forListing?: boolean;
 }
@@ -19,14 +19,13 @@ export default function ProductPrice({
   className,
   isDeal = false,
   listPrice = 0,
-
   forListing = true,
   plain = false,
 }: IProps) {
   const t = useTranslations();
   const format = useFormatter();
 
-  const { currencyName, rate, symbols } = useCurrency({
+  const { currencyName, rate, symbols, isReady } = useCurrency({
     from: "USD",
     amount: price,
   });
@@ -49,8 +48,19 @@ export default function ProductPrice({
     const stringValue = convertedPrice.toString();
     return stringValue.includes(".")
       ? stringValue.split(".")
-      : [stringValue, ""];
+      : [stringValue, "00"];
   }, [convertedPrice]);
+
+  if (!isReady) {
+    return plain ? (
+      <div className="h-6 w-20 bg-muted animate-pulse rounded-sm" />
+    ) : (
+      <div className={cn("text-3xl", className)}>
+        <span className="text-xs align-super">{symbols ?? "$"}</span>
+        00<span className="text-xs align-super">00</span>
+      </div>
+    );
+  }
 
   return plain ? (
     format.number(convertedPrice, {
@@ -95,7 +105,7 @@ export default function ProductPrice({
       </div>
     </div>
   ) : (
-    <div className="">
+    <div>
       <div className="flex justify-center gap-3">
         <div className="text-3xl text-orange-700">-{discountPercent}%</div>
         <div className={cn("text-3xl", className)}>

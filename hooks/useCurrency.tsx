@@ -30,6 +30,7 @@ export function useCurrency({ from }: UseCurrencyProps) {
   });
 
   const rate = data?.conversion_rates?.[currency];
+  const isReady = !isLoading && !!rate;
 
   const symbols = {
     USD: "$",
@@ -42,6 +43,7 @@ export function useCurrency({ from }: UseCurrencyProps) {
     currencyName: currency,
     symbols: symbols[currency],
     isLoading,
+    isReady,
     error,
   };
 }
