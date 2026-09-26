@@ -1,59 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import createIntlMiddleware from "next-intl/middleware";
+
 import { routing } from "./i18n/routing";
 
-const publicRoutes = ["/api"]; // قائمة الروابط التي لا تحتاج إلى لغة
+const intlMiddleware = createIntlMiddleware(routing);
 
-// إنشاء `next-intl` middleware
-const intlMiddleware = createIntlMiddleware({
-  locales: routing.locales,
-  defaultLocale: routing.defaultLocale,
-});
+// Route protection lives here only (auth.config.ts no longer duplicates it).
+const SIGNED_IN_ONLY = /^\/(checkout|account|admin)(\/|$)/;
+const ADMIN_ONLY = /^\/admin(\/|$)/;
+const GUEST_ONLY = /^\/(sign-in|sign-up)(\/|$)/;
+
 export async function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-  const locales = routing.locales;
-  const pathnameParts = pathname.split("/").filter(Boolean);
-  const locale = locales.includes(pathnameParts[0])
-    ? pathnameParts[0]
-    : routing.defaultLocale;
+  const { pathname, search } = req.nextUrl;
 
-  if (pathname.startsWith("/api/auth")) return NextResponse.next();
-  if (publicRoutes.some((route) => pathname.startsWith(route)))
-    return NextResponse.next();
+  if (pathname.startsWith("/api")) return NextResponse.next();
 
-  const userAgent = req.headers.get("user-agent");
-  if (userAgent?.includes("bot")) {
+  const parts = pathname.split("/").filter(Boolean);
+  const hasLocale = routing.locales.includes(parts[0]);
+  const locale = hasLocale ? parts[0] : routing.defaultLocale;
+  // Path without the locale prefix, e.g. "/admin/orders".
+  const path = "/" + (hasLocale ? parts.slice(1) : parts).join("/");
+
+  const userAgent = req.headers.get("user-agent") ?? "";
+  if (/bot/i.test(userAgent) && !path.startsWith("/not-allowed")) {
     return NextResponse.redirect(new URL(`/${locale}/not-allowed`, req.url));
   }
 
-  const secret_Key = process.env.AUTH_SECRET;
-  const session = await getToken({ req, secret: secret_Key });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: req.nextUrl.protocol === "https:",
+  });
 
-  const protectedRoutes = [
-    "/profile",
-    "/my-appointments",
-    "/verify",
-    "/api/dashboard",
-  ];
-
-  if (!session && protectedRoutes.some((route) => pathname.includes(route))) {
-    return NextResponse.redirect(new URL(`/${locale}/`, req.url));
+  if (!token && SIGNED_IN_ONLY.test(path)) {
+    const url = new URL(`/${locale}/sign-in`, req.url);
+    url.searchParams.set("callbackUrl", `/${locale}${path}${search}`);
+    return NextResponse.redirect(url);
   }
 
-  if (
-    session &&
-    (pathname === `/${locale}/sign-in` || pathname === `/${locale}/sign-up`)
-  ) {
-    return NextResponse.redirect(new URL(`/${locale}/`, req.url));
+  if (token && ADMIN_ONLY.test(path) && String(token.role).toLowerCase() !== "admin") {
+    return NextResponse.redirect(new URL(`/${locale}/not-allowed`, req.url));
+  }
+
+  if (token && GUEST_ONLY.test(path)) {
+    const next = req.nextUrl.searchParams.get("callbackUrl");
+    const safe = next && next.startsWith("/") && !next.startsWith("//") ? next : `/${locale}`;
+    return NextResponse.redirect(new URL(safe, req.url));
   }
 
   return intlMiddleware(req);
 }
+
 export const config = {
-  matcher: [
-    "/((?!_next|.*\\..*).*)", // استثناء الملفات الثابتة
-    "/sign-in",
-    "/sign-up",
-  ],
+  matcher: ["/((?!_next|_vercel|.*\\..*).*)"],
 };

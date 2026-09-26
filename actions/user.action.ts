@@ -19,13 +19,15 @@ export async function registerUser(userSignUp: IUserSignUp) {
       confirmPassword: userSignUp.confirmPassword,
     });
     await connectToDatabase();
-    const existingUser = await User.findOne({ email: userSignUp.email });
+    const existingUser = await User.findOne({ email: user.email.toLowerCase() });
     if (existingUser) {
       return { success: false, error: "User already exists" };
     }
     await User.create({
-      ...user,
-      password: await bcrypt.hash(userSignUp.password, 5),
+      name: user.name,
+      email: user.email.toLowerCase(),
+      role: "user",
+      password: await bcrypt.hash(userSignUp.password, 10),
     });
     return { success: true, message: "User created successfully" };
   } catch (error) {

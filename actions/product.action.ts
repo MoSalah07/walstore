@@ -68,8 +68,8 @@ export const getProductBySlug = async (
   try {
     if (!slug) return null;
     await connectToDatabase();
-    const product = await Product.findOne({ slug, isPublished: true });
-    return product as IProduct;
+    const product = await Product.findOne({ slug, isPublished: true }).lean();
+    return product ? (JSON.parse(JSON.stringify(product)) as IProduct) : null;
   } catch (err) {
     console.log(err);
     return null;
@@ -121,7 +121,7 @@ export async function getAllCategories() {
   const categories = await Product.find({ isPublished: true }).distinct(
     "category"
   );
-  return categories;
+  return (categories as string[]).sort((a, b) => a.localeCompare(b));
 }
 
 // GET ALL PRODUCTS
@@ -152,7 +152,8 @@ export async function getAllProducts({
     query && query !== "all"
       ? {
           name: {
-            $regex: query,
+            // Treat the query as literal text, not a pattern.
+            $regex: query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
             $options: "i",
           },
         }
@@ -203,6 +204,7 @@ export async function getAllProducts({
     .lean();
 
   const countProducts = await Product.countDocuments({
+    ...isPublished,
     ...queryFilter,
     ...tagFilter,
     ...categoryFilter,
@@ -219,7 +221,9 @@ export async function getAllProducts({
 }
 
 export async function getAllTags() {
+  await connectToDatabase();
   const tags = await Product.aggregate([
+    { $match: { isPublished: true } },
     { $unwind: "$tags" },
     { $group: { _id: null, uniqueTags: { $addToSet: "$tags" } } },
     { $project: { _id: 0, uniqueTags: 1 } },

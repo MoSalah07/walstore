@@ -310,7 +310,7 @@ export const products = [
     description:
       "Chronograph watch featuring silver- and blue-tone case, blue sunray dial, and silver-tone Roman numeral indices",
     sizes: [],
-    colors: ["Blue", "Black", "Sliver"],
+    colors: ["Blue", "Black", "Silver"],
   },
   {
     name: "Fossil Men's Machine Stainless Steel Quartz Watch",
@@ -327,7 +327,7 @@ export const products = [
     description:
       "In masculine black-on-black, our industrial-inspired Machine watch will add a fresh, modern touch to your casual look. This Machine watch also features a three hand movement on a stainless steel bracelet.",
     sizes: [],
-    colors: ["Brown", "Sliver", "Black"],
+    colors: ["Brown", "Silver", "Black"],
   },
   // Sneakers
   {

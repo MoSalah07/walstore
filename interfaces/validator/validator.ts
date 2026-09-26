@@ -24,9 +24,15 @@ const Email = z
   .min(1, { message: "Email is required" })
   .email({ message: "Invalid email address" });
 
+// New passwords: 8+ characters with a letter and a number.
 const Password = z
   .string()
-  .min(3, { message: "Password must be at least 3 characters" });
+  .min(8, { message: "Password must be at least 8 characters" })
+  .regex(/[A-Za-z]/, { message: "Password must include a letter" })
+  .regex(/\d/, { message: "Password must include a number" });
+
+// Signing in only needs something typed: older accounts may predate the rule.
+const PasswordSignIn = z.string().min(1, { message: "Password is required" });
 
 const UserRole = z.string().min(1, { message: "Role is required" });
 
@@ -58,13 +64,17 @@ export const UserInputSchema = z.object({
 
 export const UserSignInSchema = z.object({
   email: Email,
-  password: Password,
+  password: PasswordSignIn,
 });
 
-export const UserSignUpSchema = UserSignInSchema.extend({
-  name: UserName,
-  confirmPassword: Password,
-}).refine((data) => data.password === data.confirmPassword, {
+export const UserSignUpSchema = z
+  .object({
+    email: Email,
+    password: Password,
+    name: UserName,
+    confirmPassword: z.string().min(1, { message: "Confirm your password" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
 });

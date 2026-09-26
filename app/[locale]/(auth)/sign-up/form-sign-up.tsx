@@ -26,8 +26,8 @@ const signUpDefaultValues =
     ? {
         name: "john doe",
         email: "john@me.com",
-        password: "123456",
-        confirmPassword: "123456",
+        password: "Password123",
+        confirmPassword: "Password123",
       }
     : {
         name: "",

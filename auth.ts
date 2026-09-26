@@ -49,10 +49,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           await connectToDatabase();
-          const user = await User.findOne({ email: credentials.email });
+          const user = await User.findOne({
+            email: String(credentials.email).toLowerCase(),
+          });
 
-          if (!user) {
-            console.log("User not found");
+          if (!user || !user.password) {
             return null;
           }
 
@@ -62,7 +63,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           );
 
           if (!isPasswordCorrect) {
-            console.log("Incorrect password");
             return null;
           }
 
@@ -70,7 +70,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             id: user._id.toString(),
             email: user.email,
             name: user.name,
-            role: user.role || "user",
+            role: (user.role || "user").toLowerCase(),
           };
         } catch (error) {
           console.error("Error in authorize:", error);
