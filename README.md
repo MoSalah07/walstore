@@ -4,6 +4,8 @@ Next.js 15 storefront and admin (English + Arabic, light + dark) with MongoDB, n
 
 ## Setup
 
+Requires Node.js 22 (see `.nvmrc`).
+
 1. `npm install`
 2. Create `.env` with:
    - `DB_URL` — MongoDB connection string
