@@ -33,6 +33,71 @@ Requires Node.js 22 (see `.nvmrc`).
 | Translations | `messages/en.json`, `messages/ar.json` |
 | Content pages (`/page/[slug]`) | `content/pages.ts` |
 
+## UI kit
+
+Buttons, inputs and cards all come from `components/ui/*`. Use their props instead of overriding heights, radii or borders with classes.
+
+### Control sizes
+
+Buttons, inputs and selects share one height scale, so they line up when placed side by side.
+
+| Size | Height | Use |
+| --- | --- | --- |
+| `xs` | 28 | table row actions, tags |
+| `sm` | 32 | secondary actions in dense rows |
+| `md` | 36 | admin (pairs with `<Input size="sm">`) |
+| `default` | 40 | storefront (pairs with `<Input>`) |
+| `lg` | 44 | main CTA in a section |
+| `xl` | 48 | hero, checkout |
+
+Icon buttons: `icon-xs` · `icon-sm` · `icon-md` · `icon` (28 → 40, square).
+
+### Button
+
+```tsx
+import { Button, buttonVariants } from "@/components/ui/button";
+
+<Button>Add to cart</Button>
+<Button variant="outline" size="md">Export</Button>
+<Button variant="destructive-outline" loading={pending}>Delete</Button>
+<Button size="icon" shape="pill" aria-label="Next"><ChevronRight /></Button>
+
+// Links and other elements: same styles, no wrapper
+<Link href="/checkout" className={buttonVariants({ size: "xl", block: true })}>Checkout</Link>
+```
+
+- **variant**: `default` · `secondary` · `outline` · `ghost` · `destructive` · `destructive-outline` · `deal` (money off only) · `inverse` (on dark surfaces) · `link`
+- **shape**: `default` (10px radius) · `pill` (floating or round controls)
+- **block**: full width · **loading**: shows a spinner and blocks clicks · **asChild**: renders the child element
+
+### Card
+
+`size` sets the padding once (`--card-p`) and every part reads it.
+
+```tsx
+import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, cardVariants } from "@/components/ui/card";
+
+<Card size="lg">
+  <CardHeader>
+    <CardTitle>Shipping</CardTitle>
+    <CardDescription>Rates shown at checkout</CardDescription>
+    <CardAction><Button size="sm" variant="outline">Edit</Button></CardAction>
+  </CardHeader>
+  <CardContent>…</CardContent>
+  <CardFooter><Button>Save</Button></CardFooter>
+</Card>
+
+// Tables and lists that reach the edges
+<section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
+  <Table>…</Table>
+</section>
+```
+
+- **variant**: `default` · `elevated` · `interactive` (lifts on hover, for clickable cards) · `muted` · `ghost`
+- **size** (padding): `sm` 16 · `md` 20 · `lg` 20 → 24 · `xl` 24 → 40 (mobile → desktop)
+- **flush**: no padding on the card; `CardHeader`, `CardContent` and `CardFooter` pad themselves instead. `CardSection` bleeds to the edges inside a padded card.
+- `<Card>` stacks its children (`flex-col gap-4`). `cardVariants()` adds only the surface and keeps the element's own layout, so use it on a `section`, `li` or `Link` that already has one.
+
 ## Before going live
 
 - **Fill in the placeholders** in `content/pages.ts` (legal text, return policy, delivery times) — they render as grey italic `[brackets]` until replaced.
