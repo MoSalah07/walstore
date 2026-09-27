@@ -6,6 +6,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getAdminOrder } from "@/actions/admin-order.action";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, StatusPill } from "@/components/ui/badge";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate, formatDateTime, formatMoney, ltr } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,6 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const region = new Intl.DisplayNames([locale], { type: "region" });
   const a = order.shippingAddress;
   const count = order.items.reduce((n, i) => n + i.quantity, 0);
-  const card = "rounded-[14px] border border-border bg-card";
 
   return (
     <div className="flex flex-col gap-5">
@@ -55,14 +55,14 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex flex-col gap-5">
-          <section className={cn(card, "overflow-hidden")}>
+          <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
             <h2 className="border-b border-border-soft px-5 py-4 text-base font-bold">
               {t("Items")} <span className="font-normal text-muted-foreground">· {count}</span>
             </h2>
             <ul>
               {order.items.map((l, i) => (
                 <li key={i} className="grid grid-cols-[48px_1fr_auto] items-center gap-3.5 border-b border-border-soft px-5 py-3 md:grid-cols-[48px_1fr_90px_100px]">
-                  <span className="relative flex size-12 items-center justify-center rounded-sm bg-sunken dark:bg-[#E9ECF1]">
+                  <span className="relative flex size-12 items-center justify-center rounded-sm bg-media">
                     <span className="relative size-[80%]">
                       <Image src={l.image} alt="" fill sizes="48px" className="object-contain mix-blend-multiply" />
                     </span>
@@ -90,7 +90,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             </dl>
           </section>
 
-          <section className={cn(card, "flex flex-col gap-4 p-5 print:hidden")}>
+          <section className={cardVariants({ className: "flex flex-col gap-4 print:hidden" })}>
             <h2 className="text-base font-bold">{t("Timeline")}</h2>
             <ol className="flex flex-col">
               {[...order.history].reverse().map((h, i, arr) => {
@@ -124,7 +124,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         </div>
 
         <aside className="flex flex-col gap-5">
-          <section className={cn(card, "flex flex-col gap-3 p-5")}>
+          <section className={cardVariants({ className: "flex flex-col gap-3" })}>
             <h2 className="text-base font-bold">{t("Customer")}</h2>
             {customer ? (
               <>
@@ -143,7 +143,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               <span className="text-sm text-foreground-secondary">{t("Deleted user")}</span>
             )}
           </section>
-          <section className={cn(card, "flex flex-col gap-2 p-5 text-sm leading-relaxed")}>
+          <section className={cardVariants({ className: "flex flex-col gap-2 text-sm leading-relaxed" })}>
             <h2 className="mb-1 text-base font-bold">{t("Shipping address")}</h2>
             <span>
               {a.fullName}
@@ -156,7 +156,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             </span>
             <a href={`tel:${a.phone.replace(/\s/g, "")}`} className="font-semibold hover:underline" dir="ltr">{a.phone}</a>
           </section>
-          <section className={cn(card, "flex flex-col gap-2 p-5 text-sm")}>
+          <section className={cardVariants({ className: "flex flex-col gap-2 text-sm" })}>
             <h2 className="mb-1 text-base font-bold">{t("Payment")}</h2>
             <span className="flex items-center justify-between">
               <span>{to(`payment.${order.paymentMethod}`)}</span>

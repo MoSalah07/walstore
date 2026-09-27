@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -34,12 +35,12 @@ export default function SettingsForm({ initial, languages, currencies }: { initi
   const [pending, start] = useTransition();
   const dirty = JSON.stringify(v) !== JSON.stringify(initial);
   const set = (k: keyof Values) => (e: React.ChangeEvent<HTMLInputElement>) => setV({ ...v, [k]: e.target.value });
-  const card = "flex scroll-mt-40 flex-col gap-4 rounded-[14px] border border-border bg-card p-5 md:p-6";
+  const card = cardVariants({ size: "lg", className: "flex scroll-mt-40 flex-col gap-4" });
 
   const money = (k: keyof Values, label: string, hint?: string) => (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={`st-${k}`}>{label}</Label>
-      <div className={cn("flex h-[42px] items-center rounded-[10px] border-[1.5px] bg-card focus-within:border-foreground", errors[k] ? "border-destructive" : "border-input")}>
+      <div className={cn("flex h-9 items-center rounded-[10px] border bg-card focus-within:border-foreground", errors[k] ? "border-destructive" : "border-input")}>
         <span className="ps-3 text-sm text-muted-foreground">$</span>
         <input id={`st-${k}`} inputMode="decimal" dir="ltr" value={v[k]} onChange={set(k)} className="h-full min-w-0 flex-1 bg-transparent px-2 text-sm tabular-nums outline-none" />
       </div>
@@ -105,7 +106,7 @@ export default function SettingsForm({ initial, languages, currencies }: { initi
             {money("expressShipping", t("Express price"))}
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="st-tax">{t("Tax rate")}</Label>
-              <div className={cn("flex h-[42px] items-center rounded-[10px] border-[1.5px] bg-card focus-within:border-foreground", errors.taxPercent ? "border-destructive" : "border-input")}>
+              <div className={cn("flex h-9 items-center rounded-[10px] border bg-card focus-within:border-foreground", errors.taxPercent ? "border-destructive" : "border-input")}>
                 <input id="st-tax" inputMode="decimal" dir="ltr" value={v.taxPercent} onChange={set("taxPercent")} className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm tabular-nums outline-none" />
                 <span className="pe-3 text-sm text-muted-foreground">%</span>
               </div>
@@ -149,7 +150,7 @@ export default function SettingsForm({ initial, languages, currencies }: { initi
           <Link href="/account" className="self-start text-sm font-bold underline-offset-4 hover:underline">{t("Open account")}</Link>
         </section>
 
-        <div className="sticky bottom-20 z-10 flex justify-end gap-2 rounded-[14px] border border-border bg-card/95 p-3 backdrop-blur md:bottom-4">
+        <div className={cardVariants({ variant: "elevated", size: "sm", className: "sticky bottom-20 z-10 flex justify-end gap-2 bg-card/95 p-3 backdrop-blur md:bottom-4" })}>
           <Button type="button" variant="ghost" disabled={!dirty || pending} onClick={() => { setV(initial); setErrors({}); }}>{t("Cancel")}</Button>
           <Button type="submit" loading={pending} disabled={!dirty}>{t("Save settings")}</Button>
         </div>

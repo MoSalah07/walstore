@@ -11,6 +11,7 @@ import FilterPanel from "@/components/shared/search/filter-panel";
 import FilterSheet from "@/components/shared/search/filter-sheet";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { PRICE_RANGES, SearchParams, activeFilters, searchHref } from "@/lib/search";
 
@@ -151,14 +152,14 @@ export default async function SearchPage(props: Props) {
       </div>
 
       <div className="mt-4 flex items-start gap-8 md:mt-6">
-        <aside aria-label={t("Filters")} className="hidden w-[280px] shrink-0 rounded-lg border border-border bg-card lg:block">
+        <aside aria-label={t("Filters")} className={cardVariants({ flush: true, className: "hidden w-[280px] shrink-0 lg:block" })}>
           <FilterPanel params={params} categories={categories} tags={tags} />
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-6">
           {data.products.length === 0 ? (
             <EmptyState
-              className="rounded-xl border border-border bg-card py-16"
+              className={cardVariants({ flush: true, className: "py-16" })}
               icon={<SearchX />}
               title={params.q ? t("No results for", { q: params.q }) : t("No product found")}
               description={t("Check the spelling")}

@@ -5,6 +5,7 @@ import { RefreshCw, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,7 @@ export default function ErrorView({
 
   return (
     <div className={cn("flex flex-1 items-center justify-center px-4 py-16", className)}>
-      <div role="alert" className="flex max-w-md flex-col items-center gap-3 rounded-xl border border-border bg-card px-8 py-10 text-center">
+      <div role="alert" className={cardVariants({ flush: true, className: "flex max-w-md flex-col items-center gap-3 px-8 py-10 text-center" })}>
         <span className="mb-1 flex size-16 items-center justify-center rounded-full bg-error-bg text-error-fg">
           <TriangleAlert className="size-7" aria-hidden />
         </span>

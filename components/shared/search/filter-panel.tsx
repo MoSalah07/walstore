@@ -12,7 +12,7 @@ function Stars({ n }: { n: number }) {
       {[1, 2, 3, 4, 5].map((i) => (
         <Star
           key={i}
-          className={cn("size-4 text-[#B45309]", i <= n && "fill-[#B45309]")}
+          className={cn("size-4 text-rating", i <= n && "fill-rating")}
           strokeWidth={1.5}
         />
       ))}
@@ -116,7 +116,7 @@ export default async function FilterPanel({
                     href={searchHref(params, { [g.key]: o.value })}
                     aria-current={on ? "true" : undefined}
                     className={cn(
-                      "flex h-10 items-center rounded-full border px-3.5 text-sm font-semibold transition-colors duration-fast",
+                      "flex h-9 items-center rounded-full border px-3.5 text-sm font-semibold transition-colors duration-fast",
                       on
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-input bg-card text-foreground hover:border-foreground"

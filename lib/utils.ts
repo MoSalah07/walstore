@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
 import qs from "query-string";
+
+// Teach the merger our custom shadow tokens so `shadow-none` can override them.
+const twMerge = extendTailwindMerge({
+  extend: { theme: { shadow: ["button", "card"] } },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -16,6 +21,10 @@ export const toSlug = (text: string): string =>
 
 export const round2 = (num: number) =>
   Math.round((num + Number.EPSILON) * 100) / 100;
+
+// On-model / lifestyle photos (…/look-2.jpg) fill their frame; studio shots on
+// white stay contained so the well colour shows around them.
+export const isLookPhoto = (src: string) => /\/look-\d+\.\w+$/.test(src);
 
 export const generateId = () =>
   Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join("");

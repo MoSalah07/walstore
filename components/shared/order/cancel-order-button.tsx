@@ -32,7 +32,7 @@ export default function CancelOrderButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="subtle" {...props}>
+        <Button variant="outline" {...props}>
           {t("Cancel order")}
         </Button>
       </DialogTrigger>

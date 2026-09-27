@@ -1,30 +1,31 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
 
 import { useSwitchLocale } from "@/components/shared/header/locale-currency-menu";
+import BrandPicker from "@/components/shared/theme/brand-picker";
+import ModePicker from "@/components/shared/theme/mode-picker";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { cardVariants } from "@/components/ui/card";
 import { CURRENCY } from "@/constants/currency";
 import { i18n } from "@/i18n/i18n-confige";
 import useMounted from "@/hooks/use-mounted";
 import { useStore } from "@/store";
 
 const select =
-  "h-[46px] w-full rounded-md border-[1.5px] border-input bg-card px-3 text-[15px] text-foreground outline-none focus-visible:border-foreground";
+  "h-10 w-full rounded-[10px] border border-input bg-card px-3 text-sm text-foreground shadow-xs outline-none focus-visible:border-foreground";
 
 export default function Preferences() {
   const t = useTranslations("Account");
   const tc = useTranslations("Currency");
+  const tt = useTranslations("Theme");
   const locale = useLocale();
   const mounted = useMounted();
   const switchLocale = useSwitchLocale();
   const { currency, setCurrency } = useStore();
-  const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <section className="flex flex-col gap-3.5 rounded-xl border border-border bg-card p-5 md:p-7">
+    <section className={cardVariants({ size: "lg", className: "flex flex-col gap-3.5" })}>
       <h2 className="text-xl font-bold">{t("Preferences")}</h2>
       <div className="grid grid-cols-2 gap-3.5">
         <div className="flex flex-col gap-1.5">
@@ -53,15 +54,13 @@ export default function Preferences() {
           </select>
         </div>
       </div>
-      <div className="flex items-center justify-between">
-        <Label htmlFor="pref-dark" className="text-[15px] font-normal">
-          {t("Dark mode")}
-        </Label>
-        <Switch
-          id="pref-dark"
-          checked={mounted && resolvedTheme === "dark"}
-          onCheckedChange={(v) => setTheme(v ? "dark" : "light")}
-        />
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold">{tt("Mode")}</span>
+        <ModePicker />
+      </div>
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold">{tt("Color")}</span>
+        <BrandPicker />
       </div>
     </section>
   );

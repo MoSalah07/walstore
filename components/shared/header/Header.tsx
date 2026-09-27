@@ -14,7 +14,7 @@ import LocaleCurrencyMenu from "./locale-currency-menu";
 import MobileMenu from "./mobile-menu";
 import NavRow from "./nav-row";
 import SearchBar from "./search-bar";
-import ThemeToggle from "./theme-toggle";
+import AppearanceMenu from "./appearance-menu";
 import UserButton from "./user-button";
 
 async function safeCategories() {
@@ -69,7 +69,7 @@ export default async function Header() {
               <SearchBar categories={categories} className="flex-1" />
             </Suspense>
             <div className="flex items-center gap-2">
-              <ThemeToggle />
+              <AppearanceMenu />
               <UserButton />
               <CartButton />
             </div>

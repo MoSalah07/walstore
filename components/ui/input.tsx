@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-// Height 50 storefront / 42 admin (`size="sm"`). Focus: 2px ink border + soft halo.
+// Matches Button: 40 storefront (`default`) / 36 admin (`size="sm"`, Button `md`). Focus: 2px ink border + soft halo.
 export const inputClasses =
-  "flex w-full min-w-0 rounded-md border-[1.5px] border-input bg-card px-3.5 text-[15px] text-foreground transition-[border-color,box-shadow] duration-fast ease-standard placeholder:text-muted-foreground focus-visible:border-foreground focus-visible:shadow-[0_0_0_4px_rgb(var(--secondary))] focus-visible:outline-none aria-[invalid=true]:border-destructive aria-[invalid=true]:focus-visible:shadow-[0_0_0_4px_rgb(var(--error-bg))] disabled:cursor-not-allowed disabled:bg-sunken disabled:text-muted-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium";
+  "flex w-full min-w-0 rounded-[10px] border border-input bg-card px-3 text-sm shadow-xs text-foreground transition-[border-color,box-shadow] duration-fast ease-standard placeholder:text-muted-foreground focus-visible:border-foreground focus-visible:shadow-[0_0_0_4px_rgb(var(--secondary))] focus-visible:outline-none aria-[invalid=true]:border-destructive aria-[invalid=true]:focus-visible:shadow-[0_0_0_4px_rgb(var(--error-bg))] disabled:cursor-not-allowed disabled:bg-sunken disabled:text-muted-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium";
 
 export interface InputProps extends Omit<React.ComponentProps<"input">, "size"> {
   size?: "default" | "sm";
@@ -18,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn(
           inputClasses,
-          size === "sm" ? "h-[42px] rounded-[10px] text-sm" : "h-[50px]",
+          size === "sm" ? "h-9 text-[13px]" : "h-10",
           className
         )}
         ref={ref}

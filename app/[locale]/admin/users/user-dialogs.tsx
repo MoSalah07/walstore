@@ -57,7 +57,7 @@ export function EditUserDrawer({ user }: { user: { _id: string; name: string; em
   return (
     <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (o) { setF({ name: user.name, email: user.email, role: user.role }); setError(null); } }}>
       <SheetTrigger asChild>
-        <Button size="sm" className="h-10 rounded-[10px]">
+        <Button size="md">
           <Pencil aria-hidden />
           {t("Edit user")}
         </Button>
@@ -114,7 +114,7 @@ export function DeleteUserDialog({ user, orders }: { user: { _id: string; name: 
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); setTyped(""); setError(null); }}>
       <DialogTrigger asChild>
-        <Button variant="subtle" size="sm" className="h-10 rounded-[10px] text-destructive">{t("Delete user")}</Button>
+        <Button variant="destructive-outline" size="md">{t("Delete user")}</Button>
       </DialogTrigger>
       <DialogContent role="alertdialog" closeLabel={t("Close")}>
         <span className="flex size-11 items-center justify-center rounded-full bg-error-bg text-error-fg">
@@ -160,9 +160,8 @@ export function ActiveToggle({ id, active }: { id: string; active: boolean }) {
   const [pending, start] = useTransition();
   return (
     <Button
-      variant="subtle"
-      size="sm"
-      className="h-10 rounded-[10px]"
+      variant="outline"
+      size="md"
       loading={pending}
       onClick={() =>
         start(async () => {
@@ -188,7 +187,7 @@ export function AddUserDialog() {
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); setError(null); if (o) setF({ name: "", email: "", role: "user", password: "" }); }}>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-[38px] rounded-[10px]">
+        <Button size="md">
           <UserPlus aria-hidden />
           {t("Add user")}
         </Button>

@@ -41,12 +41,12 @@ export function OrderActions({ id, status, isPaid }: { id: string; status: Order
 
   return (
     <div className="flex flex-wrap gap-2 print:hidden">
-      <Button variant="subtle" size="sm" className="h-10 rounded-[10px]" onClick={() => window.print()}>
+      <Button variant="outline" size="md" onClick={() => window.print()}>
         <Printer aria-hidden />
         {t("Print packing slip")}
       </Button>
       {!isPaid && status !== "cancelled" && (
-        <Button variant="subtle" size="sm" className="h-10 rounded-[10px]" loading={pending} onClick={() => run(() => markOrderPaid(id), t("Marked paid"))}>
+        <Button variant="outline" size="md" loading={pending} onClick={() => run(() => markOrderPaid(id), t("Marked paid"))}>
           <Banknote aria-hidden />
           {t("Mark as paid")}
         </Button>
@@ -54,7 +54,7 @@ export function OrderActions({ id, status, isPaid }: { id: string; status: Order
       {cancellable && (
         <Dialog open={confirm} onOpenChange={setConfirm}>
           <DialogTrigger asChild>
-            <Button variant="subtle" size="sm" className="h-10 rounded-[10px] text-destructive">
+            <Button variant="destructive-outline" size="md">
               {t("Cancel order")}
             </Button>
           </DialogTrigger>
@@ -73,7 +73,7 @@ export function OrderActions({ id, status, isPaid }: { id: string; status: Order
         </Dialog>
       )}
       {next && (
-        <Button size="sm" className="h-10 rounded-[10px]" loading={pending} onClick={() => run(() => setOrderStatus(id, next), t(`moved.${next}`))}>
+        <Button size="md" loading={pending} onClick={() => run(() => setOrderStatus(id, next), t(`moved.${next}`))}>
           {next === "delivered" ? <PackageCheck aria-hidden /> : <Truck aria-hidden />}
           {t(`next.${next}`)}
         </Button>
@@ -104,7 +104,7 @@ export function NoteForm({ id }: { id: string }) {
       <Label htmlFor="note">{t("Internal note")}</Label>
       <div className="flex gap-2">
         <Input id="note" size="sm" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("Note placeholder")} maxLength={500} />
-        <Button type="submit" variant="subtle" size="sm" className="h-[42px] shrink-0 rounded-[10px]" loading={pending} disabled={!note.trim()}>
+        <Button type="submit" variant="outline" size="md" className="shrink-0" loading={pending} disabled={!note.trim()}>
           {t("Add note")}
         </Button>
       </div>

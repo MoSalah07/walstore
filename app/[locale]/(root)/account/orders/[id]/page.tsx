@@ -11,6 +11,7 @@ import Price from "@/components/shared/price";
 import { StatusPill } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate, ltr } from "@/lib/format";
 
@@ -71,12 +72,12 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
         </div>
       </div>
 
-      <section className="rounded-xl border border-border bg-card p-5 md:p-7">
+      <section className={cardVariants({ size: "lg" })}>
         <OrderProgress order={order} />
       </section>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
-        <section className="overflow-hidden rounded-xl border border-border bg-card">
+        <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
           <h2 className="border-b border-border-soft px-5 py-4 text-lg font-bold md:px-6">{t("Items")}</h2>
           <OrderLines
             items={order.items}
@@ -86,7 +87,7 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
                   {t("Buy it again")}
                 </Link>
                 {order.status === "delivered" && (
-                  <Link href={`/product/${l.slug}#reviews`} className={buttonVariants({ size: "sm", variant: "subtle" })}>
+                  <Link href={`/product/${l.slug}#reviews`} className={buttonVariants({ size: "sm", variant: "outline" })}>
                     {t("Write a review")}
                   </Link>
                 )}
@@ -95,7 +96,7 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
           />
         </section>
         <aside className="flex flex-col gap-5">
-          <section className="flex flex-col gap-2.5 rounded-xl border border-border bg-card p-6 text-[15px]">
+          <section className={cardVariants({ size: "lg", className: "flex flex-col gap-2.5 text-[15px]" })}>
             <h2 className="mb-1 text-lg font-bold">{t("Payment summary")}</h2>
             <div className="flex justify-between">
               <span className="text-foreground-secondary">{tc("Items n", { count })}</span>
@@ -116,7 +117,7 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
               <Price amount={order.totalPrice} />
             </div>
           </section>
-          <section className="flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-[15px] leading-relaxed">
+          <section className={cardVariants({ size: "lg", className: "flex flex-col gap-2 text-[15px] leading-relaxed" })}>
             <h2 className="mb-1 text-lg font-bold">{order.status === "delivered" ? t("Delivered to") : t("Shipping to")}</h2>
             <span>
               {a.fullName}

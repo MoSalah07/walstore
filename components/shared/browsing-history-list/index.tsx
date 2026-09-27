@@ -11,6 +11,7 @@ import { Link } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 import useBrowsingHistoryStore from "@/store/use-browsing-history";
+import { cardVariants } from "@/components/ui/card";
 
 type Item = ProductCardData & { _id: string };
 
@@ -56,7 +57,7 @@ export function BrowsingHistoryTiles({ className }: { className?: string }) {
             href={`/product/${p.slug}`}
             aria-label={p.name}
             title={p.name}
-            className="relative flex size-[104px] shrink-0 items-center justify-center rounded-[14px] border border-border bg-card transition-colors duration-fast hover:border-foreground dark:bg-[#E9ECF1] md:size-[140px]"
+            className={cardVariants({ variant: "interactive", flush: true, className: "relative flex size-[104px] shrink-0 items-center justify-center dark:bg-media md:size-[140px]" })}
           >
             <span className="relative size-[76%]">
               <Image src={p.images[0]} alt="" fill sizes="140px" className="object-contain mix-blend-multiply" />

@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import { formatDateTime, formatMoney } from "@/lib/format";
 import type { OrderStatus } from "@/models/order.model";
@@ -155,7 +156,7 @@ export default function OrdersTable({ orders, locale }: { orders: AdminOrderRow[
       <ul className="flex flex-col gap-2.5 p-3 md:hidden">
         {orders.map((o) => (
           <li key={o._id}>
-            <Link href={`/admin/orders/${o._id}`} className="flex flex-col gap-2 rounded-[14px] border border-border bg-card p-3.5">
+            <Link href={`/admin/orders/${o._id}`} className={cardVariants({ flush: true, className: "flex flex-col gap-2 p-3.5" })}>
               <span className="flex justify-between font-bold">
                 <span dir="ltr">#{o.orderNumber}</span>
                 <span className="tabular-nums">{formatMoney(o.totalPrice)}</span>

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate, formatMoney, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -80,7 +81,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
         </Link>
       </div>
 
-      <section className="overflow-hidden rounded-[14px] border border-border bg-card">
+      <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
         {data.users.length === 0 ? (
           <EmptyState icon={<UsersRound />} title={t("No users")} description={t("No users help")}
             actions={<Link href="/admin/users" className={buttonVariants({ variant: "outline", size: "sm" })}>{t("Clear filters")}</Link>} />

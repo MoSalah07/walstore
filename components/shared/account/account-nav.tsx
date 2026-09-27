@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { SignOut } from "@/actions/user.action";
 import { Avatar } from "@/components/ui/avatar";
+import { cardVariants } from "@/components/ui/card";
 import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export default function AccountNav({ name }: { name: string }) {
             href={i.href}
             aria-current={i.on ? "page" : undefined}
             className={cn(
-              "flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-semibold",
+              "flex h-9 shrink-0 items-center gap-2 rounded-full border px-3.5 text-sm font-semibold",
               i.on ? "border-primary bg-primary text-primary-foreground" : "border-input bg-card"
             )}
           >
@@ -38,7 +39,7 @@ export default function AccountNav({ name }: { name: string }) {
       </nav>
       <nav
         aria-label={t("Account")}
-        className="hidden w-[260px] shrink-0 flex-col gap-1 rounded-xl border border-border bg-card p-5 lg:sticky lg:top-44 lg:flex"
+        className={cardVariants({ className: "hidden w-[260px] shrink-0 flex-col gap-1 lg:sticky lg:top-44 lg:flex" })}
       >
         <div className="mb-2 flex items-center gap-3 border-b border-border px-2 pb-4 pt-1">
           <Avatar name={name} size="md" className="size-11" />

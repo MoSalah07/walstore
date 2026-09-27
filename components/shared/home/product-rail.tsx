@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import ProductCard, { ProductCardData } from "./ProductCard";
 import SectionHeading from "./section-heading";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 // Phones: swipeable row. Desktop: 4-up grid, or a paged row with arrows.
 export default function ProductRail({
@@ -44,7 +45,7 @@ export default function ProductRail({
               type="button"
               onClick={() => page(-1)}
               aria-label={t("Previous")}
-              className="flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors duration-fast hover:border-foreground"
+              className={buttonVariants({ variant: "outline", size: "icon", shape: "pill" })}
             >
               <ChevronLeft className="size-[18px] rtl:rotate-180" />
             </button>
@@ -52,7 +53,7 @@ export default function ProductRail({
               type="button"
               onClick={() => page(1)}
               aria-label={t("Next")}
-              className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors duration-fast hover:bg-primary-hover"
+              className={buttonVariants({ size: "icon", shape: "pill" })}
             >
               <ChevronRight className="size-[18px] rtl:rotate-180" />
             </button>

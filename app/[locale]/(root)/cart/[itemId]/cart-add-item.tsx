@@ -10,6 +10,7 @@ import Price from "@/components/shared/price";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { PricingConfig, calcPrices } from "@/lib/pricing";
@@ -29,7 +30,7 @@ export default function CartAddItem({ itemId, pricing }: { itemId: string; prici
   if (!item) {
     return (
       <EmptyState
-        className="rounded-xl border border-border bg-card"
+        className={cardVariants({ flush: true })}
         icon={<SearchX />}
         title={t("Item not in cart")}
         description={t("Item not in cart help")}
@@ -51,8 +52,8 @@ export default function CartAddItem({ itemId, pricing }: { itemId: string; prici
   return (
     <div className="flex flex-col gap-12 md:gap-[72px]">
       <section className="grid gap-4 md:gap-6 lg:grid-cols-2">
-        <div role="status" className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 md:gap-6 md:p-7">
-          <span className="relative flex size-24 shrink-0 items-center justify-center rounded-lg bg-sunken dark:bg-[#E9ECF1] md:size-[140px]">
+        <div role="status" className={cardVariants({ size: "lg", className: "flex items-center gap-4 md:gap-6" })}>
+          <span className="relative flex size-24 shrink-0 items-center justify-center rounded-lg bg-media md:size-[140px]">
             <span className="relative size-[80%]">
               <Image src={item.image} alt="" fill sizes="140px" className="object-contain mix-blend-multiply" />
             </span>
@@ -60,7 +61,7 @@ export default function CartAddItem({ itemId, pricing }: { itemId: string; prici
           <div className="flex min-w-0 flex-col gap-2">
             <span className="flex items-center gap-2.5 text-lg font-bold text-success-fg md:text-[22px]">
               <span className="flex size-7 items-center justify-center rounded-full bg-success md:size-8">
-                <Check className="size-4 text-white" strokeWidth={3} aria-hidden />
+                <Check className="size-4 text-success-foreground" strokeWidth={3} aria-hidden />
               </span>
               {t("Added to cart")}
             </span>
@@ -73,7 +74,7 @@ export default function CartAddItem({ itemId, pricing }: { itemId: string; prici
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center md:gap-7 md:p-7">
+        <div className={cardVariants({ size: "lg", className: "flex flex-col gap-5 sm:flex-row sm:items-center md:gap-7" })}>
           <div className="flex flex-1 flex-col gap-2.5">
             <FreeShippingMeter remaining={p.remainingForFree} progress={p.progress} />
             <span className="mt-1.5 text-base">

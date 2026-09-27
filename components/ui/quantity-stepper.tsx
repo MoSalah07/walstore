@@ -4,7 +4,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-// − qty + pill. At 1, the minus becomes a remove button when `onRemove` is set.
+// − qty + stepper, same heights as Button. At 1, the minus becomes a remove button when `onRemove` is set.
 export function QuantityStepper({
   value,
   min = 1,
@@ -30,26 +30,26 @@ export function QuantityStepper({
   return (
     <div
       className={cn(
-        "inline-flex items-center overflow-hidden rounded-full border-[1.5px] border-input bg-card",
-        size === "sm" ? "h-9" : "h-11",
+        "inline-flex items-center overflow-hidden rounded-[10px] border border-input bg-card shadow-xs",
+        size === "sm" ? "h-8 rounded-sm" : "h-10",
         className
       )}
     >
       <button
         type="button"
-        className={cn(btn, size === "sm" ? "w-9" : "w-[42px]")}
+        className={cn(btn, size === "sm" ? "w-8" : "w-10")}
         aria-label={canRemove ? labels.remove : labels.decrease}
         disabled={!canRemove && value <= min}
         onClick={() => (canRemove ? onRemove?.() : onChange(Math.max(min, value - 1)))}
       >
         {canRemove ? <Trash2 className="size-4" /> : <Minus className="size-4" />}
       </button>
-      <output aria-live="polite" className="w-7 text-center text-[15px] font-bold tabular-nums">
+      <output aria-live="polite" className="w-7 text-center text-sm font-semibold tabular-nums">
         {value}
       </output>
       <button
         type="button"
-        className={cn(btn, size === "sm" ? "w-9" : "w-[42px]")}
+        className={cn(btn, size === "sm" ? "w-8" : "w-10")}
         aria-label={labels.increase}
         disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}

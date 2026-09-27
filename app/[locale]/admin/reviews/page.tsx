@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { getAdminReviews } from "@/actions/review.action";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { REVIEW_STATUSES, ReviewStatus } from "@/models/review.model";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,7 @@ export default async function AdminReviewsPage({ searchParams }: { searchParams:
       </nav>
       {data.reviews.length === 0 ? (
         <EmptyState
-          className="rounded-[14px] border border-border bg-card"
+          className={cardVariants({ flush: true })}
           icon={<MessageSquareText />}
           title={t(`empty.${status}`)}
           description={t("Empty help")}

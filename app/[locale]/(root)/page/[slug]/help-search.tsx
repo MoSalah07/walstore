@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Headset, Mail, Minus, Plus, SearchIcon } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -35,30 +36,30 @@ export default function HelpSearch({
 
   return (
     <>
-      <section className="flex flex-col items-center gap-5 rounded-3xl bg-[#0B0D12] px-6 py-12 text-center text-white md:py-16">
-        <span className="type-overline text-[13px] text-[#A4ACB9]">{labels.eyebrow}</span>
-        <h1 className="type-display text-white">{labels.title}</h1>
+      <section className="flex flex-col items-center gap-5 rounded-3xl bg-inverse px-6 py-12 text-center text-inverse-foreground md:py-16">
+        <span className="type-overline text-[13px] text-inverse-muted">{labels.eyebrow}</span>
+        <h1 className="type-display">{labels.title}</h1>
         <form
           role="search"
           onSubmit={(e) => {
             e.preventDefault();
             document.getElementById("help-results")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="mt-2 flex h-14 w-full max-w-[640px] items-center gap-2 rounded-full bg-white pe-1.5 ps-5 text-[#0B0D12]"
+          className="mt-2 flex h-12 w-full max-w-[640px] items-center gap-2 rounded-md bg-inverse-foreground pe-1.5 ps-4 text-inverse"
         >
           <label htmlFor="h-q" className="sr-only">
             {labels.search}
           </label>
-          <SearchIcon className="size-5 shrink-0 text-[#667085]" aria-hidden />
+          <SearchIcon className="size-5 shrink-0 text-inverse/60" aria-hidden />
           <input
             id="h-q"
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={labels.placeholder}
-            className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-[#667085]"
+            className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-inverse/55"
           />
-          <button type="submit" className="h-11 shrink-0 rounded-full bg-[#0B0D12] px-5 text-sm font-bold text-white">
+          <button type="submit" className={buttonVariants({ size: "md", className: "bg-inverse text-inverse-foreground hover:bg-inverse/90" })}>
             {labels.searchButton}
           </button>
         </form>
@@ -72,7 +73,7 @@ export default function HelpSearch({
               <Link
                 key={t.title}
                 href={t.href}
-                className="group flex flex-col gap-2 rounded-xl border border-border bg-card p-6 transition-colors duration-fast hover:border-foreground"
+                className={cardVariants({ variant: "interactive", size: "lg", className: "group flex flex-col gap-2" })}
               >
                 <span className="flex items-center justify-between text-lg font-bold">
                   {t.title}
@@ -92,7 +93,7 @@ export default function HelpSearch({
           <h2 className="type-h2">{labels.faq}</h2>
           <p className="text-base text-foreground-secondary">{labels.faqSub}</p>
         </div>
-        <div className="flex flex-col rounded-xl border border-border bg-card">
+        <div className={cardVariants({ flush: true, className: "flex flex-col" })}>
           {shownFaqs.length === 0 && <p className="p-6 text-foreground-secondary">{labels.noMatch}</p>}
           {shownFaqs.map((f, i) => {
             const isOpen = open === i || !!needle;
@@ -120,7 +121,7 @@ export default function HelpSearch({
         </div>
       </section>
 
-      <section className="flex flex-col gap-6 rounded-2xl border border-border bg-card p-6 md:flex-row md:items-center md:justify-between md:p-10">
+      <section className={cardVariants({ size: "xl", className: "flex flex-col gap-6 md:flex-row md:items-center md:justify-between" })}>
         <div className="flex items-start gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary">
             <Headset className="size-6" aria-hidden />

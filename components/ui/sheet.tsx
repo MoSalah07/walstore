@@ -5,6 +5,7 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const Sheet = SheetPrimitive.Root;
@@ -21,7 +22,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-[rgb(11_13_18/0.5)] backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-scrim/50 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -83,7 +84,7 @@ const SheetContent = React.forwardRef<
         )}
         {children}
         {!hideClose && (
-          <SheetPrimitive.Close className="absolute end-3 top-3 flex size-10 items-center justify-center rounded-full text-foreground transition-colors duration-fast hover:bg-sunken disabled:pointer-events-none">
+          <SheetPrimitive.Close className={buttonVariants({ variant: "ghost", size: "icon-sm", className: "absolute end-3 top-3" })}>
             <X className="size-5" />
             <span className="sr-only">{closeLabel}</span>
           </SheetPrimitive.Close>

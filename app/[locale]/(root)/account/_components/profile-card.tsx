@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cardVariants } from "@/components/ui/card";
 
 function PasswordDialog() {
   const t = useTranslations("Account");
@@ -45,7 +46,7 @@ function PasswordDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="h-10">
+        <Button variant="outline">
           {t("Change password")}
         </Button>
       </DialogTrigger>
@@ -83,7 +84,7 @@ export default function ProfileCard({ name, email }: { name: string; email: stri
   const dirty = value.trim() !== name;
 
   return (
-    <section className="flex flex-col gap-[18px] rounded-xl border border-border bg-card p-5 md:p-7">
+    <section className={cardVariants({ size: "lg", className: "flex flex-col gap-[18px]" })}>
       <h2 className="text-xl font-bold">{t("Profile")}</h2>
       <form
         className="flex flex-col gap-1.5"
@@ -100,7 +101,7 @@ export default function ProfileCard({ name, email }: { name: string; email: stri
         <div className="flex gap-2">
           <Input id="ac-name" value={value} onChange={(e) => setValue(e.target.value)} autoComplete="name" className="h-12" />
           {dirty && (
-            <Button type="submit" loading={pending} className="h-12 shrink-0">
+            <Button type="submit" loading={pending} className="shrink-0">
               {t("Save")}
             </Button>
           )}

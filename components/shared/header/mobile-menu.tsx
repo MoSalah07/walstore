@@ -5,9 +5,10 @@ import { ChevronRight, LogOut, Menu } from "lucide-react";
 
 import { SignOut } from "@/actions/user.action";
 import { useLocale, useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
 
 import { LogoMark } from "@/components/shared/logo";
+import BrandPicker from "@/components/shared/theme/brand-picker";
+import ModePicker from "@/components/shared/theme/mode-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
@@ -38,11 +39,11 @@ export default function MobileMenu({
 }) {
   const t = useTranslations("Header");
   const tc = useTranslations("Categories");
+  const tt = useTranslations("Theme");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const mounted = useMounted();
   const { currency, setCurrency } = useStore();
-  const { theme, setTheme } = useTheme();
   const switchLocale = useSwitchLocale();
   const close = () => setOpen(false);
 
@@ -167,20 +168,12 @@ export default function MobileMenu({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">{t("Theme")}</span>
-            <div className="flex flex-wrap gap-2">
-              {(["light", "dark", "system"] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  aria-pressed={mounted && theme === m}
-                  onClick={() => setTheme(m)}
-                  className={chip(mounted && theme === m)}
-                >
-                  {t(m === "light" ? "Light" : m === "dark" ? "Dark" : "System")}
-                </button>
-              ))}
-            </div>
+            <span className="text-sm font-semibold">{tt("Mode")}</span>
+            <ModePicker />
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">{tt("Color")}</span>
+            <BrandPicker />
           </div>
         </section>
 

@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { cardVariants } from "@/components/ui/card";
 
 // KPI tile: label, big value, delta vs previous period. Delta is never
 // color-only: it carries an arrow and the words.
@@ -21,7 +22,7 @@ export default function StatCard({
 }) {
   const Icon = tone === "up" ? ArrowUpRight : tone === "down" ? ArrowDownRight : Minus;
   return (
-    <div className="flex flex-col gap-2 rounded-[14px] border border-border bg-card px-5 py-[18px]">
+    <div className={cardVariants({ className: "flex flex-col gap-2" })}>
       <span className="flex items-center gap-2 text-[13px] font-semibold text-foreground-secondary">
         {label}
         {source && <span className="rounded-[5px] bg-sunken px-1.5 py-px text-[11px] font-semibold text-muted-foreground">{source}</span>}

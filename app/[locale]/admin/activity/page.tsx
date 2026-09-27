@@ -5,6 +5,7 @@ import { getActivityLog } from "@/actions/admin-system.action";
 import Pagination from "@/components/shared/pagination/pagination";
 import { Avatar } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate, formatDateTime, ltr } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -75,7 +76,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
         </nav>
       </div>
 
-      <section className="rounded-[14px] border border-border bg-card px-5 pb-4 pt-2 md:px-6">
+      <section className={cardVariants({ flush: true, className: "px-5 pb-4 pt-2 md:px-6" })}>
         {data.events.length === 0 ? (
           <EmptyState icon={<History />} title={t("Empty")} description={t("Empty help")} />
         ) : (

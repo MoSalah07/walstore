@@ -15,7 +15,7 @@ export default function NewsletterForm() {
   if (state?.ok) {
     return (
       <p role="status" className="flex items-center gap-2.5 text-base font-semibold text-inverse-foreground">
-        <CheckCircle2 className="size-5 text-[#4ADE80]" aria-hidden />
+        <CheckCircle2 className="size-5 text-inverse-success" aria-hidden />
         {t("Subscribed")}
       </p>
     );
@@ -36,14 +36,14 @@ export default function NewsletterForm() {
           placeholder="you@example.com"
           aria-invalid={state?.error === "invalid" || undefined}
           aria-describedby={state?.error ? `${id}-err` : undefined}
-          className="h-[52px] min-w-0 flex-1 rounded-full border-0 bg-white px-[22px] text-[15px] text-[#0B0D12] outline-none placeholder:text-[#667085] focus-visible:shadow-[0_0_0_4px_rgb(255_255_255/0.25)]"
+          className="h-11 min-w-0 flex-1 rounded-[10px] border-0 bg-inverse-foreground px-4 text-sm text-inverse outline-none placeholder:text-inverse/55 focus-visible:shadow-[0_0_0_4px_rgb(var(--inverse-accent)/0.35)]"
         />
-        <Button type="submit" size="lg" variant="inverse" loading={pending} className="px-[26px]">
+        <Button type="submit" size="lg" variant="inverse" loading={pending}>
           {t("Subscribe")}
         </Button>
       </div>
       {state?.error && (
-        <p id={`${id}-err`} role="alert" className="text-[13px] font-semibold text-[#F97066]">
+        <p id={`${id}-err`} role="alert" className="text-[13px] font-semibold text-inverse-error">
           {state.error === "invalid" ? t("Enter a valid email") : t("Try again later")}
         </p>
       )}

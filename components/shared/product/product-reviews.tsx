@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getProductReviews, getReviewEligibility } from "@/actions/review.action";
 
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,7 @@ export function Stars({ value, size = 22 }: { value: number; size?: number }) {
         <Star
           key={i}
           style={{ width: size, height: size }}
-          className={cn("text-[#B45309]", i <= Math.round(value) && "fill-[#B45309]")}
+          className={cn("text-rating", i <= Math.round(value) && "fill-rating")}
           strokeWidth={1.5}
         />
       ))}
@@ -59,7 +60,7 @@ export default async function ProductReviews({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-5 rounded-xl border border-border bg-card p-6 md:flex-row md:items-center md:justify-between md:p-10">
+      <div className={cardVariants({ size: "xl", className: "flex flex-col gap-5 md:flex-row md:items-center md:justify-between" })}>
         <div className="flex flex-col gap-2.5">
           <h2 className="font-display text-[22px] font-extrabold tracking-[-0.02em] md:text-[26px]">{t("Customer Reviews")}</h2>
           <div className="flex items-center gap-3">
@@ -81,7 +82,7 @@ export default async function ProductReviews({
       {reviews.length > 0 && (
         <ul className="flex flex-col gap-4">
           {reviews.map((r) => (
-            <li key={r._id} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5 md:p-6">
+            <li key={r._id} className={cardVariants({ size: "lg", className: "flex flex-col gap-2" })}>
               <div className="flex flex-wrap items-center gap-3">
                 <Stars value={r.rating} size={16} />
                 <span className="sr-only">{t("rated out of 5", { rating: r.rating })}</span>

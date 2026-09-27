@@ -5,6 +5,7 @@ import { getAdminOrders } from "@/actions/admin-order.action";
 import Pagination from "@/components/shared/pagination/pagination";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import OrdersTable from "./orders-table";
@@ -56,7 +57,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
           <h1 className="font-display text-[26px] font-extrabold tracking-[-0.03em] md:text-[30px]">{t("nav.orders")}</h1>
           <p className="text-[15px] text-foreground-secondary">{t("orders in period", { count: data.counts.all ?? 0, period: t(`periodLong.${period}`) })}</p>
         </div>
-        <a href={`/api/admin/orders-csv?${exportQs}`} className={cn(buttonVariants({ variant: "subtle", size: "sm" }), "h-[38px] rounded-[10px]")}>
+        <a href={`/api/admin/orders-csv?${exportQs}`} className={buttonVariants({ variant: "outline", size: "md" })}>
           <Download aria-hidden />
           {t("Export CSV")}
         </a>
@@ -94,11 +95,11 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
         <select id="o-pay" name="payment" defaultValue={payment} className={select}>
           {PAYMENTS.map((p) => <option key={p} value={p}>{p === "all" ? t("All payments") : to(`payment.${p}`)}</option>)}
         </select>
-        <button type="submit" className={cn(buttonVariants({ size: "sm" }), "rounded-sm")}>{t("Apply")}</button>
+        <button type="submit" className={buttonVariants({ size: "md" })}>{t("Apply")}</button>
         <span className="ms-auto hidden text-[13px] text-muted-foreground md:inline">{t("Sorted by newest")}</span>
       </form>
 
-      <section className="overflow-hidden rounded-[14px] border border-border bg-card">
+      <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
         {data.orders.length === 0 ? (
           <EmptyState
             icon={<PackageOpen />}

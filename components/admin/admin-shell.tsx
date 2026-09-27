@@ -19,6 +19,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import { ADMIN_NAV, activeKey } from "./admin-nav";
 
 type Counts = { toShip: number; lowStock: number; reviews: number };
@@ -57,7 +58,7 @@ function NavLinks({ collapsed, counts, onNavigate }: { collapsed: boolean; count
                   (collapsed ? (
                     <span className="absolute end-2 top-1.5 size-2 rounded-full bg-deal" aria-hidden />
                   ) : (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] font-bold text-white dark:text-[#0B0D12]">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] font-bold text-deal-foreground">
                       {n}
                     </span>
                   ))}
@@ -189,7 +190,7 @@ function Notifications({ counts }: { counts: Counts }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t("Notifications", { count: total })}
-        className="relative flex size-[38px] shrink-0 items-center justify-center rounded-[10px] border border-border bg-card text-primary-hover hover:border-foreground dark:text-foreground"
+        className={buttonVariants({ variant: "outline", size: "icon-md", className: "text-primary-hover dark:text-foreground" })}
       >
         <Bell className="size-4" />
         {total > 0 && <span className="absolute end-2 top-[7px] size-2 rounded-full bg-deal ring-2 ring-card" />}

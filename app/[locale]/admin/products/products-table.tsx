@@ -78,7 +78,7 @@ export default function ProductsTable({
               <TableRow key={p._id} className={cn(updated && "bg-success-bg/60 hover:bg-success-bg")}>
                 <TableCell>
                   <span className="flex items-center gap-3">
-                    <span className="relative flex size-11 shrink-0 items-center justify-center rounded-sm bg-sunken dark:bg-[#E9ECF1]">
+                    <span className="relative flex size-11 shrink-0 items-center justify-center rounded-sm bg-media">
                       <span className="relative size-[80%]">
                         {p.images[0] && <Image src={p.images[0]} alt="" fill sizes="44px" className="object-contain mix-blend-multiply" />}
                       </span>

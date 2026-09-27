@@ -40,12 +40,24 @@ export default {
           foreground: token("popover-foreground"),
         },
         sunken: token("sunken"),
+        media: {
+          DEFAULT: token("media"),
+          paper: token("media-paper"),
+          foreground: token("media-foreground"),
+        },
+        scrim: token("scrim"),
         inverse: {
           DEFAULT: token("inverse"),
           foreground: token("inverse-foreground"),
           muted: token("inverse-muted"),
           raised: token("inverse-raised"),
           border: token("inverse-border"),
+          accent: {
+            DEFAULT: token("inverse-accent"),
+            foreground: token("inverse-accent-foreground"),
+          },
+          success: token("inverse-success"),
+          error: token("inverse-error"),
         },
         primary: {
           DEFAULT: token("primary"),
@@ -70,14 +82,21 @@ export default {
         },
         deal: {
           DEFAULT: token("deal"),
+          foreground: token("deal-foreground"),
           subtle: token("deal-subtle"),
         },
         success: {
           DEFAULT: token("success"),
+          foreground: token("success-foreground"),
           fg: token("success-fg"),
           bg: token("success-bg"),
         },
-        warning: { fg: token("warning-fg"), bg: token("warning-bg") },
+        warning: {
+          DEFAULT: token("warning"),
+          fg: token("warning-fg"),
+          bg: token("warning-bg"),
+        },
+        rating: token("rating"),
         error: { fg: token("error-fg"), bg: token("error-bg") },
         info: { fg: token("info-fg"), bg: token("info-bg") },
         violet: { fg: token("violet-fg"), bg: token("violet-bg") },
@@ -105,7 +124,12 @@ export default {
         "3xl": "28px",
       },
       boxShadow: {
+        xs: "0 1px 2px rgb(11 13 18 / 0.04)",
         sm: "0 1px 2px rgb(11 13 18 / 0.06)",
+        // Filled buttons: top highlight + soft contact shadow.
+        button:
+          "inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(11 13 18 / 0.18)",
+        card: "0 1px 2px rgb(11 13 18 / 0.04), 0 1px 1px rgb(11 13 18 / 0.02)",
         md: "0 8px 24px rgb(11 13 18 / 0.10)",
         lg: "0 24px 48px rgb(11 13 18 / 0.20)",
       },
@@ -126,6 +150,11 @@ export default {
           from: { opacity: "0", transform: "translateY(12px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        // Hero copy entrance: rises out of a soft blur.
+        rise: {
+          from: { opacity: "0", transform: "translateY(18px)", filter: "blur(8px)" },
+          to: { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
         shimmer: {
           from: { backgroundPosition: "200% 0" },
           to: { backgroundPosition: "-200% 0" },
@@ -133,6 +162,7 @@ export default {
       },
       animation: {
         "fade-up": "fade-up 480ms cubic-bezier(0.2, 0, 0, 1) both",
+        rise: "rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
         shimmer: "shimmer 1.6s linear infinite",
       },
       screens: {

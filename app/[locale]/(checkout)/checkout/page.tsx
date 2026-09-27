@@ -40,7 +40,7 @@ export default async function CheckoutPage() {
                 <span
                   className={`flex size-6 items-center justify-center rounded-full text-xs font-bold ${
                     s.state === "done"
-                      ? "bg-success text-white"
+                      ? "bg-success text-success-foreground"
                       : s.state === "current"
                         ? "bg-primary text-primary-foreground"
                         : "border-2 border-input"

@@ -11,7 +11,9 @@ import Pagination from "@/components/shared/pagination/pagination";
 import Price from "@/components/shared/price";
 import { StatusPill } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { inputClasses } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -64,9 +66,9 @@ export default async function OrdersPage({
               type="search"
               defaultValue={sp.q}
               placeholder={t("Search all orders")}
-              className="h-11 min-w-0 flex-1 rounded-full border-[1.5px] border-input bg-card px-[18px] text-[15px] outline-none focus-visible:border-foreground md:w-[280px]"
+              className={cn(inputClasses, "h-10 flex-1 md:w-[280px]")}
             />
-            <button type="submit" className={cn(buttonVariants(), "shrink-0")}>
+            <button type="submit" className={buttonVariants({ className: "shrink-0" })}>
               <Search aria-hidden />
               <span className="sr-only md:not-sr-only">{t("Search")}</span>
             </button>
@@ -80,7 +82,7 @@ export default async function OrdersPage({
               href={href({ status: tab, page: undefined })}
               aria-current={tab === status ? "page" : undefined}
               className={cn(
-                "flex h-10 shrink-0 items-center rounded-full border-[1.5px] px-[18px] text-sm font-semibold transition-colors duration-fast",
+                "flex h-9 shrink-0 items-center rounded-full border px-4 text-sm font-semibold transition-colors duration-fast",
                 tab === status ? "border-primary bg-primary text-primary-foreground" : "border-input bg-card hover:border-foreground"
               )}
             >
@@ -91,7 +93,7 @@ export default async function OrdersPage({
 
         {data.orders.length === 0 ? (
           <EmptyState
-            className="rounded-xl border border-border bg-card"
+            className={cardVariants({ flush: true })}
             icon={<PackageOpen />}
             title={sp.q || status !== "all" ? t("No orders match") : t("No orders yet")}
             description={sp.q || status !== "all" ? t("No orders match help") : t("No orders yet help")}
@@ -107,7 +109,7 @@ export default async function OrdersPage({
             const first = o.items[0];
             const names = o.items.map((i) => i.name.split(/[,(]/)[0]);
             return (
-              <article key={o._id} className="overflow-hidden rounded-xl border border-border bg-card">
+              <article key={o._id} className={cardVariants({ flush: true, className: "overflow-hidden" })}>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3 border-b border-border bg-background-subtle px-5 py-4 text-[13px] md:flex md:gap-10 md:px-6">
                   <div className="flex flex-col gap-0.5">
                     <span className="font-semibold uppercase tracking-[0.06em] text-foreground-secondary">{t("Order placed")}</span>
@@ -141,7 +143,7 @@ export default async function OrdersPage({
                           key={idx}
                           href={`/product/${i.slug}`}
                           aria-label={i.name}
-                          className="relative flex size-[72px] items-center justify-center rounded-[14px] bg-sunken dark:bg-[#E9ECF1] md:size-[88px]"
+                          className="relative flex size-[72px] items-center justify-center rounded-[14px] bg-media md:size-[88px]"
                         >
                           <span className="relative size-[80%]">
                             <Image src={i.image} alt="" fill sizes="88px" className="object-contain mix-blend-multiply" />
@@ -166,7 +168,7 @@ export default async function OrdersPage({
                         </Link>
                         <Link
                           href={o.status === "delivered" ? `/product/${first.slug}#reviews` : `/account/orders/${o._id}`}
-                          className={buttonVariants({ variant: "subtle" })}
+                          className={buttonVariants({ variant: "outline" })}
                         >
                           {o.status === "delivered" ? t("Write a review") : t("View order details")}
                         </Link>

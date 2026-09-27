@@ -34,8 +34,6 @@
     "Hello name": "مرحبًا، {name}",
     "Account": "الحساب",
     "Cart items": "السلة، {count, plural, =0 {فارغة} one {منتج واحد} two {منتجان} few {# منتجات} many {# منتجًا} other {# منتج}}",
-    "Dark mode": "التبديل إلى الوضع الداكن",
-    "Light mode": "التبديل إلى الوضع الفاتح",
     "Open menu": "فتح القائمة",
     "Close": "إغلاق",
     "Quick links": "روابط سريعة",
@@ -44,13 +42,20 @@
     "Shop": "تسوّق",
     "Language": "اللغة",
     "Currency label": "العملة",
-    "Theme": "المظهر",
-    "Light": "فاتح",
-    "Dark": "داكن",
-    "System": "تلقائي",
     "Categories": "الأقسام",
     "Home": "الرئيسية",
     "Tabs": "التبويبات"
+  },
+  "Theme": {
+    "Appearance": "المظهر",
+    "Mode": "الوضع",
+    "Color": "اللون",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "تلقائي",
+    "ink": "أسود",
+    "red": "أحمر",
+    "blue": "أزرق"
   },
   "Home": {
     "Categories to explore": "أقسام للاستكشاف",
@@ -69,7 +74,7 @@
     "Hero label": "مميز",
     "New season": "الموسم الجديد · {year}",
     "Hero title": "أناقة كل يوم،<br></br> بأسعار أفضل.",
-    "Hero body": "تيشيرتات وجينز وأحذية وساعات من Nike وLevi's وSeiko وadidas وغيرها.",
+    "Hero body": "قمصان وجينز وفساتين وأحذية وشنط وساعات من Nike وPuma وCalvin Klein وغيرها.",
     "Shop new arrivals": "تسوّق الجديد",
     "Today's deals link": "عروض اليوم",
     "products": "منتج",
@@ -257,7 +262,7 @@
     "Copyright": "حقوق الطبع والنشر",
     "Year": "لعام",
     "Design by": "التصميم بواسطة {name}",
-    "Tagline": "تيشيرتات وجينز وأحذية وساعات — شحن مجاني للطلبات فوق <price></price>.",
+    "Tagline": "جينز وفساتين وأحذية وشنط وساعات — شحن مجاني للطلبات فوق <price></price>.",
     "Rights": "© {year} وولستور. جميع الحقوق محفوظة.",
     "Your orders": "طلباتك"
   },
@@ -318,9 +323,15 @@
   },
   "Categories": {
     "T-Shirts": "تيشيرتات",
+    "Shirts": "قمصان",
     "Jeans": "جينز",
+    "Pants": "بناطيل",
+    "Dresses": "فساتين",
     "Shoes": "أحذية",
-    "Wrist Watches": "ساعات يد"
+    "Bags": "شنط",
+    "Belts": "أحزمة",
+    "Wrist Watches": "ساعات يد",
+    "Sunglasses": "نظارات شمس"
   },
   "Currency": {
     "USD": "دولار أمريكي",
@@ -531,7 +542,6 @@
     "Preferences": "التفضيلات",
     "Language": "اللغة",
     "Currency": "العملة",
-    "Dark mode": "الوضع الداكن",
     "Search all orders": "ابحث في كل الطلبات",
     "Search": "بحث",
     "Order status": "حالة الطلب",

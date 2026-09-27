@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 // 1 … 4 5 6 … 10 — returns page numbers with null for gaps.
 function pageList(page: number, total: number): (number | null)[] {
@@ -30,8 +31,7 @@ export default async function Pagination({
 }) {
   const t = await getTranslations("Search");
   const current = Number(page) || 1;
-  const box =
-    "flex size-9 items-center justify-center rounded-sm border border-border bg-card text-sm font-semibold text-foreground transition-colors duration-fast hover:border-foreground";
+  const box = buttonVariants({ variant: "outline", size: "icon-md" });
   const disabled = "pointer-events-none opacity-40";
 
   return (
@@ -55,7 +55,7 @@ export default async function Pagination({
             href={hrefFor(p)}
             aria-current={p === current ? "page" : undefined}
             aria-label={t("Page n", { n: p })}
-            className={cn(box, "tabular-nums", p === current && "border-primary bg-primary text-primary-foreground")}
+            className={cn(box, "tabular-nums", p === current && buttonVariants({ size: "icon-md" }))}
           >
             {p}
           </Link>

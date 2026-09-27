@@ -7,6 +7,7 @@ import { getAdminProducts } from "@/actions/admin-product.action";
 import { getAdminUsers } from "@/actions/admin-user.action";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusPill } from "@/components/ui/badge";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatMoney } from "@/lib/format";
 
@@ -27,7 +28,7 @@ export default async function AdminSearchPage({ searchParams }: { searchParams: 
         getAdminUsers({ q: query, limit: 5 }),
       ])
     : [null, null, null];
-  const card = "overflow-hidden rounded-[14px] border border-border bg-card";
+  const card = cardVariants({ flush: true, className: "overflow-hidden" });
   const none = query && !orders?.total && !products?.total && !users?.total;
 
   return (
@@ -71,7 +72,7 @@ export default async function AdminSearchPage({ searchParams }: { searchParams: 
             {products.products.map((p) => (
               <li key={p._id} className="border-b border-border-soft last:border-0">
                 <Link href={`/admin/products/${p._id}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-background-subtle">
-                  <span className="relative size-10 shrink-0 rounded-sm bg-sunken dark:bg-[#E9ECF1]">
+                  <span className="relative size-10 shrink-0 rounded-sm bg-media">
                     {p.images[0] && <Image src={p.images[0]} alt="" fill sizes="40px" className="object-contain p-1 mix-blend-multiply" />}
                   </span>
                   <span className="flex-1 truncate text-sm font-semibold">{p.name}</span>

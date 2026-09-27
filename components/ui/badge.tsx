@@ -11,7 +11,7 @@ const badgeVariants = cva(
       variant: {
         neutral: "bg-secondary text-primary-hover dark:text-foreground-secondary",
         ink: "bg-primary text-primary-foreground",
-        deal: "bg-deal text-white dark:text-[#0B0D12]",
+        deal: "bg-deal text-deal-foreground",
         "deal-subtle": "bg-deal-subtle text-deal",
         success: "bg-success-bg text-success-fg",
         warning: "bg-warning-bg text-warning-fg",

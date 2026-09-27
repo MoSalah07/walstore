@@ -33,7 +33,7 @@ export default function ProductSortSelector({
           onChange={(e) => router.push(searchHref(params, { sort: e.target.value }), { scroll: false })}
           className={cn(
             "cursor-pointer appearance-none rounded-full border border-input bg-card pe-10 ps-4 text-sm font-semibold text-foreground outline-none transition-colors duration-fast hover:border-foreground focus-visible:border-foreground",
-            compact ? "h-[38px] border-[1.5px] text-[13px]" : "h-11"
+            compact ? "h-9 border text-[13px]" : "h-10"
           )}
         >
           {SORT_ORDERS.map((s) => (

@@ -42,8 +42,8 @@ export default function AppProviders({
               duration: 5000,
               className:
                 "!max-w-[380px] !rounded-md !bg-inverse !px-4 !py-3.5 !text-sm !font-sans !text-inverse-foreground !shadow-md",
-              success: { iconTheme: { primary: "#067647", secondary: "#FFFFFF" } },
-              error: { duration: Infinity, iconTheme: { primary: "#B42318", secondary: "#FFFFFF" } },
+              success: { iconTheme: { primary: "rgb(var(--inverse-success))", secondary: "rgb(var(--inverse))" } },
+              error: { duration: Infinity, iconTheme: { primary: "rgb(var(--inverse-error))", secondary: "rgb(var(--inverse))" } },
             }}
           />
         </TooltipProvider>

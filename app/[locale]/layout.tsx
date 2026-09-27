@@ -9,6 +9,7 @@ import { getMessages } from "next-intl/server";
 import { getDirection } from "@/i18n/i18n-confige";
 import clsx from "clsx";
 import { WEBSITE_NAME } from "@/constants";
+import { brandInitScript } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: `${WEBSITE_NAME} | Save Money`,
@@ -67,6 +68,10 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={clsx(bricolage.variable, instrument.variable, cairo.variable)}
     >
+      <head>
+        {/* Applies the saved brand before first paint (no flash of the default). */}
+        <script dangerouslySetInnerHTML={{ __html: brandInitScript }} />
+      </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AppProviders dir={dir}>{children}</AppProviders>

@@ -9,6 +9,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cardVariants } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export default function ReviewForm({ productId }: { productId: string }) {
@@ -25,7 +26,7 @@ export default function ReviewForm({ productId }: { productId: string }) {
 
   return (
     <form
-      className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6"
+      className={cardVariants({ size: "lg", className: "flex flex-col gap-4" })}
       onSubmit={(e) => {
         e.preventDefault();
         if (!rating) return setError(t("Pick a rating"));
@@ -52,7 +53,7 @@ export default function ReviewForm({ productId }: { productId: string }) {
               onMouseEnter={() => setHover(n)}
               className="flex size-10 items-center justify-center rounded-sm"
             >
-              <Star className={cn("size-7 text-[#B45309]", n <= (hover || rating) && "fill-[#B45309]")} strokeWidth={1.5} />
+              <Star className={cn("size-7 text-rating", n <= (hover || rating) && "fill-rating")} strokeWidth={1.5} />
             </button>
           ))}
         </div>

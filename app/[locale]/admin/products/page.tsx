@@ -6,6 +6,7 @@ import { LOW_STOCK } from "@/constants";
 import Pagination from "@/components/shared/pagination/pagination";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import ProductsTable from "./products-table";
@@ -55,7 +56,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
             {t("summary", { total: data.stats.total, categories: data.stats.categories, low: data.stats.low })}
           </p>
         </div>
-        <Link href="/admin/products/new" className={cn(buttonVariants({ size: "sm" }), "h-[38px] rounded-[10px]")}>
+        <Link href="/admin/products/new" className={buttonVariants({ size: "md" })}>
           <Plus aria-hidden />
           {t("Add product")}
         </Link>
@@ -85,7 +86,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         </nav>
       </div>
 
-      <section className="overflow-hidden rounded-[14px] border border-border bg-card">
+      <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
         {data.products.length === 0 ? (
           <EmptyState
             icon={<PackageSearch />}

@@ -4,12 +4,13 @@ import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cardVariants } from "@/components/ui/card";
 
 type Spec = { k: string; v: string };
 
 function SpecList({ specs }: { specs: Spec[] }) {
   return (
-    <dl className="flex flex-col rounded-lg border border-border bg-card">
+    <dl className={cardVariants({ flush: true, className: "flex flex-col" })}>
       {specs.map((s, i) => (
         <div
           key={s.k}
@@ -81,7 +82,7 @@ export default function ProductDetails({
           <details
             key={s.key}
             open={s.open}
-            className="group rounded-lg border border-border bg-card p-4 [&_summary::-webkit-details-marker]:hidden"
+            className={cardVariants({ size: "sm", className: "group [&_summary::-webkit-details-marker]:hidden" })}
           >
             <summary className="flex cursor-pointer list-none items-center justify-between text-base font-bold">
               {s.title}

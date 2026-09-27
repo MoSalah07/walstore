@@ -34,8 +34,6 @@
     "Hello name": "Hello, {name}",
     "Account": "Account",
     "Cart items": "Cart, {count, plural, =0 {empty} one {# item} other {# items}}",
-    "Dark mode": "Switch to dark mode",
-    "Light mode": "Switch to light mode",
     "Open menu": "Open menu",
     "Close": "Close",
     "Quick links": "Quick links",
@@ -44,13 +42,20 @@
     "Shop": "Shop",
     "Language": "Language",
     "Currency label": "Currency",
-    "Theme": "Theme",
-    "Light": "Light",
-    "Dark": "Dark",
-    "System": "System",
     "Categories": "Categories",
     "Home": "Home",
     "Tabs": "Tabs"
+  },
+  "Theme": {
+    "Appearance": "Appearance",
+    "Mode": "Mode",
+    "Color": "Color",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "ink": "Black",
+    "red": "Red",
+    "blue": "Blue"
   },
   "Home": {
     "Categories to explore": "Categories to explore",
@@ -69,7 +74,7 @@
     "Hero label": "Featured",
     "New season": "New season · {year}",
     "Hero title": "Everyday style,<br></br> better prices.",
-    "Hero body": "T-shirts, jeans, shoes and watches from Nike, Levi's, Seiko, adidas and more.",
+    "Hero body": "Shirts, jeans, dresses, shoes, bags and watches from Nike, Puma, Calvin Klein and more.",
     "Shop new arrivals": "Shop new arrivals",
     "Today's deals link": "Today's deals",
     "products": "products",
@@ -257,7 +262,7 @@
     "Copyright": "Copyright All rights reserved",
     "Year": "Year",
     "Design by": "Design by {name}",
-    "Tagline": "T-shirts, jeans, shoes and watches — shipped free on orders over <price></price>.",
+    "Tagline": "Jeans, dresses, shoes, bags and watches — shipped free on orders over <price></price>.",
     "Rights": "© {year} WalStore. All rights reserved.",
     "Your orders": "Your orders"
   },
@@ -318,9 +323,15 @@
   },
   "Categories": {
     "T-Shirts": "T-Shirts",
+    "Shirts": "Shirts",
     "Jeans": "Jeans",
+    "Pants": "Pants",
+    "Dresses": "Dresses",
     "Shoes": "Shoes",
-    "Wrist Watches": "Wrist Watches"
+    "Bags": "Bags",
+    "Belts": "Belts",
+    "Wrist Watches": "Wrist Watches",
+    "Sunglasses": "Sunglasses"
   },
   "Currency": {
     "USD": "US Dollar",
@@ -531,7 +542,6 @@
     "Preferences": "Preferences",
     "Language": "Language",
     "Currency": "Currency",
-    "Dark mode": "Dark mode",
     "Search all orders": "Search all orders",
     "Search": "Search",
     "Order status": "Order status",

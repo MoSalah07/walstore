@@ -8,6 +8,7 @@ import StatCard from "@/components/admin/stat-card";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusPill } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDateTime, formatMoney, formatNumber, ltr } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -55,7 +56,6 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
   const chartTotal = d.series.reduce((a, s) => a + s.revenue, 0);
   const maxCat = Math.max(1, ...d.categories.map((c) => c.units));
   const catTotal = d.categories.reduce((a, c) => a + c.units, 0);
-  const card = "rounded-[14px] border border-border bg-card";
 
   return (
     <div className="flex flex-col gap-5 md:gap-6">
@@ -82,7 +82,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
               </Link>
             ))}
           </nav>
-          <Link href="/admin/products/new" className={cn(buttonVariants({ size: "sm" }), "h-[38px] rounded-[10px]")}>
+          <Link href="/admin/products/new" className={buttonVariants({ size: "md" })}>
             <Plus aria-hidden />
             {t("Add product")}
           </Link>
@@ -96,11 +96,11 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
-        <section aria-labelledby="attn" className={cn(card, "flex flex-col gap-1.5 p-5")}>
+        <section aria-labelledby="attn" className={cardVariants({ className: "flex flex-col gap-1.5" })}>
           <h2 id="attn" className="mb-1.5 flex items-center gap-2 text-base font-bold">
             {t("Needs attention")}
             {attention.length > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] text-white dark:text-[#0B0D12]">{attention.length}</span>
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] text-deal-foreground">{attention.length}</span>
             )}
           </h2>
           {attention.length === 0 && <p className="py-4 text-sm text-foreground-secondary">{t("All caught up")}</p>}
@@ -121,7 +121,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
           ))}
         </section>
 
-        <section aria-labelledby="rev" className={cn(card, "flex flex-col gap-4 p-5")}>
+        <section aria-labelledby="rev" className={cardVariants({ className: "flex flex-col gap-4" })}>
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-0.5">
               <h2 id="rev" className="text-base font-bold">{t("Revenue 14 days")}</h2>
@@ -141,7 +141,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,380px)]">
-        <section aria-labelledby="ro" className={cn(card, "overflow-hidden")}>
+        <section aria-labelledby="ro" className={cardVariants({ flush: true, className: "overflow-hidden" })}>
           <div className="flex items-center justify-between px-5 py-4">
             <h2 id="ro" className="text-base font-bold">{t("Recent orders")}</h2>
             <Link href="/admin/orders" className="text-[13px] font-bold hover:underline">{t("View all")}</Link>
@@ -169,7 +169,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
           )}
         </section>
 
-        <section aria-labelledby="act" className={cn(card, "flex flex-col p-5")}>
+        <section aria-labelledby="act" className={cardVariants({ className: "flex flex-col" })}>
           <div className="mb-3 flex items-center justify-between">
             <h2 id="act" className="text-base font-bold">{t("Activity")}</h2>
             <Link href="/admin/activity" className="text-[13px] font-bold hover:underline">{t("nav.activity")}</Link>
@@ -192,7 +192,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="grid gap-5 xl:grid-cols-2">
-        <section aria-labelledby="cat" className={cn(card, "flex flex-col gap-4 p-5")}>
+        <section aria-labelledby="cat" className={cardVariants({ className: "flex flex-col gap-4" })}>
           <div className="flex flex-col gap-0.5">
             <h2 id="cat" className="text-base font-bold">{t("Units by category")}</h2>
             <span className="text-xs text-foreground-secondary">{t("Units note", { total: formatNumber(catTotal) })}</span>
@@ -209,7 +209,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
             ))}
           </ul>
         </section>
-        <section aria-labelledby="tp" className={cn(card, "flex flex-col p-5")}>
+        <section aria-labelledby="tp" className={cardVariants({ className: "flex flex-col" })}>
           <div className="mb-3 flex items-center justify-between">
             <h2 id="tp" className="text-base font-bold">{t("Top products")}</h2>
             <Link href="/admin/products" className="text-[13px] font-bold hover:underline">{t("All products")}</Link>
@@ -217,7 +217,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
           <ul className="flex flex-col">
             {d.top.map((p) => (
               <li key={p._id} className="flex items-center gap-3 border-t border-border-soft py-2.5 first:border-0">
-                <span className="relative flex size-11 shrink-0 items-center justify-center rounded-sm bg-sunken dark:bg-[#E9ECF1]">
+                <span className="relative flex size-11 shrink-0 items-center justify-center rounded-sm bg-media">
                   <span className="relative size-[80%]">
                     <Image src={p.images[0]} alt="" fill sizes="44px" className="object-contain mix-blend-multiply" />
                   </span>

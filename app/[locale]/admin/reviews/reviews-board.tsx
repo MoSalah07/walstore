@@ -11,6 +11,7 @@ import { StatusPill } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,7 @@ function Stars({ n, size = 14 }: { n: number; size?: number }) {
   return (
     <span className="flex gap-0.5" aria-hidden>
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} style={{ width: size, height: size }} className={cn("text-[#B45309]", i <= n && "fill-[#B45309]")} strokeWidth={1.5} />
+        <Star key={i} style={{ width: size, height: size }} className={cn("text-rating", i <= n && "fill-rating")} strokeWidth={1.5} />
       ))}
     </span>
   );
@@ -50,7 +51,7 @@ export default function ReviewsBoard({ reviews, locale }: { reviews: AdminReview
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
-      <ul className="flex flex-col overflow-hidden rounded-[14px] border border-border bg-card">
+      <ul className={cardVariants({ flush: true, className: "flex flex-col overflow-hidden" })}>
         {reviews.map((r) => (
           <li key={r._id} className="border-b border-border-soft last:border-0">
             <button
@@ -59,7 +60,7 @@ export default function ReviewsBoard({ reviews, locale }: { reviews: AdminReview
               aria-pressed={r._id === cur._id}
               className={cn("flex w-full gap-3 px-4 py-3.5 text-start transition-colors duration-fast", r._id === cur._id ? "bg-secondary shadow-[inset_3px_0_0_rgb(var(--primary))] rtl:shadow-[inset_-3px_0_0_rgb(var(--primary))]" : "hover:bg-background-subtle")}
             >
-              <span className="relative size-12 shrink-0 rounded-sm bg-sunken dark:bg-[#E9ECF1]">
+              <span className="relative size-12 shrink-0 rounded-sm bg-media">
                 {r.productImage && <Image src={r.productImage} alt="" fill sizes="48px" className="object-contain p-1 mix-blend-multiply" />}
               </span>
               <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -77,9 +78,9 @@ export default function ReviewsBoard({ reviews, locale }: { reviews: AdminReview
         ))}
       </ul>
 
-      <section aria-label={t("Review details")} className="flex flex-col gap-5 rounded-[14px] border border-border bg-card p-5 md:p-6">
+      <section aria-label={t("Review details")} className={cardVariants({ size: "lg", className: "flex flex-col gap-5" })}>
         <div className="flex items-center gap-3">
-          <span className="relative size-14 shrink-0 rounded-md bg-sunken dark:bg-[#E9ECF1]">
+          <span className="relative size-14 shrink-0 rounded-md bg-media">
             {cur.productImage && <Image src={cur.productImage} alt="" fill sizes="56px" className="object-contain p-1.5 mix-blend-multiply" />}
           </span>
           <span className="flex min-w-0 flex-1 flex-col">
@@ -106,7 +107,7 @@ export default function ReviewsBoard({ reviews, locale }: { reviews: AdminReview
         </div>
         <div className="flex flex-wrap justify-end gap-2">
           {cur.status !== "rejected" && (
-            <Button variant="subtle" className="text-destructive" loading={pending} onClick={() => act("rejected")}>
+            <Button variant="destructive-outline" loading={pending} onClick={() => act("rejected")}>
               {t("Reject")}
             </Button>
           )}

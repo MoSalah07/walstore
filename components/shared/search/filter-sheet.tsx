@@ -39,7 +39,7 @@ export default function FilterSheet({
         <button
           type="button"
           onClick={() => setSide(window.matchMedia("(min-width: 768px)").matches ? "end" : "bottom")}
-          className="flex h-[38px] items-center gap-2 rounded-full border-[1.5px] border-foreground bg-card px-3.5 text-[13px] font-bold text-foreground lg:hidden"
+          className={buttonVariants({ variant: "outline", size: "md", className: "lg:hidden" })}
         >
           <SlidersHorizontal className="size-4" aria-hidden />
           {t("Filters")}
@@ -64,7 +64,7 @@ export default function FilterSheet({
           <Link
             href={clearHref}
             replace
-            className={buttonVariants({ variant: "subtle", size: "lg" })}
+            className={buttonVariants({ variant: "outline", size: "lg" })}
           >
             {t("Clear")}
           </Link>

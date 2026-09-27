@@ -5,10 +5,10 @@ import Logo from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
 
 const tiles = [
-  { src: "/images/p35-1.jpg", bg: "bg-[#F0F2F5]" },
-  { src: "/images/p41-1.jpg", bg: "bg-[#0B0D12]", round: true },
-  { src: "/images/p22-1.jpg", bg: "bg-[#FFF1E8]" },
-  { src: "/images/p11-1.jpg", bg: "bg-[#F0F2F5]" },
+  { src: "/images/p35-1.jpg", bg: "bg-media" },
+  { src: "/images/p41-1.jpg", bg: "bg-inverse-raised", round: true },
+  { src: "/images/p22-1.jpg", bg: "bg-media" },
+  { src: "/images/p11-1.jpg", bg: "bg-media" },
 ];
 
 // Desktop: dark product panel beside the form. Phones: logo above the form.
@@ -25,7 +25,7 @@ export default function AuthShell({
 }) {
   return (
     <div className="flex min-h-dvh gap-6 bg-background p-4 lg:p-6">
-      <aside className="hidden w-[min(640px,45%)] shrink-0 flex-col rounded-3xl bg-[#0B0D12] p-12 text-white lg:flex">
+      <aside className="hidden w-[min(640px,45%)] shrink-0 flex-col rounded-3xl bg-inverse p-12 text-inverse-foreground lg:flex">
         <Logo tone="inverse" />
         {perks ? (
           <div className="mt-auto flex flex-col gap-6">
@@ -33,7 +33,7 @@ export default function AuthShell({
             <ul className="flex flex-col gap-4 text-base">
               {perks.map((p) => (
                 <li key={p} className="flex items-center gap-3">
-                  <span className="flex size-8 items-center justify-center rounded-full bg-white text-[#0B0D12]">
+                  <span className="flex size-8 items-center justify-center rounded-full bg-inverse-accent text-inverse-accent-foreground">
                     <Check className="size-4" strokeWidth={2.5} aria-hidden />
                   </span>
                   {p}
@@ -60,7 +60,7 @@ export default function AuthShell({
             </div>
             <div className="mt-auto flex flex-col gap-3 pt-10">
               <h2 className="font-display text-[44px] font-extrabold leading-[1.05] tracking-[-0.035em]">{title}</h2>
-              {body && <p className="text-base leading-relaxed text-[#C4CAD4]">{body}</p>}
+              {body && <p className="text-base leading-relaxed text-inverse-muted">{body}</p>}
             </div>
           </>
         )}

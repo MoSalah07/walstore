@@ -6,38 +6,42 @@
  * Design tokens — "Walstore Redesign" foundations.
  * Colors are stored as RGB channels so Tailwind opacity modifiers work
  * (e.g. bg-primary/90). Screens use only the semantic names below.
+ *
+ * Two independent axes:
+ *   1. Mode  — `.dark` on <html> (next-themes) swaps the neutral palette.
+ *   2. Brand — `data-brand` on <html> (lib/brand.ts) swaps the action and
+ *      inverse-surface palette. Brands: ink (default) · red · blue.
+ * Brand blocks also match descendants, so any element with `data-brand`
+ * previews that brand (the colour picker swatches rely on this).
  */
 @layer base {
+  /* ── Neutrals · light ─────────────────────────────────────────────── */
   :root {
     /* Grounds & surfaces */
-    --background: 245 246 248; /* color.background.default  #F5F6F8 */
-    --background-subtle: 248 249 251; /* admin page ground        #F8F9FB */
-    --card: 255 255 255; /* color.surface.primary     #FFFFFF */
+    --background: 245 246 248; /* #F5F6F8 */
+    --background-subtle: 248 249 251; /* admin page ground #F8F9FB */
+    --card: 255 255 255;
     --card-foreground: 11 13 18;
-    --popover: 255 255 255; /* color.surface.elevated    #FFFFFF */
+    --popover: 255 255 255;
     --popover-foreground: 11 13 18;
-    --sunken: 240 242 245; /* color.surface.sunken      #F0F2F5 */
-    --inverse: 11 13 18; /* color.surface.inverse     #0B0D12 */
-    --inverse-foreground: 255 255 255;
-    --inverse-muted: 196 202 212; /* footer body text          #C4CAD4 */
-    --inverse-raised: 22 26 34; /* footer "back to top" bar  #161A22 */
-    --inverse-border: 38 43 54; /*                           #262B36 */
+    --sunken: 240 242 245; /* #F0F2F5 */
+    --media: 240 242 245; /* well behind product photos */
+    --media-paper: 255 255 255; /* photo stage: product shots are shot on white */
+    --media-foreground: 11 13 18; /* controls drawn on a photo */
+    --scrim: 11 13 18; /* modal backdrop, used at /50 */
 
     /* Lines */
-    --border: 228 231 236; /* color.border.default      #E4E7EC */
-    --border-soft: 240 242 245; /* row dividers              #F0F2F5 */
-    --input: 208 213 221; /* color.border.strong       #D0D5DD */
-    --ring: 11 13 18; /* focus ring follows ink actions */
+    --border: 228 231 236; /* #E4E7EC */
+    --border-soft: 240 242 245;
+    --input: 208 213 221; /* #D0D5DD */
+    --ring: var(--primary);
 
     /* Text */
-    --foreground: 11 13 18; /* color.text.primary        #0B0D12 */
-    --foreground-secondary: 71 84 103; /* color.text.secondary #475467 */
-    --muted-foreground: 102 112 133; /* color.text.muted          #667085 */
+    --foreground: 11 13 18; /* #0B0D12 */
+    --foreground-secondary: 71 84 103; /* #475467 */
+    --muted-foreground: 102 112 133; /* #667085 */
 
-    /* Actions — ink primary, one orange reserved for deals */
-    --primary: 11 13 18; /* #0B0D12 */
-    --primary-hover: 52 64 84; /* #344054 */
-    --primary-foreground: 255 255 255;
+    /* Neutral actions */
     --secondary: 242 244 247; /* #F2F4F7 — "Buy Now", selected tint */
     --secondary-foreground: 11 13 18;
     --muted: 240 242 245;
@@ -46,13 +50,17 @@
     --destructive: 180 35 24; /* #B42318 */
     --destructive-foreground: 255 255 255;
 
-    --deal: 194 65 12; /* color.accent.deal         #C2410C */
-    --deal-subtle: 255 241 232; /* color.accent.deal.subtle  #FFF1E8 */
+    /* One orange, reserved for money off */
+    --deal: 194 65 12; /* #C2410C */
+    --deal-foreground: 255 255 255;
+    --deal-subtle: 255 241 232; /* #FFF1E8 */
 
     /* Status (fg on tinted bg — never color alone) */
     --success: 6 118 71; /* #067647 solid */
+    --success-foreground: 255 255 255;
     --success-fg: 5 96 58; /* #05603A */
     --success-bg: 236 253 243; /* #ECFDF3 */
+    --warning: 180 83 9; /* #B45309 solid */
     --warning-fg: 147 55 13; /* #93370D */
     --warning-bg: 255 250 235; /* #FFFAEB */
     --error-fg: 145 32 24; /* #912018 */
@@ -61,9 +69,14 @@
     --info-bg: 239 248 255; /* #EFF8FF */
     --violet-fg: 89 37 220; /* #5925DC shipped */
     --violet-bg: 244 243 255; /* #F4F3FF */
+    --rating: var(--warning);
+
+    /* Status on inverse surfaces (always dark, so one value) */
+    --inverse-success: 74 222 128; /* #4ADE80 */
+    --inverse-error: 249 112 102; /* #F97066 */
 
     /* Charts */
-    --chart-1: 11 13 18;
+    --chart-1: var(--primary);
     --chart-2: 194 65 12;
     --chart-3: 6 118 71;
     --chart-4: 23 92 211;
@@ -79,34 +92,26 @@
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   }
 
-  /* Dark mode is its own palette: surfaces step lighter as they rise. */
+  /* ── Neutrals · dark — surfaces step lighter as they rise ─────────── */
   .dark {
     --background: 9 11 15; /* #090B0F */
-    --background-subtle: 16 18 23; /* #101217 */
+    --background-subtle: 16 18 23;
     --card: 20 23 29; /* #14171D */
     --card-foreground: 242 244 247;
     --popover: 28 32 41; /* #1C2029 */
     --popover-foreground: 242 244 247;
-    --sunken: 16 18 23; /* #101217 */
-    /* Footer, top bar, hero stay dark: a raised ink instead of flipping to light. */
-    --inverse: 20 23 29; /* #14171D */
-    --inverse-foreground: 242 244 247;
-    --inverse-muted: 164 172 185;
-    --inverse-raised: 28 32 41;
-    --inverse-border: 38 43 54;
+    --sunken: 16 18 23;
+    --media: 233 236 241; /* photos keep a light well */
+    --scrim: 0 0 0;
 
     --border: 38 43 54; /* #262B36 */
     --border-soft: 28 32 41;
     --input: 53 59 72; /* #353B48 */
-    --ring: 242 244 247;
 
     --foreground: 242 244 247; /* #F2F4F7 */
     --foreground-secondary: 164 172 185; /* #A4ACB9 */
     --muted-foreground: 139 147 161; /* #8B93A1 */
 
-    --primary: 242 244 247;
-    --primary-hover: 208 213 221;
-    --primary-foreground: 11 13 18;
     --secondary: 28 32 41;
     --secondary-foreground: 242 244 247;
     --muted: 28 32 41;
@@ -116,25 +121,117 @@
     --destructive-foreground: 11 13 18;
 
     --deal: 251 138 78; /* #FB8A4E */
+    --deal-foreground: 11 13 18;
     --deal-subtle: 43 26 16; /* #2B1A10 */
 
     --success: 74 222 128;
-    --success-fg: 74 222 128; /* #4ADE80 */
-    --success-bg: 10 36 24; /* #0A2418 */
-    --warning-fg: 251 191 36; /* #FBBF24 */
-    --warning-bg: 43 32 12; /* #2B200C */
-    --error-fg: 249 112 102; /* #F97066 */
-    --error-bg: 45 20 18; /* #2D1412 */
+    --success-foreground: 11 13 18;
+    --success-fg: 74 222 128;
+    --success-bg: 10 36 24;
+    --warning: 251 191 36; /* #FBBF24 */
+    --warning-fg: 251 191 36;
+    --warning-bg: 43 32 12;
+    --error-fg: 249 112 102;
+    --error-bg: 45 20 18;
     --info-fg: 132 173 255;
     --info-bg: 16 30 58;
     --violet-fg: 180 160 255;
     --violet-bg: 34 24 64;
 
-    --chart-1: 242 244 247;
     --chart-2: 251 138 78;
     --chart-3: 74 222 128;
     --chart-4: 132 173 255;
     --chart-5: 102 112 133;
+  }
+
+  /*
+   * ── Brands ────────────────────────────────────────────────────────
+   * Each brand sets the same 11 tokens, in light and dark:
+   *   primary · primary-hover · primary-foreground   — actions, links, selection
+   *   inverse · -foreground · -muted · -raised · -border — hero, footer, toasts
+   *   inverse-accent · -foreground                   — CTA + 3D glow on inverse
+   */
+
+  /* Ink — monochrome (default) */
+  :root,
+  [data-brand="ink"] {
+    --primary: 11 13 18; /* #0B0D12 */
+    --primary-hover: 52 64 84; /* #344054 */
+    --primary-foreground: 255 255 255;
+    --inverse: 11 13 18;
+    --inverse-foreground: 255 255 255;
+    --inverse-muted: 196 202 212; /* #C4CAD4 */
+    --inverse-raised: 22 26 34; /* #161A22 */
+    --inverse-border: 38 43 54; /* #262B36 */
+    --inverse-accent: 255 255 255;
+    --inverse-accent-foreground: 11 13 18;
+  }
+  .dark,
+  .dark [data-brand="ink"] {
+    --primary: 242 244 247;
+    --primary-hover: 208 213 221;
+    --primary-foreground: 11 13 18;
+    --inverse: 20 23 29; /* a raised ink instead of flipping to light */
+    --inverse-foreground: 242 244 247;
+    --inverse-muted: 164 172 185;
+    --inverse-raised: 28 32 41;
+    --inverse-border: 38 43 54;
+    --inverse-accent: 242 244 247;
+    --inverse-accent-foreground: 11 13 18;
+  }
+
+  /* Red — rose-leaning so it never reads as an error */
+  [data-brand="red"] {
+    --primary: 190 18 60; /* #BE123C */
+    --primary-hover: 159 18 57; /* #9F1239 */
+    --primary-foreground: 255 255 255;
+    --inverse: 26 8 14; /* #1A080E */
+    --inverse-foreground: 255 255 255;
+    --inverse-muted: 232 196 205;
+    --inverse-raised: 40 14 22;
+    --inverse-border: 64 24 36;
+    --inverse-accent: 251 113 133; /* #FB7185 */
+    --inverse-accent-foreground: 26 8 14;
+  }
+  .dark[data-brand="red"],
+  .dark [data-brand="red"] {
+    --primary: 251 113 133;
+    --primary-hover: 253 164 175; /* #FDA4AF */
+    --primary-foreground: 26 8 14;
+    --inverse: 30 12 19; /* #1E0C13 */
+    --inverse-foreground: 250 240 242;
+    --inverse-muted: 214 180 189;
+    --inverse-raised: 44 18 28;
+    --inverse-border: 70 30 43;
+    --inverse-accent: 251 113 133;
+    --inverse-accent-foreground: 26 8 14;
+  }
+
+  /* Blue */
+  [data-brand="blue"] {
+    --primary: 21 112 239; /* #1570EF */
+    --primary-hover: 23 92 211; /* #175CD3 */
+    --primary-foreground: 255 255 255;
+    --inverse: 8 16 36; /* #081024 */
+    --inverse-foreground: 255 255 255;
+    --inverse-muted: 190 204 230;
+    --inverse-raised: 15 26 54;
+    --inverse-border: 30 44 78;
+    --inverse-accent: 83 177 253; /* #53B1FD */
+    --inverse-accent-foreground: 8 16 36;
+  }
+  .dark[data-brand="blue"],
+  .dark [data-brand="blue"] {
+    --primary: 83 177 253;
+    --primary-hover: 132 202 255; /* #84CAFF */
+    --primary-foreground: 8 16 36;
+    --inverse: 12 21 42; /* #0C152A */
+    --inverse-foreground: 240 245 255;
+    --inverse-muted: 168 184 214;
+    --inverse-raised: 20 32 60;
+    --inverse-border: 36 52 88;
+    --inverse-accent: 83 177 253;
+    --inverse-accent-foreground: 8 16 36;
   }
 }
 
@@ -239,9 +336,6 @@
     @apply px-4 md:px-8 xl:px-20;
   }
 
-  .surface-card {
-    @apply rounded-lg border border-border bg-card text-card-foreground;
-  }
 
   .scrollbar-none {
     scrollbar-width: none;

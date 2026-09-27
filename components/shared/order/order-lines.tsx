@@ -22,7 +22,7 @@ export default async function OrderLines({
             href={`/product/${l.slug}`}
             tabIndex={-1}
             aria-hidden
-            className="relative flex size-16 shrink-0 items-center justify-center rounded-[14px] bg-sunken dark:bg-[#E9ECF1] md:size-24"
+            className="relative flex size-16 shrink-0 items-center justify-center rounded-[14px] bg-media md:size-24"
           >
             <span className="relative size-[80%]">
               <Image src={l.image} alt="" fill sizes="96px" className="object-contain mix-blend-multiply" />

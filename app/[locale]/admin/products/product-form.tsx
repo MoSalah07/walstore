@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { AdminProduct, ProductInput, deleteProduct, saveProduct, uploadProductImage } from "@/actions/admin-product.action";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -22,6 +22,7 @@ import {
 import { Input, Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import { swatchFor } from "@/lib/colors";
 import { discountPercent, formatMoney } from "@/lib/format";
@@ -48,7 +49,7 @@ function ChipInput({ id, label, values, onChange, swatch, placeholder }: {
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
-      <div className="flex min-h-[42px] flex-wrap items-center gap-1.5 rounded-[10px] border-[1.5px] border-input bg-card px-2 py-1.5 focus-within:border-foreground">
+      <div className="flex min-h-9 flex-wrap items-center gap-1.5 rounded-[10px] border border-input bg-card px-2 py-1.5 focus-within:border-foreground">
         {values.map((v) => (
           <span key={v} className="flex h-7 items-center gap-1.5 rounded-full bg-secondary pe-1 ps-2.5 text-[13px] font-semibold">
             {swatch && <span className="size-3.5 rounded-full border border-input" style={{ background: swatchFor(v) }} aria-hidden />}
@@ -177,14 +178,14 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
     else doSave();
   };
 
-  const card = "flex flex-col gap-4 rounded-[14px] border border-border bg-card p-5";
+  const card = cardVariants({ className: "flex flex-col gap-4" });
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-5">
       {/* Sticky action bar */}
       <div className="sticky top-[60px] z-20 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background-subtle/95 px-4 py-3 backdrop-blur md:top-16 md:-mx-6 md:px-6 xl:-mx-8 xl:px-8">
         <div className="flex min-w-0 items-center gap-3">
-          <Link href="/admin/products" aria-label={t("All products")} className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-border bg-card hover:border-foreground">
+          <Link href="/admin/products" aria-label={t("All products")} className={buttonVariants({ variant: "outline", size: "icon-md" })}>
             <ArrowLeft className="size-4 rtl:rotate-180" />
           </Link>
           <h1 className="truncate font-display text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
@@ -193,10 +194,10 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
           {dirty && <Badge variant="warning" dot>{t("Unsaved changes")}</Badge>}
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="ghost" size="sm" className="h-10 rounded-[10px]" disabled={!dirty || pending} onClick={() => { setF(initial); setErrors({}); }}>
+          <Button type="button" variant="ghost" size="md" disabled={!dirty || pending} onClick={() => { setF(initial); setErrors({}); }}>
             {t("Discard")}
           </Button>
-          <Button type="submit" size="sm" className="h-10 rounded-[10px]" loading={pending} disabled={!dirty && !!product}>
+          <Button type="submit" size="md" loading={pending} disabled={!dirty && !!product}>
             {product ? t("Save changes") : t("Create product")}
           </Button>
         </div>
@@ -216,7 +217,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="pe-slug">{t("Slug")}</Label>
-              <div className={cn("flex h-[42px] items-center overflow-hidden rounded-[10px] border-[1.5px] bg-card focus-within:border-foreground", err("slug") ? "border-destructive" : "border-input")}>
+              <div className={cn("flex h-9 items-center overflow-hidden rounded-[10px] border bg-card focus-within:border-foreground", err("slug") ? "border-destructive" : "border-input")}>
                 <span className="hidden h-full items-center border-e border-border bg-background-subtle px-3 text-[13px] text-muted-foreground sm:flex" dir="ltr">/product/</span>
                 <input id="pe-slug" dir="ltr" value={f.slug} onChange={(e) => { setSlugTouched(true); set("slug", e.target.value); }} className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none" />
               </div>
@@ -235,7 +236,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
                 ) : (
                   <select id="pe-cat" value={f.category}
                     onChange={(e) => { if (e.target.value === "__new") { setNewCategory(true); set("category", ""); } else set("category", e.target.value); }}
-                    className={cn("h-[42px] rounded-[10px] border-[1.5px] bg-card px-3 text-sm outline-none focus-visible:border-foreground", err("category") ? "border-destructive" : "border-input")}>
+                    className={cn("h-9 rounded-[10px] border bg-card px-3 text-sm outline-none focus-visible:border-foreground", err("category") ? "border-destructive" : "border-input")}>
                     <option value="">{t("Choose category")}</option>
                     {categories.map((c) => <option key={c} value={c}>{tc.has(c) ? tc(c) : c}</option>)}
                     <option value="__new">{t("Add new category")}</option>
@@ -258,7 +259,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {f.images.map((src, i) => (
-                <div key={src + i} className="group relative flex aspect-square items-center justify-center rounded-md border border-border bg-white">
+                <div key={src + i} className="group relative flex aspect-square items-center justify-center rounded-md border border-border bg-media-paper">
                   <span className="relative size-[80%]">
                     <Image src={src} alt="" fill sizes="160px" className="object-contain" />
                   </span>
@@ -296,7 +297,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
             <div className="flex gap-2">
               <label htmlFor="pe-img" className="sr-only">{t("Image path")}</label>
               <Input id="pe-img" size="sm" dir="ltr" value={imagePath} onChange={(e) => setImagePath(e.target.value)} placeholder="/images/p11-1.jpg" />
-              <Button type="button" variant="subtle" size="sm" className="h-[42px] shrink-0 rounded-[10px]" disabled={!imagePath.trim().startsWith("/")}
+              <Button type="button" variant="outline" size="md" className="shrink-0" disabled={!imagePath.trim().startsWith("/")}
                 onClick={() => { set("images", [...f.images, imagePath.trim()]); setImagePath(""); }}>
                 {t("Add path")}
               </Button>
@@ -313,7 +314,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
               ] as const).map(([k, label, hint]) => (
                 <div key={k} className="flex flex-col gap-1.5">
                   <Label htmlFor={`pe-${k}`}>{label}</Label>
-                  <div className={cn("flex h-[42px] items-center rounded-[10px] border-[1.5px] bg-card focus-within:border-foreground", err(k) ? "border-destructive" : "border-input")}>
+                  <div className={cn("flex h-9 items-center rounded-[10px] border bg-card focus-within:border-foreground", err(k) ? "border-destructive" : "border-input")}>
                     <span className="ps-3 text-sm text-muted-foreground">$</span>
                     <input id={`pe-${k}`} inputMode="decimal" dir="ltr" value={f[k]} onChange={(e) => set(k, e.target.value)}
                       onBlur={() => { const n = Number(f[k]); if (!Number.isNaN(n) && f[k] !== "") set(k, n.toFixed(2)); }}
@@ -363,7 +364,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
           <section className={card}>
             <h2 className="text-base font-bold">{t("Store preview")}</h2>
             <div className="overflow-hidden rounded-lg border border-border">
-              <div className="relative flex aspect-[4/3] items-center justify-center bg-sunken dark:bg-[#E9ECF1]">
+              <div className="relative flex aspect-[4/3] items-center justify-center bg-media">
                 {f.images[0] && (
                   <span className="relative size-[75%]">
                     <Image src={f.images[0]} alt="" fill sizes="300px" className="object-contain mix-blend-multiply" />
@@ -382,7 +383,7 @@ export default function ProductForm({ product, categories }: { product?: AdminPr
             </div>
           </section>
           {product && (
-            <Button type="button" variant="subtle" className="text-destructive" onClick={() => setDeleting(true)}>
+            <Button type="button" variant="destructive-outline" onClick={() => setDeleting(true)}>
               {t("Delete product")}
             </Button>
           )}

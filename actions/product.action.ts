@@ -242,10 +242,14 @@ export async function getAllTags() {
 
 // Home: one tile per category with its product count and cover photo.
 const CATEGORY_COVERS: Record<string, string> = {
-  "T-Shirts": "/images/t-shirts.jpg",
-  Jeans: "/images/jeans.jpg",
-  Shoes: "/images/shoes.jpg",
-  "Wrist Watches": "/images/wrist-watches.jpg",
+  Shirts: "/images/categories/shirts.jpg",
+  Dresses: "/images/categories/dresses.jpg",
+  Pants: "/images/products/high-rise-dark-wash-bootcut-jeans/look-1.jpg",
+  Shoes: "/images/categories/shoes.jpg",
+  Bags: "/images/categories/bags.jpg",
+  Belts: "/images/products/mens-tan-leather-dress-belt/look-1.jpg",
+  "Wrist Watches": "/images/categories/wrist-watches.jpg",
+  Sunglasses: "/images/categories/sunglasses.jpg",
 };
 
 export async function getCategorySummaries(): Promise<

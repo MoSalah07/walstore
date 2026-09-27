@@ -12,6 +12,19 @@ const SWATCHES: Record<string, string> = {
   yellow: "#E8C547",
   brown: "#7A4E2D",
   beige: "#D9C8A9",
+  "light blue": "#9AD1DE",
+  "dark blue": "#1E2E4F",
+  indigo: "#2E3B5E",
+  "sage green": "#8FAE9E",
+  olive: "#6B6B3A",
+  khaki: "#B8A77A",
+  tan: "#C19A6B",
+  gold: "#C9A34E",
+  "rose gold": "#C98F76",
+  burgundy: "#6D1A2B",
+  pink: "#D6428A",
+  multicolor: "conic-gradient(#D6428A, #E8C547, #3F6B4A, #2B4C8C, #D6428A)",
+  clear: "#EEF1F4",
 };
 
 export const swatchFor = (name: string) => SWATCHES[name.toLowerCase()] ?? "#D0D5DD";

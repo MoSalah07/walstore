@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Price from "@/components/shared/price";
 import { Button } from "@/components/ui/button";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
+import { cardVariants } from "@/components/ui/card";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { swatchFor } from "@/lib/colors";
@@ -236,7 +237,7 @@ export default function BuyBox({
           )}
         </>
       ) : (
-        <div className="flex flex-col gap-3 rounded-[14px] border border-border bg-card p-4">
+        <div className={cardVariants({ size: "sm", className: "flex flex-col gap-3" })}>
           <span className="font-bold text-destructive">{t("Out of Stock")}</span>
           <span className="text-sm text-foreground-secondary">{t("Out of stock help")}</span>
           <Button
@@ -250,7 +251,7 @@ export default function BuyBox({
       )}
 
       {/* Info card */}
-      <ul className="flex flex-col rounded-lg border border-border bg-card">
+      <ul className={cardVariants({ flush: true, className: "flex flex-col" })}>
         <li className="flex items-start gap-3.5 border-b border-border px-5 py-4">
           <PackageCheck className={cn("mt-0.5 size-5 shrink-0", inStock ? "text-success" : "text-destructive")} aria-hidden />
           <span className="flex flex-col gap-0.5">

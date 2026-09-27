@@ -5,6 +5,7 @@ import { getRoleMembers } from "@/actions/admin-system.action";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatNumber } from "@/lib/format";
 import { PERMISSION_GROUPS, Scope, permissionCoverage } from "@/lib/permissions";
@@ -47,7 +48,6 @@ export default async function AdminRolesPage({ searchParams }: { searchParams: P
     const q = new URLSearchParams({ role, view, ...patch });
     return `/admin/roles?${q}`;
   };
-  const card = "rounded-[14px] border border-border bg-card";
 
   return (
     <div className="flex flex-col gap-5">
@@ -57,11 +57,11 @@ export default async function AdminRolesPage({ searchParams }: { searchParams: P
           <p className="text-[15px] text-foreground-secondary">{t("Sub")}</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/admin/activity?entity=user" className={cn(buttonVariants({ variant: "subtle", size: "sm" }), "h-[38px] rounded-[10px]")}>
+          <Link href="/admin/activity?entity=user" className={buttonVariants({ variant: "outline", size: "md" })}>
             <History aria-hidden />
             {t("Role history")}
           </Link>
-          <Link href="/admin/users?role=user" className={cn(buttonVariants({ size: "sm" }), "h-[38px] rounded-[10px]")}>
+          <Link href="/admin/users?role=user" className={buttonVariants({ size: "md" })}>
             <UserPlus aria-hidden />
             {t("Add an admin")}
           </Link>
@@ -79,7 +79,7 @@ export default async function AdminRolesPage({ searchParams }: { searchParams: P
                 key={r.key}
                 href={href({ role: r.key })}
                 aria-current={on ? "true" : undefined}
-                className={cn(card, "flex flex-col gap-3.5 p-4 transition-colors duration-fast", on ? "border-2 border-primary" : "hover:border-foreground")}
+                className={cardVariants({ variant: "interactive", size: "sm", className: cn("flex flex-col gap-3.5", on && "border-primary ring-1 ring-primary") })}
               >
                 <span className="flex items-center gap-3">
                   <span className={cn("flex size-10 items-center justify-center rounded-[10px]", r.key === "admin" ? "bg-primary text-primary-foreground" : "bg-secondary")}>
@@ -104,14 +104,14 @@ export default async function AdminRolesPage({ searchParams }: { searchParams: P
               </Link>
             );
           })}
-          <div className={cn(card, "flex flex-col gap-2 border-dashed p-4 text-[13px] text-foreground-secondary")}>
+          <div className={cardVariants({ size: "sm", className: "flex flex-col gap-2 border-dashed shadow-none text-[13px] text-foreground-secondary" })}>
             <span className="flex items-center gap-2 font-bold text-foreground"><Lock className="size-4" aria-hidden />{t("Custom roles")}</span>
             <span>{t("Custom roles body")}</span>
-            <button type="button" disabled aria-disabled className={cn(buttonVariants({ variant: "subtle", size: "sm" }), "mt-1 self-start")}>{t("New role later")}</button>
+            <button type="button" disabled aria-disabled className={buttonVariants({ variant: "outline", size: "sm", className: "mt-1 self-start" })}>{t("New role later")}</button>
           </div>
         </aside>
 
-        <section aria-label={t("Role details")} className={cn(card, "flex flex-col gap-5 p-5 md:p-6")}>
+        <section aria-label={t("Role details")} className={cardVariants({ size: "lg", className: "flex flex-col gap-5" })}>
           <div className="flex flex-wrap items-start gap-4">
             <span className={cn("flex size-12 items-center justify-center rounded-md", role === "admin" ? "bg-primary text-primary-foreground" : "bg-secondary")}>
               <cur.icon className="size-6" aria-hidden />

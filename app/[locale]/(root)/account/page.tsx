@@ -6,6 +6,7 @@ import { getMyOrderStats } from "@/actions/order.action";
 import { SignOut } from "@/actions/user.action";
 import Container from "@/components/shared/container";
 import { Avatar } from "@/components/ui/avatar";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate } from "@/lib/format";
 import AddressBook from "./_components/address-book";
@@ -51,7 +52,7 @@ export default async function AccountPage() {
           <Link
             key={title}
             href={href}
-            className="flex min-h-[132px] flex-col gap-2.5 rounded-xl border border-border bg-card p-4 transition-colors duration-fast hover:border-foreground md:min-h-[150px] md:p-[22px]"
+            className={cardVariants({ variant: "interactive", className: "flex min-h-[132px] flex-col gap-2.5 md:min-h-[150px]" })}
           >
             <span className="flex size-11 items-center justify-center rounded-md bg-secondary">
               <Icon className="size-[22px]" strokeWidth={1.8} aria-hidden />

@@ -8,6 +8,7 @@ import StatCard from "@/components/admin/stat-card";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, StatusPill, StatusKey } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatDate, formatDateTime, formatMoney, ltr } from "@/lib/format";
 import { ActiveToggle, DeleteUserDialog, EditUserDrawer } from "../user-dialogs";
@@ -33,7 +34,6 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
   const self = session?.user?.id === user._id;
   const region = new Intl.DisplayNames([locale], { type: "region" });
   const def = user.addresses?.find((a) => a.isDefault) ?? user.addresses?.[0];
-  const card = "rounded-[14px] border border-border bg-card";
 
   const sub = [
     user.email,
@@ -77,7 +77,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
       </div>
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className={card}>
+        <section className={cardVariants({ flush: true })}>
           <Tabs defaultValue="orders">
             <TabsList className="px-5">
               <TabsTrigger value="orders">{t("Orders")}</TabsTrigger>
@@ -135,7 +135,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             </TabsContent>
           </Tabs>
         </section>
-        <aside className={`${card} flex flex-col gap-2 p-5 text-sm leading-relaxed`}>
+        <aside className={cardVariants({ className: "flex flex-col gap-2 text-sm leading-relaxed" })}>
           <h2 className="text-base font-bold">{t("Default address")}</h2>
           {def ? (
             <span>{def.fullName}<br />{def.street}<br />{def.city}, {def.province} {def.postalCode}<br />{region.of(def.country) ?? def.country}</span>

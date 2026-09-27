@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { Heart, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -7,12 +8,13 @@ import toast from "react-hot-toast";
 
 import Price from "@/components/shared/price";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { IProduct } from "@/interfaces/product.interface";
 import { Link } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { discountPercent } from "@/lib/format";
-import { cn, generateId, round2 } from "@/lib/utils";
+import { cn, generateId, isLookPhoto, round2 } from "@/lib/utils";
 import useCartStore from "@/store/use-cart-store";
 import useWishlist from "@/store/use-wishlist";
 
@@ -51,6 +53,25 @@ export default function ProductCard({
   const toggleWish = useWishlist((s) => s.toggle);
   const soldOut = product.countInStock <= 0;
 
+  // Hover gallery: the pointer's position across the image picks the photo.
+  // Extra photos only load after the first hover.
+  const photos = product.images.slice(0, 4);
+  const [active, setActive] = useState(0);
+  const [warm, setWarm] = useState(false);
+  const rtl = useRef(false);
+  const onEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || photos.length < 2) return;
+    rtl.current = getComputedStyle(e.currentTarget).direction === "rtl";
+    setWarm(true);
+  };
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || photos.length < 2) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const i = Math.floor((rtl.current ? 1 - x : x) * photos.length);
+    setActive(Math.min(photos.length - 1, Math.max(0, i)));
+  };
+
   const add = () => {
     try {
       addItem(
@@ -82,24 +103,62 @@ export default function ProductCard({
 
   return (
     <article
-      className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-[box-shadow,transform] duration-base ease-standard hover:-translate-y-0.5 hover:shadow-md",
-        className
-      )}
+      className={cardVariants({
+        variant: "interactive",
+        flush: true,
+        className: cn("group flex h-full flex-col overflow-hidden", className),
+      })}
     >
-      <div className="relative aspect-[302/280] shrink-0 bg-sunken dark:bg-[#E9ECF1]">
-        <Link href={href} tabIndex={-1} aria-hidden className="absolute inset-0 flex items-center justify-center p-[13%]">
-          <span className="relative size-full">
-            <Image
-              src={product.images[0]}
-              alt=""
-              fill
-              priority={priority}
-              sizes="(min-width: 1280px) 300px, (min-width: 768px) 30vw, 50vw"
-              className="object-contain mix-blend-multiply transition-transform duration-slow ease-standard group-hover:scale-[1.04]"
-            />
-          </span>
+      <div
+        className="relative aspect-[302/280] shrink-0 overflow-hidden bg-media"
+        onPointerEnter={onEnter}
+        onPointerMove={onMove}
+        onPointerLeave={() => setActive(0)}
+      >
+        <Link href={href} tabIndex={-1} aria-hidden className="absolute inset-0">
+          {photos.map((src, i) =>
+            i === 0 || warm ? (
+              <span
+                key={src}
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-base ease-standard",
+                  !isLookPhoto(src) && "p-[13%]",
+                  i === active ? "opacity-100" : "opacity-0"
+                )}
+              >
+                <span className="relative block size-full">
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    priority={priority && i === 0}
+                    sizes="(min-width: 1280px) 300px, (min-width: 768px) 30vw, 50vw"
+                    className={cn(
+                      "transition-transform duration-slow ease-standard group-hover:scale-[1.04]",
+                      isLookPhoto(src) ? "object-cover" : "object-contain mix-blend-multiply"
+                    )}
+                  />
+                </span>
+              </span>
+            ) : null
+          )}
         </Link>
+        {photos.length > 1 && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-3 bottom-2.5 hidden gap-1 opacity-0 transition-opacity duration-fast group-hover:opacity-100 [@media(hover:hover)]:flex"
+          >
+            {photos.map((src, i) => (
+              <span
+                key={src}
+                className={cn(
+                  "h-[3px] flex-1 rounded-full transition-colors duration-fast",
+                  i === active ? "bg-media-foreground" : "bg-media-foreground/20"
+                )}
+              />
+            ))}
+          </div>
+        )}
         {off > 0 ? (
           <Badge variant="deal" className="absolute start-3.5 top-3.5">
             -{off}%
@@ -117,7 +176,7 @@ export default function ProductCard({
           }}
           aria-pressed={saved}
           aria-label={saved ? t("Remove from wishlist") : t("Save to wishlist")}
-          className="absolute end-2.5 top-2.5 flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors duration-fast hover:border-foreground"
+          className={buttonVariants({ variant: "outline", size: "icon-md", shape: "pill", className: "absolute end-2.5 top-2.5" })}
         >
           <Heart
             className={cn("size-[18px]", saved && "fill-deal text-deal")}

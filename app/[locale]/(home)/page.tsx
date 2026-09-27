@@ -16,13 +16,18 @@ import ProductRail from "@/components/shared/home/product-rail";
 import SectionHeading from "@/components/shared/home/section-heading";
 import Price from "@/components/shared/price";
 import { Badge } from "@/components/ui/badge";
+import { cardVariants } from "@/components/ui/card";
 import { getPricingConfig } from "@/lib/settings";
 import { getDirection } from "@/i18n/i18n-confige";
 import { Link } from "@/i18n/routing";
 import { ProductTags } from "@/interfaces/product.interface";
 import { discountPercent } from "@/lib/format";
+import { buttonVariants } from "@/components/ui/button";
+import { cn, isLookPhoto } from "@/lib/utils";
 
 const arrow = "size-4 rtl:rotate-180";
+// Staggered entrance for the hero copy; pair with `motion-safe:animate-rise`.
+const riseDelay = (step: number) => ({ animationDelay: `${150 + step * 110}ms` });
 
 export default async function Home() {
   const [t, tc, locale] = await Promise.all([
@@ -48,7 +53,9 @@ export default async function Home() {
   ).slice(0, 8);
   const bestDeal = Math.max(0, ...deals.map((p) => discountPercent(p.price, p.listPrice)));
   const dealTile = deals[0];
-  const jeans = bestSellers.find((p) => p.category === "Jeans") ?? bestSellers[0];
+  const jeans = bestSellers.find((p) => p.category === "Pants" && /jeans/i.test(p.name)) ?? bestSellers[0];
+  // On-model photos fill their frame; studio shots on white sit contained on the tint.
+  const fit = (src: string) => (isLookPhoto(src) ? "rounded-md object-cover" : "object-contain mix-blend-multiply");
   const catLabel = (c: string) => (tc.has(c) ? tc(c) : c);
 
   const collections = [
@@ -66,27 +73,37 @@ export default async function Home() {
 
   const heroCopy = (
     <>
-      <span className="flex h-8 items-center gap-2 self-start rounded-full bg-white/[0.08] pe-3.5 ps-2.5 text-[13px] font-semibold shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]">
-        <span className="size-2 rounded-full bg-white shadow-[0_0_0_4px_rgb(255_255_255/0.18)]" />
+      <span
+        style={riseDelay(0)}
+        className="motion-safe:animate-rise flex h-8 items-center gap-2 self-start rounded-full bg-inverse-foreground/[0.08] pe-3.5 ps-2.5 text-[13px] font-semibold shadow-[inset_0_0_0_1px_rgb(var(--inverse-foreground)/0.14)] backdrop-blur-md"
+      >
+        <span className="size-2 rounded-full bg-inverse-accent shadow-[0_0_0_4px_rgb(var(--inverse-accent)/0.22)]" />
         {t("New season", { year: new Date().getFullYear() })}
       </span>
-      <h1 className="font-display text-[34px] font-extrabold leading-[1.02] tracking-[-0.035em] md:text-[56px] lg:text-[66px] lg:leading-[0.98] lg:tracking-[-0.045em]">
+      {/* Headline fades from white into the brand accent. */}
+      <h1
+        style={riseDelay(1)}
+        className="motion-safe:animate-rise bg-gradient-to-br from-inverse-foreground from-45% to-inverse-accent bg-clip-text pb-1 font-display text-[34px] font-extrabold leading-[1.02] tracking-[-0.035em] text-transparent md:text-[56px] lg:text-[66px] lg:leading-[0.98] lg:tracking-[-0.045em]"
+      >
         {t.rich("Hero title", { br: () => <br className="hidden md:block" /> })}
       </h1>
-      <p className="hidden max-w-[440px] text-[17px] leading-relaxed text-[#C4CAD4] md:block">
+      <p
+        style={riseDelay(2)}
+        className="motion-safe:animate-rise hidden max-w-[440px] text-[17px] leading-relaxed text-inverse-muted md:block"
+      >
         {t("Hero body")}
       </p>
-      <div className="mt-1.5 flex flex-wrap gap-3">
+      <div style={riseDelay(3)} className="motion-safe:animate-rise mt-1.5 flex flex-wrap gap-3">
         <Link
           href="/search?tag=new-arrival"
-          className="flex h-[46px] items-center gap-2 rounded-full bg-white px-5 text-[15px] font-bold text-[#0B0D12] transition-colors duration-fast hover:bg-white/90 md:h-[52px] md:px-6"
+          className={buttonVariants({ variant: "inverse", size: "xl", className: "shadow-[0_8px_32px_-8px_rgb(var(--inverse-accent)/0.55)] hover:shadow-[0_10px_40px_-6px_rgb(var(--inverse-accent)/0.7)]" })}
         >
           {t("Shop new arrivals")}
           <ArrowRight className={arrow} aria-hidden />
         </Link>
         <Link
           href="/search?tag=todays-deal"
-          className="hidden h-[52px] items-center rounded-full bg-white/[0.06] px-6 text-[15px] font-semibold text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.22)] transition-colors duration-fast hover:bg-white/[0.12] md:flex"
+          className={buttonVariants({ variant: "ghost", size: "xl", className: "hidden bg-inverse-foreground/[0.06] text-inverse-foreground shadow-[inset_0_0_0_1px_rgb(var(--inverse-foreground)/0.22)] backdrop-blur-md hover:bg-inverse-foreground/[0.12] md:inline-flex" })}
         >
           {t("Today's deals link")}
         </Link>
@@ -97,8 +114,8 @@ export default async function Home() {
   return (
     <Container className="flex flex-col gap-12 pb-16 pt-5 md:gap-[72px] md:pb-20 md:pt-8">
       <div className="flex flex-col gap-4 md:gap-6">
-        {/* Hero: 3D ring on tablet/desktop, photo card on phones. */}
-        <section aria-label={t("Hero label")} className="overflow-hidden rounded-2xl bg-[#0B0D12] text-white md:hidden">
+        {/* Hero: 3D glass portal on tablet/desktop, photo card on phones. */}
+        <section aria-label={t("Hero label")} className="overflow-hidden rounded-2xl bg-inverse text-inverse-foreground md:hidden">
           <div className="relative h-[180px]">
             <Image src="/images/banner1.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
           </div>
@@ -106,7 +123,7 @@ export default async function Home() {
         </section>
         <section
           aria-label={t("Hero label")}
-          className="relative hidden h-[480px] overflow-hidden rounded-3xl bg-[#0B0D12] text-white md:block lg:h-[540px]"
+          className="relative hidden h-[500px] overflow-hidden rounded-3xl bg-inverse text-inverse-foreground md:block lg:h-[580px]"
         >
           <Hero3D
             photos={heroPhotos}
@@ -121,9 +138,17 @@ export default async function Home() {
               />
             }
           />
-          <div className="pointer-events-none relative z-[1] flex h-full w-full max-w-[560px] flex-col gap-[22px] px-10 pb-12 pt-14 lg:ps-16 lg:pt-16 [&_a]:pointer-events-auto">
+          {/* Keeps the copy legible over the scene. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 start-0 z-[1] w-[64%] bg-gradient-to-r from-inverse from-20% via-inverse/70 to-transparent rtl:bg-gradient-to-l"
+          />
+          <div className="pointer-events-none relative z-[2] flex h-full w-full max-w-[560px] flex-col gap-[22px] px-10 pb-12 pt-14 lg:ps-16 lg:pt-16 [&_a]:pointer-events-auto">
             {heroCopy}
-            <dl className="mt-auto flex gap-7 text-[13px] text-[#A4ACB9]">
+            <dl
+              style={riseDelay(4)}
+              className="motion-safe:animate-rise mt-auto flex gap-7 border-t border-inverse-foreground/10 pt-5 text-[13px] text-inverse-muted"
+            >
               {[
                 { v: String(total), l: t("products") },
                 { v: String(categories.length), l: t("categories") },
@@ -131,7 +156,7 @@ export default async function Home() {
               ].map((s, i) => (
                 <div key={i} className="flex flex-col-reverse gap-0.5">
                   <dt>{s.l}</dt>
-                  <dd className="font-display text-[22px] font-extrabold text-white tabular-nums">{s.v}</dd>
+                  <dd className="font-display text-[22px] font-extrabold text-inverse-foreground tabular-nums">{s.v}</dd>
                 </div>
               ))}
             </dl>
@@ -155,13 +180,13 @@ export default async function Home() {
                 </span>
               </div>
               <span className="relative size-[110px] shrink-0 transition-transform duration-slow ease-standard group-hover:scale-105 md:size-[140px]">
-                <Image src={dealTile.images[0]} alt="" fill sizes="140px" className="object-contain mix-blend-multiply dark:rounded-md dark:mix-blend-normal" />
+                <Image src={dealTile.images[0]} alt="" fill sizes="140px" className={cn(fit(dealTile.images[0]), "dark:rounded-md dark:mix-blend-normal")} />
               </span>
             </Link>
           )}
           {jeans && (
             <Link
-              href="/search?category=Jeans"
+              href="/search?category=Pants"
               className="group flex h-[150px] items-center justify-between gap-4 rounded-2xl bg-secondary px-6 text-foreground md:h-[180px] md:px-8"
             >
               <div className="flex flex-col gap-2">
@@ -174,7 +199,7 @@ export default async function Home() {
                 </span>
               </div>
               <span className="relative size-[110px] shrink-0 transition-transform duration-slow ease-standard group-hover:scale-105 md:size-[140px]">
-                <Image src={jeans.images[0]} alt="" fill sizes="140px" className="object-contain mix-blend-multiply dark:mix-blend-normal" />
+                <Image src={jeans.images[0]} alt="" fill sizes="140px" className={cn(fit(jeans.images[0]), "dark:mix-blend-normal")} />
               </span>
             </Link>
           )}
@@ -247,7 +272,7 @@ export default async function Home() {
           <SectionHeading title={t("Picked for you")} />
           <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
             {collections.map((col) => (
-              <div key={col.title} className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 md:p-6">
+              <div key={col.title} className={cardVariants({ size: "lg", className: "flex flex-col gap-4" })}>
                 <h3 className="text-xl font-bold">{col.title}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {col.items.slice(0, 4).map((p) => (
@@ -255,15 +280,15 @@ export default async function Home() {
                       key={p._id.toString()}
                       href={`/product/${p.slug}`}
                       aria-label={p.name}
-                      className="group relative flex h-[130px] items-center justify-center rounded-md bg-sunken dark:bg-[#E9ECF1] md:h-[150px]"
+                      className="group relative flex h-[130px] items-center justify-center rounded-md bg-media md:h-[150px]"
                     >
-                      <span className="relative size-[80%]">
+                      <span className={cn("relative", isLookPhoto(p.images[0]) ? "size-full overflow-hidden rounded-md" : "size-[80%]")}>
                         <Image
                           src={p.images[0]}
                           alt=""
                           fill
                           sizes="150px"
-                          className="object-contain mix-blend-multiply transition-transform duration-slow ease-standard group-hover:scale-105"
+                          className={cn(fit(p.images[0]), "rounded-none transition-transform duration-slow ease-standard group-hover:scale-105")}
                         />
                       </span>
                     </Link>
@@ -288,12 +313,12 @@ export default async function Home() {
       <BrowsingHistoryTiles />
 
       {/* Newsletter */}
-      <section className="flex flex-col gap-6 rounded-2xl bg-[#0B0D12] px-6 py-8 text-white md:px-14 md:py-12 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+      <section className="flex flex-col gap-6 rounded-2xl bg-inverse px-6 py-8 text-inverse-foreground md:px-14 md:py-12 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
         <div className="flex max-w-[520px] flex-col gap-2.5">
           <h2 className="font-display text-[28px] font-extrabold leading-[1.05] tracking-[-0.03em] md:text-[38px]">
             {t("Newsletter title")}
           </h2>
-          <p className="text-base text-[#D0D5DD]">{t("Newsletter body")}</p>
+          <p className="text-base text-inverse-muted">{t("Newsletter body")}</p>
         </div>
         <NewsletterForm />
       </section>

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cardVariants } from "@/components/ui/card";
 import { ShippingAddressSchema } from "@/interfaces/validator/validator";
 import type { IUserAddress } from "@/models/user.model";
 import { cn } from "@/lib/utils";
@@ -73,7 +74,7 @@ export default function AddressBook({ addresses }: { addresses: Saved[] }) {
   );
 
   return (
-    <section id="addresses" className="flex scroll-mt-44 flex-col gap-3.5 rounded-xl border border-border bg-card p-5 md:p-7">
+    <section id="addresses" className={cardVariants({ size: "lg", className: "flex scroll-mt-44 flex-col gap-3.5" })}>
       <div className="flex items-baseline justify-between">
         <h2 className="text-xl font-bold">{t("Addresses")}</h2>
         <button type="button" onClick={() => open("new")} className="flex items-center gap-1 text-sm font-bold underline-offset-4 hover:underline">
@@ -165,7 +166,7 @@ export default function AddressBook({ addresses }: { addresses: Saved[] }) {
                     <FormItem>
                       <FormLabel>{tc("Country")}</FormLabel>
                       <FormControl>
-                        <select {...f} className="h-[42px] w-full rounded-[10px] border-[1.5px] border-input bg-card px-3 text-sm outline-none focus-visible:border-foreground">
+                        <select {...f} className="h-9 w-full rounded-[10px] border border-input bg-card px-3 text-[13px] shadow-xs outline-none focus-visible:border-foreground">
                           {COUNTRIES.map((c) => (
                             <option key={c} value={c}>
                               {region.of(c)}

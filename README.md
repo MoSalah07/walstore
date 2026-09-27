@@ -9,9 +9,11 @@ Next.js 15 storefront and admin (English + Arabic, light + dark) with MongoDB, n
    - `DB_URL` — MongoDB connection string
    - `AUTH_SECRET` — random string for sessions
    - `NEXT_PUBLIC_SECRET_KEY_CUREENCY` — exchangerate-api.com key (currency conversion)
-3. `npm run seed` — reloads the demo products and adds demo accounts **only if they don't exist**:
-   - admin: `admin@example.com` / `123456`
-   - customer: `john@me.com` / `Password123`
+3. `npm run seed` — **wipes the database** and fills it with a full demo store: 24 products, 14 users,
+   ~6 months of orders (`WS-10001`…), reviews (6 waiting for moderation), store settings, newsletter
+   subscribers and the admin activity log. Don't run it against a database with real customers.
+   - admins: `admin@example.com` / `123456`, `sara@walstore.com` / `123456`
+   - customers: `john@me.com` / `Password123` (and every other `…@example.com` demo customer)
 4. `npm run dev` → http://localhost:3000 (admin at `/en/admin`)
 
 ## Where things live
@@ -19,6 +21,8 @@ Next.js 15 storefront and admin (English + Arabic, light + dark) with MongoDB, n
 | Area | Path |
 | --- | --- |
 | Design tokens (colors, type, radius, motion) | `app/globals.css`, `tailwind.config.ts` |
+| Color themes (Black · Red · Blue, each light + dark) | palettes in `app/globals.css` under `[data-brand]`; logic in `lib/brand.ts`, `hooks/use-brand.ts`; pickers in `components/shared/theme/*` |
+| Home 3D hero (Three.js) | `components/shared/home/hero-3d/*` (colors come from the `--inverse*` tokens) |
 | UI kit | `components/ui/*` |
 | Storefront pages | `app/[locale]/(home)`, `app/[locale]/(root)`, `app/[locale]/(auth)`, `app/[locale]/(checkout)` |
 | Admin | `app/[locale]/admin/*`, `components/admin/*` |

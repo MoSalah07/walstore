@@ -8,6 +8,7 @@ import OrderLines from "@/components/shared/order/order-lines";
 import OrderProgress from "@/components/shared/order/order-progress";
 import Price from "@/components/shared/price";
 import { buttonVariants } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { requireUser } from "@/lib/auth-guard";
 
@@ -32,8 +33,8 @@ export default async function OrderConfirmedPage({ params }: { params: Promise<{
 
   return (
     <Container className="flex max-w-[880px] flex-col gap-6 pb-16 pt-8 md:pb-20 md:pt-12">
-      <section className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-card px-6 py-10 text-center md:px-12 md:py-14">
-        <span className="flex size-16 items-center justify-center rounded-full bg-success text-white motion-safe:animate-fade-up">
+      <section className={cardVariants({ flush: true, className: "flex flex-col items-center gap-4 px-6 py-10 text-center md:px-12 md:py-14" })}>
+        <span className="flex size-16 items-center justify-center rounded-full bg-success text-success-foreground motion-safe:animate-fade-up">
           <Check className="size-8" strokeWidth={3} aria-hidden />
         </span>
         <h1 className="type-h1 text-[28px] leading-9 md:text-[40px] md:leading-[44px]">{t("Thank you")}</h1>
@@ -47,7 +48,7 @@ export default async function OrderConfirmedPage({ params }: { params: Promise<{
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-border bg-card">
+      <section className={cardVariants({ flush: true, className: "overflow-hidden" })}>
         <h2 className="border-b border-border-soft px-5 py-4 text-lg font-bold md:px-6">{t("Order details")}</h2>
         <OrderLines items={order.items} />
         <div className="grid gap-5 border-t border-border bg-background-subtle px-5 py-5 text-sm md:grid-cols-3 md:px-6">

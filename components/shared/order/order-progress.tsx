@@ -30,9 +30,9 @@ export default async function OrderProgress({ order, compact = false }: { order:
                 className={cn(
                   "flex size-7 shrink-0 items-center justify-center rounded-full",
                   "cancel" in s && s.cancel
-                    ? "bg-destructive text-white"
+                    ? "bg-destructive text-destructive-foreground"
                     : s.done
-                      ? "bg-success text-white"
+                      ? "bg-success text-success-foreground"
                       : "border-2 border-input bg-card"
                 )}
               >

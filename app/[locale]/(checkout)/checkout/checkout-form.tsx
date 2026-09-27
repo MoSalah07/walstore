@@ -17,6 +17,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { ShippingAddressSchema } from "@/interfaces/validator/validator";
@@ -133,7 +134,7 @@ export default function CheckoutForm({
   if (items.length === 0 && !placed) {
     return (
       <EmptyState
-        className="rounded-xl border border-border bg-card"
+        className={cardVariants({ flush: true })}
         icon={<ShoppingBag />}
         title={t("Cart empty")}
         description={t("Cart empty help")}
@@ -204,7 +205,7 @@ export default function CheckoutForm({
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-8">
         <form id="checkout-form" onSubmit={form.handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
           {/* 1 Address */}
-          <section className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 md:p-7">
+          <section className={cardVariants({ size: "lg", className: "flex flex-col gap-5" })}>
             <SectionTitle n={1}>{t("Shipping address")}</SectionTitle>
             {addresses.length > 0 && (
               <div role="radiogroup" aria-label={t("Saved addresses")} className="grid gap-3 md:grid-cols-2">
@@ -248,7 +249,7 @@ export default function CheckoutForm({
                         {...field}
                         disabled={saved !== "new"}
                         autoComplete="country"
-                        className="h-[50px] w-full rounded-md border-[1.5px] border-input bg-card px-3 text-[15px] text-foreground outline-none focus-visible:border-foreground disabled:bg-sunken"
+                        className="h-10 w-full rounded-[10px] border border-input bg-card px-3 text-sm shadow-xs text-foreground outline-none focus-visible:border-foreground disabled:bg-sunken"
                       >
                         {COUNTRIES.map((c) => (
                           <option key={c} value={c}>
@@ -271,7 +272,7 @@ export default function CheckoutForm({
           </section>
 
           {/* 2 Delivery */}
-          <section className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 md:p-7">
+          <section className={cardVariants({ size: "lg", className: "flex flex-col gap-5" })}>
             <SectionTitle n={2}>{t("Delivery")}</SectionTitle>
             <div role="radiogroup" aria-label={t("Delivery speed")} className="grid gap-3 md:grid-cols-2">
               <OptionCard checked={method === "standard"} onSelect={() => setMethod("standard")}>
@@ -300,7 +301,7 @@ export default function CheckoutForm({
           </section>
 
           {/* 3 Payment */}
-          <section className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 md:p-7">
+          <section className={cardVariants({ size: "lg", className: "flex flex-col gap-5" })}>
             <SectionTitle n={3}>{t("Payment method")}</SectionTitle>
             <div role="radiogroup" aria-label={t("Payment method")} className="flex flex-col gap-3">
               <OptionCard checked onSelect={() => {}}>
@@ -329,12 +330,12 @@ export default function CheckoutForm({
         </form>
 
         {/* Summary */}
-        <aside aria-label={t("Order summary")} className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 md:p-7 lg:sticky lg:top-6">
+        <aside aria-label={t("Order summary")} className={cardVariants({ size: "lg", className: "flex flex-col gap-5 lg:sticky lg:top-6" })}>
           <h2 className="text-lg font-bold md:text-xl">{t("Order summary")}</h2>
           <ul className="flex flex-col gap-4">
             {items.map((i) => (
               <li key={i.clientId} className="flex items-center gap-3.5">
-                <span className="relative flex size-16 shrink-0 items-center justify-center rounded-md bg-sunken dark:bg-[#E9ECF1]">
+                <span className="relative flex size-16 shrink-0 items-center justify-center rounded-md bg-media">
                   <span className="relative size-[80%]">
                     <Image src={i.image} alt="" fill sizes="64px" className="object-contain mix-blend-multiply" />
                   </span>

@@ -48,7 +48,7 @@ export function StrengthMeter({ value }: { value: string }) {
   const t = useTranslations("Auth");
   const score = value ? passwordScore(value) : 0;
   const labels = [t("Too short"), t("Weak"), t("Fair"), t("Good"), t("Strong")];
-  const color = score <= 1 ? "bg-destructive" : score === 2 ? "bg-[#B45309]" : "bg-success";
+  const color = score <= 1 ? "bg-destructive" : score === 2 ? "bg-warning" : "bg-success";
   return (
     <div className="flex items-center gap-3" aria-live="polite">
       <div className="flex flex-1 gap-1" aria-hidden>

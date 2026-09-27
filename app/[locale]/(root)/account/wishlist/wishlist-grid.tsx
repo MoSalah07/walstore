@@ -8,6 +8,7 @@ import ProductCard, { ProductCardData } from "@/components/shared/home/ProductCa
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import useWishlist from "@/store/use-wishlist";
@@ -44,7 +45,7 @@ export default function WishlistGrid() {
   if (visible.length === 0) {
     return (
       <EmptyState
-        className="rounded-xl border border-border bg-card"
+        className={cardVariants({ flush: true })}
         icon={<Heart />}
         title={t("Wishlist empty")}
         description={t("Wishlist empty help")}
