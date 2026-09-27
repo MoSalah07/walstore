@@ -1170,5 +1170,13 @@
     "Yesterday": "Yesterday",
     "Empty": "Nothing happened in this period",
     "Empty help": "Try a longer period or another type."
+  },
+  "Errors": {
+    "Title": "We couldn't load this page",
+    "Body": "Something went wrong on our side. Your cart is safe — try again in a moment.",
+    "Try again": "Try again",
+    "Go home": "Go home",
+    "Reference": "Error reference",
+    "Offline": "You're offline. Some things won't load until you're back online."
   }
 }

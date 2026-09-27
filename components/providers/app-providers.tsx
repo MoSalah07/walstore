@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 import { ThemeProvider } from "./theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import OfflineBanner from "@/components/shared/offline-banner";
 
 function useIsMobile() {
   const [mobile, setMobile] = React.useState(false);
@@ -31,6 +32,7 @@ export default function AppProviders({
     <DirectionProvider dir={dir}>
       <ThemeProvider>
         <TooltipProvider delayDuration={300}>
+          <OfflineBanner />
           {children}
           {/* Bottom-right on desktop, bottom-centre above the tab bar on mobile. */}
           <Toaster

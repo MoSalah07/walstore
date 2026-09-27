@@ -155,7 +155,7 @@ export default async function Home() {
                 </span>
               </div>
               <span className="relative size-[110px] shrink-0 transition-transform duration-slow ease-standard group-hover:scale-105 md:size-[140px]">
-                <Image src={dealTile.images[0]} alt="" fill sizes="140px" className="object-contain mix-blend-multiply" />
+                <Image src={dealTile.images[0]} alt="" fill sizes="140px" className="object-contain mix-blend-multiply dark:rounded-md dark:mix-blend-normal" />
               </span>
             </Link>
           )}

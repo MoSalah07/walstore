@@ -20,7 +20,9 @@ import { cn } from "@/lib/utils";
 
 // Desktop: icon + "Hello, …" / "Account & Orders". Compact: icon only.
 export default async function UserButton({ compact = false }: { compact?: boolean }) {
-  const session = await auth();
+  const raw = await auth();
+  // A failed session lookup can return an object without user.
+  const session = raw?.user ? raw : null;
   const t = await getTranslations("Header");
   const name = session?.user?.name;
 

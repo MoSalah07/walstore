@@ -57,7 +57,7 @@ function NavLinks({ collapsed, counts, onNavigate }: { collapsed: boolean; count
                   (collapsed ? (
                     <span className="absolute end-2 top-1.5 size-2 rounded-full bg-deal" aria-hidden />
                   ) : (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] font-bold text-white">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] font-bold text-white dark:text-[#0B0D12]">
                       {n}
                     </span>
                   ))}

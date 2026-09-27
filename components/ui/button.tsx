@@ -22,7 +22,7 @@ const buttonVariants = cva(
           "bg-transparent text-foreground hover:bg-sunken disabled:bg-transparent",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-error-fg",
-        deal: "bg-deal text-white hover:bg-deal/90",
+        deal: "bg-deal text-white hover:bg-deal/90 dark:text-[#0B0D12]",
         link: "h-auto rounded-none bg-transparent p-0 text-foreground underline-offset-4 hover:underline active:scale-100 disabled:bg-transparent",
         inverse:
           "bg-inverse-foreground text-inverse hover:bg-inverse-foreground/90",

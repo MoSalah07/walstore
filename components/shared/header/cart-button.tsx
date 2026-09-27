@@ -21,7 +21,7 @@ export function CartCount({ count, className }: { count: number; className?: str
     <span
       aria-hidden
       className={cn(
-        "absolute -end-2 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-deal px-1 text-[11px] font-bold leading-none text-white tabular-nums",
+        "absolute -end-2 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-deal px-1 text-[11px] font-bold leading-none text-white dark:text-[#0B0D12] tabular-nums",
         className
       )}
     >

@@ -100,7 +100,7 @@ export default async function AdminOverview({ searchParams }: { searchParams: Pr
           <h2 id="attn" className="mb-1.5 flex items-center gap-2 text-base font-bold">
             {t("Needs attention")}
             {attention.length > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] text-white">{attention.length}</span>
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-deal px-1.5 text-[11px] text-white dark:text-[#0B0D12]">{attention.length}</span>
             )}
           </h2>
           {attention.length === 0 && <p className="py-4 text-sm text-foreground-secondary">{t("All caught up")}</p>}

@@ -25,6 +25,8 @@ declare module "next-auth" {
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
+  // Self-hosted (next start / Docker): trust the incoming Host header.
+  trustHost: true,
   pages: {
     signIn: "/sign-in",
     newUser: "/sign-up",
