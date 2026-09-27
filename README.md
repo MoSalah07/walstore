@@ -24,7 +24,7 @@ Requires Node.js 22 (see `.nvmrc`).
 | --- | --- |
 | Design tokens (colors, type, radius, motion) | `app/globals.css`, `tailwind.config.ts` |
 | Color themes (Black · Red · Blue, each light + dark) | palettes in `app/globals.css` under `[data-brand]`; logic in `lib/brand.ts`, `hooks/use-brand.ts`; pickers in `components/shared/theme/*` |
-| Home 3D hero (Three.js) | `components/shared/home/hero-3d/*` (colors come from the `--inverse*` tokens) |
+| Home hero slider (Three.js) | `components/shared/home/hero-slider/*` — slides are built in `app/[locale]/(home)/page.tsx`; tuning in `config.ts`; colors come from the `--inverse*` and `--deal` tokens |
 | UI kit | `components/ui/*` |
 | Storefront pages | `app/[locale]/(home)`, `app/[locale]/(root)`, `app/[locale]/(auth)`, `app/[locale]/(checkout)` |
 | Admin | `app/[locale]/admin/*`, `components/admin/*` |

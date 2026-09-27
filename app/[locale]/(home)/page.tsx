@@ -6,11 +6,10 @@ import {
   getBestSellers,
   getCategorySummaries,
   getProductByTag,
-  getPublishedCount,
 } from "@/actions/product.action";
 import { BrowsingHistoryTiles } from "@/components/shared/browsing-history-list";
 import Container from "@/components/shared/container";
-import Hero3D from "@/components/shared/home/hero-3d";
+import HeroSlider, { type HeroSlide } from "@/components/shared/home/hero-slider";
 import NewsletterForm from "@/components/shared/home/newsletter-form";
 import ProductRail from "@/components/shared/home/product-rail";
 import SectionHeading from "@/components/shared/home/section-heading";
@@ -22,12 +21,9 @@ import { getDirection } from "@/i18n/i18n-confige";
 import { Link } from "@/i18n/routing";
 import { ProductTags } from "@/interfaces/product.interface";
 import { discountPercent } from "@/lib/format";
-import { buttonVariants } from "@/components/ui/button";
 import { cn, isLookPhoto } from "@/lib/utils";
 
 const arrow = "size-4 rtl:rotate-180";
-// Staggered entrance for the hero copy; pair with `motion-safe:animate-rise`.
-const riseDelay = (step: number) => ({ animationDelay: `${150 + step * 110}ms` });
 
 export default async function Home() {
   const [t, tc, locale] = await Promise.all([
@@ -37,20 +33,16 @@ export default async function Home() {
   ]);
   const dir = getDirection(locale);
 
-  const [deals, bestSellers, newArrivals, featured, categories, total, pricing] = await Promise.all([
+  const [deals, bestSellers, newArrivals, featured, categories, pricing] = await Promise.all([
     getProductByTag({ tag: ProductTags["todays-deal"], limit: 8 }),
     getBestSellers(8),
     getProductByTag({ tag: ProductTags["new-arrival"], limit: 4 }),
     getProductByTag({ tag: ProductTags["featured"], limit: 4 }),
     getCategorySummaries(),
-    getPublishedCount(),
     getPricingConfig(),
   ]);
   const freeMin = pricing.freeShippingMin;
 
-  const heroPhotos = Array.from(
-    new Set([...deals, ...bestSellers, ...newArrivals].map((p) => p.images[0]))
-  ).slice(0, 8);
   const bestDeal = Math.max(0, ...deals.map((p) => discountPercent(p.price, p.listPrice)));
   const dealTile = deals[0];
   const jeans = bestSellers.find((p) => p.category === "Pants" && /jeans/i.test(p.name)) ?? bestSellers[0];
@@ -71,97 +63,64 @@ export default async function Home() {
     { icon: Headset, title: t("Customer service"), sub: t("Here to help") },
   ];
 
-  const heroCopy = (
-    <>
-      <span
-        style={riseDelay(0)}
-        className="motion-safe:animate-rise flex h-8 items-center gap-2 self-start rounded-full bg-inverse-foreground/[0.08] pe-3.5 ps-2.5 text-[13px] font-semibold shadow-[inset_0_0_0_1px_rgb(var(--inverse-foreground)/0.14)] backdrop-blur-md"
-      >
-        <span className="size-2 rounded-full bg-inverse-accent shadow-[0_0_0_4px_rgb(var(--inverse-accent)/0.22)]" />
-        {t("New season", { year: new Date().getFullYear() })}
-      </span>
-      {/* Headline fades from white into the brand accent. */}
-      <h1
-        style={riseDelay(1)}
-        className="motion-safe:animate-rise bg-gradient-to-br from-inverse-foreground from-45% to-inverse-accent bg-clip-text pb-1 font-display text-[34px] font-extrabold leading-[1.02] tracking-[-0.035em] text-transparent md:text-[56px] lg:text-[66px] lg:leading-[0.98] lg:tracking-[-0.045em]"
-      >
-        {t.rich("Hero title", { br: () => <br className="hidden md:block" /> })}
-      </h1>
-      <p
-        style={riseDelay(2)}
-        className="motion-safe:animate-rise hidden max-w-[440px] text-[17px] leading-relaxed text-inverse-muted md:block"
-      >
-        {t("Hero body")}
-      </p>
-      <div style={riseDelay(3)} className="motion-safe:animate-rise mt-1.5 flex flex-wrap gap-3">
-        <Link
-          href="/search?tag=new-arrival"
-          className={buttonVariants({ variant: "inverse", size: "xl", className: "shadow-[0_8px_32px_-8px_rgb(var(--inverse-accent)/0.55)] hover:shadow-[0_10px_40px_-6px_rgb(var(--inverse-accent)/0.7)]" })}
-        >
-          {t("Shop new arrivals")}
-          <ArrowRight className={arrow} aria-hidden />
-        </Link>
-        <Link
-          href="/search?tag=todays-deal"
-          className={buttonVariants({ variant: "ghost", size: "xl", className: "hidden bg-inverse-foreground/[0.06] text-inverse-foreground shadow-[inset_0_0_0_1px_rgb(var(--inverse-foreground)/0.22)] backdrop-blur-md hover:bg-inverse-foreground/[0.12] md:inline-flex" })}
-        >
-          {t("Today's deals link")}
-        </Link>
-      </div>
-    </>
-  );
+  // Editorial slides; category slides only appear while that category has products.
+  const cover = (name: string) => categories.find((c) => c.name === name)?.image;
+  const categorySlide = (id: string, name: string, key: string): HeroSlide | null => {
+    const image = cover(name);
+    return image
+      ? {
+          id,
+          label: t(`Slide ${key}`),
+          eyebrow: `${catLabel(name)} · ${t("products count", { count: categories.find((c) => c.name === name)!.count })}`,
+          title: t(`${key} title`),
+          body: t(`${key} body`),
+          cta: { href: `/search?category=${encodeURIComponent(name)}`, label: t(`Shop ${key}`) },
+          image,
+          tone: "accent",
+        }
+      : null;
+  };
+  const heroSlides = [
+    {
+      id: "new",
+      label: t("Slide new"),
+      eyebrow: t("New season", { year: new Date().getFullYear() }),
+      title: t.rich("Hero title", { br: () => <br className="hidden md:block" /> }),
+      body: t("Hero body"),
+      cta: { href: "/search?tag=new-arrival", label: t("Shop new arrivals") },
+      secondary: { href: "/search?tag=todays-deal", label: t("Today's deals link") },
+      image: cover("Sunglasses") ?? "/images/categories/sunglasses.jpg",
+      tone: "accent",
+    },
+    deals.length > 0 && {
+      id: "deals",
+      label: t("Slide deals"),
+      eyebrow: t("Today's Deals"),
+      title: t("Up to off", { percent: bestDeal }),
+      body: t("Deals body"),
+      cta: { href: "/search?tag=todays-deal", label: t("Shop deals") },
+      image: cover("Shoes") ?? "/images/categories/shoes.jpg",
+      tone: "deal",
+    },
+    cover("Pants") && {
+      id: "denim",
+      label: t("Slide denim"),
+      eyebrow: t("Best Sellers"),
+      title: t("Denim that lasts"),
+      body: t("Denim body"),
+      cta: { href: "/search?category=Pants", label: t("Shop jeans") },
+      image: cover("Pants")!,
+      tone: "accent",
+    },
+    categorySlide("watches", "Wrist Watches", "watches"),
+    categorySlide("bags", "Bags", "bags"),
+    categorySlide("dresses", "Dresses", "dresses"),
+  ].filter(Boolean) as HeroSlide[];
 
   return (
     <Container className="flex flex-col gap-12 pb-16 pt-5 md:gap-[72px] md:pb-20 md:pt-8">
       <div className="flex flex-col gap-4 md:gap-6">
-        {/* Hero: 3D glass portal on tablet/desktop, photo card on phones. */}
-        <section aria-label={t("Hero label")} className="overflow-hidden rounded-2xl bg-inverse text-inverse-foreground md:hidden">
-          <div className="relative h-[180px]">
-            <Image src="/images/banner1.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
-          </div>
-          <div className="flex flex-col gap-3 p-[22px]">{heroCopy}</div>
-        </section>
-        <section
-          aria-label={t("Hero label")}
-          className="relative hidden h-[500px] overflow-hidden rounded-3xl bg-inverse text-inverse-foreground md:block lg:h-[580px]"
-        >
-          <Hero3D
-            photos={heroPhotos}
-            dir={dir}
-            fallback={
-              <Image
-                src="/images/banner1.jpg"
-                alt=""
-                fill
-                sizes="50vw"
-                className="!start-auto !w-1/2 object-cover opacity-80"
-              />
-            }
-          />
-          {/* Keeps the copy legible over the scene. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 start-0 z-[1] w-[64%] bg-gradient-to-r from-inverse from-20% via-inverse/70 to-transparent rtl:bg-gradient-to-l"
-          />
-          <div className="pointer-events-none relative z-[2] flex h-full w-full max-w-[560px] flex-col gap-[22px] px-10 pb-12 pt-14 lg:ps-16 lg:pt-16 [&_a]:pointer-events-auto">
-            {heroCopy}
-            <dl
-              style={riseDelay(4)}
-              className="motion-safe:animate-rise mt-auto flex gap-7 border-t border-inverse-foreground/10 pt-5 text-[13px] text-inverse-muted"
-            >
-              {[
-                { v: String(total), l: t("products") },
-                { v: String(categories.length), l: t("categories") },
-                { v: <Price amount={freeMin} whole className="!font-display" />, l: t("ships free") },
-              ].map((s, i) => (
-                <div key={i} className="flex flex-col-reverse gap-0.5">
-                  <dt>{s.l}</dt>
-                  <dd className="font-display text-[22px] font-extrabold text-inverse-foreground tabular-nums">{s.v}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+        <HeroSlider slides={heroSlides} dir={dir} />
 
         {/* Promo tiles */}
         <div className="grid gap-3 md:grid-cols-2 md:gap-6">
