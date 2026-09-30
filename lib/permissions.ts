@@ -21,6 +21,7 @@ export const PERMISSION_GROUPS: { key: "storefront" | "store" | "system"; rows: 
       { key: "products.delete", user: "none", admin: "all" },
       { key: "orders.manage", user: "own", admin: "all" },
       { key: "reviews.moderate", user: "none", admin: "all" },
+      { key: "promo.manage", user: "none", admin: "all" },
     ],
   },
   {

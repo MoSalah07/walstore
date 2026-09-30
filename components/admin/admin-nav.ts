@@ -5,6 +5,7 @@ import {
   SlidersHorizontal,
   Star,
   Tag,
+  TicketPercent,
   UserCog,
   Users,
   type LucideIcon,
@@ -21,6 +22,7 @@ export const ADMIN_NAV: { group: string | null; items: AdminNavItem[] }[] = [
       { key: "orders", href: "/admin/orders", icon: Package, badge: "toShip" },
       { key: "products", href: "/admin/products", icon: Tag },
       { key: "reviews", href: "/admin/reviews", icon: Star, badge: "reviews" },
+      { key: "promo", href: "/admin/promo-codes", icon: TicketPercent },
     ],
   },
   {

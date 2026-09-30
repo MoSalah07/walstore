@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   }
   const p = req.nextUrl.searchParams;
   const rows: string[] = [
-    ["Order", "Date", "Customer", "Email", "Items", "Payment", "Paid", "Status", "Items total", "Shipping", "Tax", "Total", "City", "Country"].map(cell).join(","),
+    ["Order", "Date", "Customer", "Email", "Items", "Payment", "Paid", "Status", "Items total", "Discount", "Promo code", "Shipping", "Tax", "Total", "City", "Country"].map(cell).join(","),
   ];
   let page = 1;
   for (;;) {
@@ -43,6 +43,8 @@ export async function GET(req: NextRequest) {
           o.isPaid ? "yes" : "no",
           o.status,
           o.itemsPrice,
+          o.discountPrice ?? 0,
+          o.promo?.code ?? "",
           o.shippingPrice,
           o.taxPrice,
           o.totalPrice,

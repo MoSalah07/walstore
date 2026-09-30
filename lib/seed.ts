@@ -9,6 +9,7 @@ import Activity from "@/models/activity.model";
 import Counter from "@/models/counter.model";
 import Order, { OrderStatus, PaymentMethod } from "@/models/order.model";
 import Product from "@/models/product.model";
+import PromoCode from "@/models/promo-code.model";
 import Review, { ReviewStatus } from "@/models/review.model";
 import Settings from "@/models/settings.model";
 import Subscriber from "@/models/subscriber.model";
@@ -16,7 +17,8 @@ import Upload from "@/models/upload.model";
 import User from "@/models/user.model";
 
 // Full reset: wipes every store collection and fills it with demo data
-// (products, users, ~6 months of orders, reviews, settings, subscribers, activity).
+// (products, users, ~6 months of orders, reviews, settings, subscribers, activity,
+// promo codes).
 
 const DAY = 24 * 60 * 60 * 1000;
 const NOW = Date.now();
@@ -103,7 +105,7 @@ async function seed() {
   try {
     await connectToDatabase();
 
-    const all: Model<any>[] = [Product, User, Order, Review, Settings, Subscriber, Activity, Counter, Upload];
+    const all: Model<any>[] = [Product, User, Order, Review, Settings, Subscriber, Activity, Counter, Upload, PromoCode];
     await Promise.all(all.map((m) => m.deleteMany({})));
     await Promise.all(all.map((m) => m.createIndexes()));
     console.log("✓ cleared collections");
@@ -159,7 +161,7 @@ async function seed() {
                   phone: `+20 1${int(0, 2)}${int(0, 9)} ${int(100, 999)} ${int(1000, 9999)}`,
                   street: `${int(1, 120)} ${pick(STREETS)}`,
                   ...loc,
-                  country: "Egypt",
+                  country: "EG",
                   isDefault: true,
                 }]
               : [],
@@ -351,6 +353,20 @@ async function seed() {
       })
     );
     console.log(`✓ ${subscribers.length} subscribers`);
+
+    // ---------- Promo codes ----------
+    // Fixed dates (no PRNG) so the data above stays the same run to run.
+    const inDays = (d: number) => new Date(NOW + d * DAY);
+    const promos = [
+      { code: "WELCOME10", description: "First order, 10% off", kind: "percent", value: 10, maxDiscount: 50, perUserLimit: 1 },
+      { code: "SAVE20", description: "$20 off orders from $150", kind: "fixed", value: 20, minOrder: 150, perUserLimit: 0 },
+      { code: "VIP25", description: "25% off for 100 uses", kind: "percent", value: 25, maxDiscount: 100, usageLimit: 100, perUserLimit: 1, endsAt: inDays(30) },
+      { code: "SUMMER15", description: "Summer sale, starts soon", kind: "percent", value: 15, startsAt: inDays(10), endsAt: inDays(40) },
+      { code: "RAMADAN30", description: "Last campaign, ended", kind: "percent", value: 30, maxDiscount: 80, startsAt: inDays(-60), endsAt: inDays(-30) },
+      { code: "STAFF50", description: "Paused", kind: "percent", value: 50, isActive: false },
+    ];
+    await PromoCode.create(promos);
+    console.log(`✓ ${promos.length} promo codes (try WELCOME10 or SAVE20 at checkout)`);
 
     console.log("\nDone. Sign in with admin@example.com / 123456 or john@me.com / Password123");
     process.exit(0);

@@ -1,6 +1,6 @@
 import { model, models, Schema, Model, Types } from "mongoose";
 
-export type ActivityEntity = "order" | "product" | "user" | "review" | "settings";
+export type ActivityEntity = "order" | "product" | "user" | "review" | "promo" | "settings";
 
 // Audit log: who did what to which record, with an optional before → after.
 export interface IActivity {
@@ -20,7 +20,7 @@ const activitySchema = new Schema<IActivity>(
     actor: { type: Schema.Types.ObjectId, ref: "User" },
     actorName: { type: String, required: true },
     action: { type: String, required: true },
-    entity: { type: String, enum: ["order", "product", "user", "review", "settings"], required: true, index: true },
+    entity: { type: String, enum: ["order", "product", "user", "review", "promo", "settings"], required: true, index: true },
     entityId: String,
     entityLabel: String,
     diff: String,

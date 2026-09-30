@@ -13,7 +13,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
-import { formatDate, ltr } from "@/lib/format";
+import { formatDate, ltr, regionNames } from "@/lib/format";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const [{ id }, t] = await Promise.all([params, getTranslations("Account")]);
@@ -32,7 +32,7 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
   ]);
   if (!order) notFound();
   const count = order.items.reduce((n, i) => n + i.quantity, 0);
-  const region = new Intl.DisplayNames([locale], { type: "region" });
+  const region = regionNames(locale);
   const a = order.shippingAddress;
   const canCancel = ["unpaid", "processing"].includes(order.status);
 
@@ -102,6 +102,14 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
               <span className="text-foreground-secondary">{tc("Items n", { count })}</span>
               <Price amount={order.itemsPrice} />
             </div>
+            {order.discountPrice > 0 && (
+              <div className="flex justify-between">
+                <span className="text-foreground-secondary">
+                  {tc("Discount")} {order.promo && <span dir="ltr" className="font-semibold">({order.promo.code})</span>}
+                </span>
+                <span className="font-semibold text-deal">−<Price amount={order.discountPrice} /></span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-foreground-secondary">{tc("Shipping")}</span>
               {order.shippingPrice === 0 ? <span className="text-success-fg">{tc("FREE")}</span> : <Price amount={order.shippingPrice} />}
@@ -124,7 +132,7 @@ export default async function AccountOrderDetail({ params }: { params: Promise<{
               <br />
               {a.street}
               <br />
-              {a.city}, {a.province} {a.postalCode}, {region.of(a.country) ?? a.country}
+              {a.city}, {a.province} {a.postalCode}, {region(a.country)}
               <br />
               <span dir="ltr">{a.phone}</span>
             </span>

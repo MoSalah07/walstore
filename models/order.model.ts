@@ -36,6 +36,8 @@ export interface IOrder {
   shippingMethod: "standard" | "express";
   paymentMethod: PaymentMethod;
   itemsPrice: number;
+  discountPrice: number;
+  promo?: { code: string; kind: "percent" | "fixed"; value: number };
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
@@ -85,6 +87,11 @@ const orderSchema = new Schema<IOrder>(
     shippingMethod: { type: String, enum: ["standard", "express"], default: "standard" },
     paymentMethod: { type: String, enum: PAYMENT_METHODS, required: true },
     itemsPrice: { type: Number, required: true },
+    discountPrice: { type: Number, default: 0 },
+    promo: {
+      type: new Schema({ code: String, kind: String, value: Number }, { _id: false }),
+      default: undefined,
+    },
     shippingPrice: { type: Number, required: true },
     taxPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
@@ -107,6 +114,8 @@ const orderSchema = new Schema<IOrder>(
   },
   { timestamps: true }
 );
+
+orderSchema.index({ "promo.code": 1, user: 1 });
 
 const Order = (models.Order as Model<IOrder>) || model<IOrder>("Order", orderSchema);
 

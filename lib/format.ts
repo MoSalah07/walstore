@@ -45,3 +45,16 @@ export function discountPercent(price: number, listPrice?: number) {
 
 // Keeps "#WS-10001" in reading order inside Arabic sentences.
 export const ltr = (s: string) => `⁦${s}⁩`;
+
+// Country name for an address. Older addresses may hold a name ("Egypt")
+// instead of a region code, which Intl rejects; show those as stored.
+export function regionNames(locale: string) {
+  const dn = new Intl.DisplayNames([locale], { type: "region" });
+  return (code: string) => {
+    try {
+      return dn.of(code) ?? code;
+    } catch {
+      return code;
+    }
+  };
+}

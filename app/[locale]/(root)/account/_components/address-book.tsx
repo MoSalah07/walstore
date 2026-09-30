@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { cardVariants } from "@/components/ui/card";
 import { ShippingAddressSchema } from "@/interfaces/validator/validator";
 import type { IUserAddress } from "@/models/user.model";
+import { regionNames } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Address = z.infer<typeof ShippingAddressSchema>;
@@ -36,7 +37,7 @@ export default function AddressBook({ addresses }: { addresses: Saved[] }) {
   const t = useTranslations("Account");
   const tc = useTranslations("Checkout");
   const locale = useLocale();
-  const region = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
+  const region = useMemo(() => regionNames(locale), [locale]);
   const [editing, setEditing] = useState<Saved | "new" | null>(null);
   const [makeDefault, setMakeDefault] = useState(false);
   const [pending, start] = useTransition();
@@ -106,7 +107,7 @@ export default function AddressBook({ addresses }: { addresses: Saved[] }) {
               <br />
               {a.street}
               <br />
-              {a.city}, {a.province} {a.postalCode}, {region.of(a.country) ?? a.country}
+              {a.city}, {a.province} {a.postalCode}, {region(a.country)}
               <br />
               <span dir="ltr">{a.phone}</span>
             </span>
@@ -169,7 +170,7 @@ export default function AddressBook({ addresses }: { addresses: Saved[] }) {
                         <select {...f} className="h-9 w-full rounded-[10px] border border-input bg-card px-3 text-[13px] shadow-xs outline-none focus-visible:border-foreground">
                           {COUNTRIES.map((c) => (
                             <option key={c} value={c}>
-                              {region.of(c)}
+                              {region(c)}
                             </option>
                           ))}
                         </select>

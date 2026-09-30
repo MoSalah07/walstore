@@ -6,9 +6,10 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { CheckoutSchema } from "@/interfaces/validator/validator";
 import connectToDatabase from "@/lib/connect.db";
-import { calcPrices } from "@/lib/pricing";
+import { calcPrices, PromoRule } from "@/lib/pricing";
 import { logActivity } from "@/lib/activity";
 import { isAdmin } from "@/lib/roles";
+import { checkPromo, PromoError, releasePromo, reservePromo } from "@/lib/promo";
 import { getPricingConfig } from "@/lib/settings";
 import { nextSequence } from "@/models/counter.model";
 import Order, { IOrder } from "@/models/order.model";
@@ -26,7 +27,34 @@ const toDTO = (o: unknown) => JSON.parse(JSON.stringify(o)) as OrderDTO;
 
 export type CreateOrderResult =
   | { ok: true; orderId: string }
-  | { ok: false; error: "auth" | "invalid" | "stock" | "unavailable" | "server"; detail?: string };
+  | { ok: false; error: "auth" | "invalid" | "stock" | "unavailable" | "server"; detail?: string }
+  | { ok: false; error: "promo"; detail: PromoError; minOrder?: number };
+
+export type PromoCodeResult =
+  | { ok: true; code: string; rule: PromoRule }
+  | { ok: false; error: PromoError | "auth" | "invalid"; minOrder?: number };
+
+const PromoCheckSchema = z.object({
+  code: z.string().trim().min(1).max(40),
+  items: CheckoutSchema.shape.items,
+});
+
+// Checkout "Apply" button. The subtotal comes from database prices; the code
+// is checked again when the order is placed.
+export async function applyPromoCode(input: z.infer<typeof PromoCheckSchema>): Promise<PromoCodeResult> {
+  const session = await auth();
+  if (!session?.user?.id) return { ok: false, error: "auth" };
+  const parsed = PromoCheckSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "invalid" };
+  await connectToDatabase();
+  const ids = [...new Set(parsed.data.items.map((i) => i.product))];
+  const products = await Product.find({ _id: { $in: ids }, isPublished: true }).select("price").lean();
+  const price = new Map(products.map((p) => [String(p._id), p.price]));
+  const itemsPrice = parsed.data.items.reduce((a, i) => a + (price.get(i.product) ?? 0) * i.quantity, 0);
+  const res = await checkPromo(parsed.data.code, session.user.id, itemsPrice);
+  if (!res.ok) return res;
+  return { ok: true, code: res.promo.code, rule: res.rule };
+}
 
 // Places a cash-on-delivery order. Prices and stock come from the database,
 // never from the client cart.
@@ -61,25 +89,45 @@ export async function createOrder(input: z.infer<typeof CheckoutSchema>): Promis
       });
     }
 
+    const promoCheck = data.promoCode
+      ? await checkPromo(
+          data.promoCode,
+          session.user.id,
+          lines.reduce((a, l) => a + l.price * l.quantity, 0)
+        )
+      : null;
+    if (promoCheck && !promoCheck.ok) {
+      return { ok: false, error: "promo", detail: promoCheck.error, minOrder: promoCheck.minOrder };
+    }
+
     // Reserve stock line by line; undo on the first shortfall.
     const reserved: { id: Types.ObjectId; qty: number }[] = [];
+    const unreserve = () =>
+      Promise.all(
+        reserved.map((r) =>
+          Product.updateOne({ _id: r.id }, { $inc: { countInStock: r.qty, numSales: -r.qty } })
+        )
+      );
     for (const l of lines) {
       const res = await Product.updateOne(
         { _id: l.product, countInStock: { $gte: l.quantity } },
         { $inc: { countInStock: -l.quantity, numSales: l.quantity } }
       );
       if (res.modifiedCount !== 1) {
-        await Promise.all(
-          reserved.map((r) =>
-            Product.updateOne({ _id: r.id }, { $inc: { countInStock: r.qty, numSales: -r.qty } })
-          )
-        );
+        await unreserve();
         return { ok: false, error: "stock", detail: l.name };
       }
       reserved.push({ id: l.product as Types.ObjectId, qty: l.quantity });
     }
 
-    const prices = calcPrices(lines, data.shippingMethod, await getPricingConfig());
+    // The last use of a limited code may have gone while we checked stock.
+    const promo = promoCheck?.ok ? promoCheck.promo : null;
+    if (promo && !(await reservePromo(promo._id))) {
+      await unreserve();
+      return { ok: false, error: "promo", detail: "used-up" };
+    }
+
+    const prices = calcPrices(lines, data.shippingMethod, await getPricingConfig(), promoCheck?.ok ? promoCheck.rule : null);
     const seq = await nextSequence("order");
     const now = new Date();
     const order = await Order.create({
@@ -90,6 +138,8 @@ export async function createOrder(input: z.infer<typeof CheckoutSchema>): Promis
       shippingMethod: data.shippingMethod,
       paymentMethod: data.paymentMethod,
       itemsPrice: prices.itemsPrice,
+      discountPrice: prices.discountPrice,
+      promo: promo ? { code: promo.code, kind: promo.kind, value: promo.value } : undefined,
       shippingPrice: prices.shippingPrice,
       taxPrice: prices.taxPrice,
       totalPrice: prices.totalPrice,
@@ -196,10 +246,11 @@ export async function cancelMyOrder(id: string): Promise<{ ok: boolean }> {
     entityLabel: `#${order.orderNumber}`,
     diff: "status: processing → cancelled",
   });
-  await Promise.all(
-    order.items.map((i) =>
+  await Promise.all([
+    ...order.items.map((i) =>
       Product.updateOne({ _id: i.product }, { $inc: { countInStock: i.quantity, numSales: -i.quantity } })
-    )
-  );
+    ),
+    releasePromo(order.promo?.code),
+  ]);
   return { ok: true };
 }

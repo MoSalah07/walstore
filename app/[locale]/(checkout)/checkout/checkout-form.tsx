@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Banknote, CreditCard, Lock, ShoppingBag, Wallet } from "lucide-react";
+import { Banknote, CreditCard, Lock, ShoppingBag, TicketPercent, Wallet, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createOrder } from "@/actions/order.action";
+import { applyPromoCode, createOrder, PromoCodeResult } from "@/actions/order.action";
 import Price from "@/components/shared/price";
 import { Alert } from "@/components/ui/alert";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -21,7 +21,8 @@ import { cardVariants } from "@/components/ui/card";
 import { Link, useRouter } from "@/i18n/routing";
 import useMounted from "@/hooks/use-mounted";
 import { ShippingAddressSchema } from "@/interfaces/validator/validator";
-import { PricingConfig, ShippingMethod, calcPrices } from "@/lib/pricing";
+import { PricingConfig, PromoRule, ShippingMethod, calcPrices } from "@/lib/pricing";
+import { regionNames } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { IUserAddress } from "@/models/user.model";
 import useCartStore from "@/store/use-cart-store";
@@ -79,6 +80,97 @@ function OptionCard({
   );
 }
 
+type AppliedPromo = { code: string; rule: PromoRule };
+
+function PromoCodeBox({
+  items,
+  applied,
+  onApply,
+  onRemove,
+  error,
+  setError,
+}: {
+  items: { product: string; quantity: number }[];
+  applied: AppliedPromo | null;
+  onApply: (p: AppliedPromo) => void;
+  onRemove: () => void;
+  error: React.ReactNode;
+  setError: (e: React.ReactNode) => void;
+}) {
+  const t = useTranslations("Checkout");
+  const [code, setCode] = useState("");
+  const [pending, setPending] = useState(false);
+
+  if (applied) {
+    return (
+      <div className="flex items-center gap-2.5 rounded-md border border-dashed border-deal bg-deal-subtle px-3.5 py-2.5">
+        <TicketPercent className="size-[18px] shrink-0 text-deal" aria-hidden />
+        <span className="flex min-w-0 flex-1 flex-col leading-tight">
+          <span dir="ltr" className="self-start font-bold tracking-wide">{applied.code}</span>
+          <span className="text-[13px] text-foreground-secondary">{t("Promo applied")}</span>
+        </span>
+        <Button type="button" variant="ghost" size="icon-sm" aria-label={t("Remove promo", { code: applied.code })} onClick={onRemove}>
+          <X aria-hidden />
+        </Button>
+      </div>
+    );
+  }
+
+  const apply = async () => {
+    if (!code.trim() || pending) return;
+    setPending(true);
+    setError(null);
+    const res = await applyPromoCode({ code, items });
+    setPending(false);
+    if (res.ok) {
+      onApply({ code: res.code, rule: res.rule });
+      setCode("");
+    } else setError(<PromoErrorText res={res} />);
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor="promo-code" className="text-sm font-semibold">{t("Promo code")}</label>
+      <div className="flex gap-2">
+        <Input
+          id="promo-code"
+          dir="ltr"
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              apply();
+            }
+          }}
+          autoComplete="off"
+          spellCheck={false}
+          placeholder={t("Promo placeholder")}
+          aria-invalid={!!error}
+          aria-describedby={error ? "promo-error" : undefined}
+          className="uppercase placeholder:normal-case"
+        />
+        <Button type="button" variant="outline" loading={pending} disabled={!code.trim()} onClick={apply}>
+          {t("Apply")}
+        </Button>
+      </div>
+      {error && (
+        <p id="promo-error" role="alert" className="text-[13px] font-semibold text-destructive">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PromoErrorText({ res }: { res: Extract<PromoCodeResult, { ok: false }> }) {
+  const t = useTranslations("Checkout");
+  if (res.error === "min-order") {
+    return <>{t.rich("promo.min-order", { price: () => <Price amount={res.minOrder ?? 0} whole /> })}</>;
+  }
+  return <>{t(`promo.${res.error === "auth" ? "auth" : res.error === "invalid" ? "missing" : res.error}`)}</>;
+}
+
 export default function CheckoutForm({
   pricing,
   addresses,
@@ -100,11 +192,10 @@ export default function CheckoutForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
+  const [promo, setPromo] = useState<AppliedPromo | null>(null);
+  const [promoError, setPromoError] = useState<React.ReactNode>(null);
 
-  const countryName = useMemo(() => {
-    const dn = new Intl.DisplayNames([locale], { type: "region" });
-    return (c: string) => dn.of(c) ?? c;
-  }, [locale]);
+  const countryName = useMemo(() => regionNames(locale), [locale]);
 
   const form = useForm<Address>({
     resolver: zodResolver(ShippingAddressSchema),
@@ -126,7 +217,7 @@ export default function CheckoutForm({
     }
   }, [saved, addresses, form]);
 
-  const p = calcPrices(items, method, pricing);
+  const p = calcPrices(items, method, pricing, promo?.rule);
   const count = items.reduce((n, i) => n + i.quantity, 0);
 
   if (!mounted) return <Skeleton className="h-[640px] rounded-xl" />;
@@ -156,6 +247,7 @@ export default function CheckoutForm({
       shippingMethod: method,
       paymentMethod: "cod",
       saveAddress: saved === "new" && saveAddress,
+      promoCode: promo?.code,
     });
     if (res.ok) {
       setPlaced(true);
@@ -164,6 +256,14 @@ export default function CheckoutForm({
       return;
     }
     setSubmitting(false);
+    if (res.error === "promo") {
+      // The code stopped working since it was applied; drop it and say why.
+      setPromo(null);
+      setPromoError(<PromoErrorText res={{ ok: false, error: res.detail, minOrder: res.minOrder }} />);
+      setError(t("Promo changed"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     setError(
       res.error === "stock"
         ? t("Stock error", { name: res.detail ?? "" })
@@ -353,11 +453,31 @@ export default function CheckoutForm({
               </li>
             ))}
           </ul>
+          <div className="border-t border-border pt-5">
+            <PromoCodeBox
+              items={items.map((i) => ({ product: i.product, quantity: i.quantity }))}
+              applied={promo}
+              onApply={setPromo}
+              onRemove={() => setPromo(null)}
+              error={promoError}
+              setError={setPromoError}
+            />
+          </div>
           <dl className="flex flex-col gap-3 border-t border-border pt-5 text-[15px]">
             <div className="flex justify-between">
               <dt className="text-foreground-secondary">{t("Items n", { count })}</dt>
               <dd><Price amount={p.itemsPrice} /></dd>
             </div>
+            {p.discountPrice > 0 && (
+              <div className="flex justify-between">
+                <dt className="text-foreground-secondary">
+                  {t("Discount")} <span dir="ltr" className="font-semibold">({promo?.code})</span>
+                </dt>
+                <dd className="font-semibold text-deal">
+                  −<Price amount={p.discountPrice} />
+                </dd>
+              </div>
+            )}
             <div className="flex justify-between">
               <dt className="text-foreground-secondary">{t("Shipping")}</dt>
               <dd>{p.shippingPrice === 0 ? <span className="font-semibold text-success-fg">{t("FREE")}</span> : <Price amount={p.shippingPrice} />}</dd>

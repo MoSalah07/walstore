@@ -8,7 +8,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge, StatusPill } from "@/components/ui/badge";
 import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
-import { formatDate, formatDateTime, formatMoney, ltr } from "@/lib/format";
+import { formatDate, formatDateTime, formatMoney, ltr, regionNames } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { NoteForm, OrderActions } from "./order-actions";
 
@@ -29,7 +29,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   ]);
   if (!data) notFound();
   const { order, customer, orderCount } = data;
-  const region = new Intl.DisplayNames([locale], { type: "region" });
+  const region = regionNames(locale);
   const a = order.shippingAddress;
   const count = order.items.reduce((n, i) => n + i.quantity, 0);
 
@@ -78,6 +78,14 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             </ul>
             <dl className="flex flex-col gap-2 bg-background-subtle px-5 py-4 text-sm">
               <div className="flex justify-between"><dt className="text-foreground-secondary">{t("Subtotal")}</dt><dd className="tabular-nums">{formatMoney(order.itemsPrice)}</dd></div>
+              {order.discountPrice > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-foreground-secondary">
+                    {tc("Discount")} {order.promo && <span dir="ltr" className="font-semibold">({order.promo.code})</span>}
+                  </dt>
+                  <dd className="font-semibold tabular-nums text-deal">−{formatMoney(order.discountPrice)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-foreground-secondary">{tc("Shipping")} · {tc(order.shippingMethod === "express" ? "Express shipping" : "Standard shipping")}</dt>
                 <dd className="tabular-nums">{order.shippingPrice === 0 ? tc("FREE") : formatMoney(order.shippingPrice)}</dd>
@@ -152,7 +160,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               <br />
               {a.city}, {a.province} {a.postalCode}
               <br />
-              {region.of(a.country) ?? a.country}
+              {region(a.country)}
             </span>
             <a href={`tel:${a.phone.replace(/\s/g, "")}`} className="font-semibold hover:underline" dir="ltr">{a.phone}</a>
           </section>

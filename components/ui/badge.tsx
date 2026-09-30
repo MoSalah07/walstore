@@ -55,7 +55,10 @@ export type StatusKey =
   | "draft"
   | "published"
   | "active"
-  | "inactive";
+  | "inactive"
+  | "scheduled"
+  | "expired"
+  | "used-up";
 
 const statusVariant: Record<StatusKey, BadgeProps["variant"]> = {
   unpaid: "warning",
@@ -68,6 +71,9 @@ const statusVariant: Record<StatusKey, BadgeProps["variant"]> = {
   published: "success",
   active: "success",
   inactive: "muted",
+  scheduled: "info",
+  expired: "muted",
+  "used-up": "warning",
 };
 
 function StatusPill({

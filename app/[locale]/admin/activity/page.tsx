@@ -10,7 +10,7 @@ import { Link } from "@/i18n/routing";
 import { formatDate, formatDateTime, ltr } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-const ENTITIES = ["all", "order", "product", "user", "review", "settings"] as const;
+const ENTITIES = ["all", "order", "product", "user", "review", "promo", "settings"] as const;
 const PERIODS = ["1d", "7d", "30d", "all"] as const;
 
 export async function generateMetadata() {
@@ -19,7 +19,7 @@ export async function generateMetadata() {
 }
 
 const entityHref = (entity: string, id?: string) =>
-  !id ? undefined : entity === "order" ? `/admin/orders/${id}` : entity === "product" ? `/admin/products/${id}` : entity === "user" ? `/admin/users/${id}` : entity === "review" ? "/admin/reviews" : undefined;
+  !id ? undefined : entity === "order" ? `/admin/orders/${id}` : entity === "product" ? `/admin/products/${id}` : entity === "user" ? `/admin/users/${id}` : entity === "review" ? "/admin/reviews" : entity === "promo" ? "/admin/promo-codes" : undefined;
 
 export default async function AdminActivityPage({ searchParams }: { searchParams: Promise<{ entity?: string; period?: string; page?: string }> }) {
   const sp = await searchParams;

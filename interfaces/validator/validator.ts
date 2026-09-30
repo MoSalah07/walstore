@@ -138,6 +138,7 @@ export const CheckoutSchema = z.object({
   shippingMethod: z.enum(["standard", "express"]),
   paymentMethod: z.enum(["cod"]),
   saveAddress: z.boolean().optional(),
+  promoCode: z.string().trim().max(40).optional(),
 });
 
 // Admin product form

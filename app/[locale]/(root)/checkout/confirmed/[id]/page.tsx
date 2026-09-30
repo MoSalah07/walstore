@@ -11,6 +11,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { requireUser } from "@/lib/auth-guard";
+import { regionNames } from "@/lib/format";
 
 export async function generateMetadata() {
   const t = await getTranslations("Checkout");
@@ -28,7 +29,7 @@ export default async function OrderConfirmedPage({ params }: { params: Promise<{
   ]);
   if (!order) notFound();
   const count = order.items.reduce((n, i) => n + i.quantity, 0);
-  const region = new Intl.DisplayNames([locale], { type: "region" });
+  const region = regionNames(locale);
   const a = order.shippingAddress;
 
   return (
@@ -56,7 +57,7 @@ export default async function OrderConfirmedPage({ params }: { params: Promise<{
             <span className="type-overline text-muted-foreground">{t("Ship to")}</span>
             <span className="font-semibold">{a.fullName}</span>
             <span className="text-foreground-secondary">
-              {a.street}, {a.city}, {region.of(a.country) ?? a.country}
+              {a.street}, {a.city}, {region(a.country)}
             </span>
           </div>
           <div className="flex flex-col gap-1">
@@ -71,6 +72,14 @@ export default async function OrderConfirmedPage({ params }: { params: Promise<{
             <span className="type-overline text-muted-foreground">{t("Order total")}</span>
             <Price amount={order.totalPrice} className="font-display text-2xl font-extrabold" />
             <span className="text-foreground-secondary">{t("Items n", { count })}</span>
+            {order.discountPrice > 0 && order.promo && (
+              <span className="font-semibold text-deal">
+                {t.rich("Saved with code", {
+                  amount: () => <Price amount={order.discountPrice} />,
+                  code: () => <span dir="ltr">{order.promo!.code}</span>,
+                })}
+              </span>
+            )}
           </div>
         </div>
       </section>

@@ -6,6 +6,7 @@ import { Types } from "mongoose";
 import { auth } from "@/auth";
 import type { OrderDTO } from "@/actions/order.action";
 import { logActivity } from "@/lib/activity";
+import { releasePromo } from "@/lib/promo";
 import connectToDatabase from "@/lib/connect.db";
 import { isAdmin } from "@/lib/roles";
 import Activity from "@/models/activity.model";
@@ -134,11 +135,12 @@ export async function setOrderStatus(id: string, status: OrderStatus): Promise<{
   order.history.push({ status, at: now, by: new Types.ObjectId(session.user.id) });
   await order.save();
   if (status === "cancelled") {
-    await Promise.all(
-      order.items.map((i) =>
+    await Promise.all([
+      ...order.items.map((i) =>
         Product.updateOne({ _id: i.product }, { $inc: { countInStock: i.quantity, numSales: -i.quantity } })
-      )
-    );
+      ),
+      releasePromo(order.promo?.code),
+    ]);
   }
   await logActivity({
     actor: session.user,
