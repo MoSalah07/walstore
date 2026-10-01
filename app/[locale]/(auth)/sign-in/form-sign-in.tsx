@@ -24,13 +24,13 @@ const signInDefaultValues =
 // Only same-site paths are allowed as a post-login destination.
 const safeCallback = (url?: string) => (url && url.startsWith("/") && !url.startsWith("//") ? url : "/");
 
-export default function FormSignIn({ callbackUrl }: { callbackUrl?: string }) {
+export default function FormSignIn({ callbackUrl, passwordReset, email }: { callbackUrl?: string; passwordReset?: boolean; email?: string }) {
   const t = useTranslations("Auth");
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
   const form = useForm<IUserSignIn>({
     resolver: zodResolver(UserSignInSchema),
-    defaultValues: signInDefaultValues,
+    defaultValues: email ? { email, password: "" } : signInDefaultValues,
   });
 
   const onSubmit = async (data: IUserSignIn) => {
@@ -67,6 +67,7 @@ export default function FormSignIn({ callbackUrl }: { callbackUrl?: string }) {
           </p>
         </div>
 
+        {passwordReset && !failed && <Alert variant="success">{t("Password reset done")}</Alert>}
         {failed && <Alert variant="error">{t("Invalid credentials")}</Alert>}
 
         <FormField
@@ -87,9 +88,17 @@ export default function FormSignIn({ callbackUrl }: { callbackUrl?: string }) {
           name="password"
           render={({ field }) => (
             <FormItem className="gap-2">
-              <FormLabel>{t("Password")}</FormLabel>
+              <div className="flex items-baseline justify-between gap-3">
+                <FormLabel>{t("Password")}</FormLabel>
+                <Link
+                  href={`/forgot-password${form.watch("email") ? `?email=${encodeURIComponent(form.watch("email"))}` : ""}`}
+                  className="text-sm font-semibold text-foreground-secondary underline-offset-4 hover:text-foreground hover:underline"
+                >
+                  {t("Forgot password")}
+                </Link>
+              </div>
               <FormControl>
-                <PasswordInput autoComplete="current-password" {...field} />
+                <PasswordInput autoComplete="current-password" autoFocus={!!email} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

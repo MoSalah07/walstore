@@ -18,6 +18,7 @@ export interface IUser extends Document, Omit<IUserInput, "address"> {
   addresses: IUserAddress[];
   isActive: boolean;
   lastLoginAt?: Date;
+  passwordChangedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +46,8 @@ const userSchema = new Schema<IUser>(
     emailVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     lastLoginAt: Date,
+    // Sessions issued before this are signed out (set by password reset).
+    passwordChangedAt: Date,
   },
   {
     timestamps: true,

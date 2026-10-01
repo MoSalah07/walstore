@@ -48,6 +48,7 @@ export interface IOrder {
   deliveredAt?: Date;
   cancelledAt?: Date;
   note?: string;
+  locale?: string; // language the customer ordered in, for emails
   history: { status: OrderStatus | "paid" | "note"; at: Date; by?: Types.ObjectId; note?: string }[];
   createdAt: Date;
   updatedAt: Date;
@@ -102,6 +103,7 @@ const orderSchema = new Schema<IOrder>(
     deliveredAt: Date,
     cancelledAt: Date,
     note: String,
+    locale: String,
     history: [
       {
         status: String,

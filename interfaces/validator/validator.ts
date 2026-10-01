@@ -32,6 +32,8 @@ const Password = z
   .regex(/\d/, { message: "Password must include a number" });
 
 // Signing in only needs something typed: older accounts may predate the rule.
+export const PasswordSchema = Password;
+
 const PasswordSignIn = z.string().min(1, { message: "Password is required" });
 
 const UserRole = z.string().min(1, { message: "Role is required" });

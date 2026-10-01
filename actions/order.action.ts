@@ -1,6 +1,8 @@
 "use server";
 
 import { Types } from "mongoose";
+import { after } from "next/server";
+import { getLocale } from "next-intl/server";
 import { z } from "zod";
 
 import { auth } from "@/auth";
@@ -8,6 +10,8 @@ import { CheckoutSchema } from "@/interfaces/validator/validator";
 import connectToDatabase from "@/lib/connect.db";
 import { calcPrices, PromoRule } from "@/lib/pricing";
 import { logActivity } from "@/lib/activity";
+import { notifyOrder } from "@/lib/mail/notify";
+import { appUrl } from "@/lib/mail/send";
 import { isAdmin } from "@/lib/roles";
 import { checkPromo, PromoError, releasePromo, reservePromo } from "@/lib/promo";
 import { getPricingConfig } from "@/lib/settings";
@@ -147,6 +151,7 @@ export async function createOrder(input: z.infer<typeof CheckoutSchema>): Promis
       status: "processing",
       isPaid: false,
       history: [{ status: "processing", at: now }],
+      locale: await getLocale(),
     });
 
     if (data.saveAddress) {
@@ -171,6 +176,8 @@ export async function createOrder(input: z.infer<typeof CheckoutSchema>): Promis
       entityId: String(order._id),
       entityLabel: `#${order.orderNumber}`,
     });
+    const baseUrl = await appUrl();
+    after(() => notifyOrder("placed", String(order._id), baseUrl));
     return { ok: true, orderId: String(order._id) };
   } catch (err) {
     console.error("createOrder", err);
@@ -252,5 +259,7 @@ export async function cancelMyOrder(id: string): Promise<{ ok: boolean }> {
     ),
     releasePromo(order.promo?.code),
   ]);
+  const baseUrl = await appUrl();
+  after(() => notifyOrder("cancelled", String(order._id), baseUrl));
   return { ok: true };
 }

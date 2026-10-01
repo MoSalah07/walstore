@@ -393,7 +393,89 @@
     "Weak": "Weak",
     "Fair": "Fair",
     "Good": "Good",
-    "Strong": "Strong"
+    "Strong": "Strong",
+    "Forgot password": "Forgot password?",
+    "Forgot title": "Reset your password",
+    "Forgot body": "Enter the email you use for your account and we'll send you a link to choose a new password.",
+    "Send reset link": "Send reset link",
+    "Invalid email": "Enter a valid email address.",
+    "Back to sign in": "Back to sign in",
+    "Check your email": "Check your email",
+    "Reset sent": "If an account exists for <email></email>, a reset link is on its way. It works for 1 hour.",
+    "Reset spam hint": "Nothing after a few minutes? Check your spam folder, or make sure you typed the email you signed up with.",
+    "Use another email": "Try another email",
+    "Reset title": "Choose a new password",
+    "Reset body": "For <email></email>. You'll use it to sign in from now on.",
+    "New password": "New password",
+    "Passwords differ": "The passwords don't match.",
+    "Save new password": "Save new password",
+    "Reset failed expired": "This link has expired or was already used. <link>Send a new link</link>.",
+    "Link expired": "This link has expired",
+    "Reset link expired body": "Reset links work for 1 hour and only once. Ask for a new one and use the latest email.",
+    "Send new link": "Send a new link",
+    "Password reset done": "Your password was changed. Sign in with the new one.",
+    "Verify title": "Confirm your email",
+    "Email verified title": "Email confirmed",
+    "Email verified body": "Thanks — we'll send your order updates to this address.",
+    "Go to account": "Go to your account",
+    "Continue shopping": "Continue shopping",
+    "Verify link expired body": "Confirmation links work for 2 days and only once. Send yourself a new one.",
+    "Verify link expired signed out": "Confirmation links work for 2 days and only once. Sign in to send yourself a new one.",
+    "Resend verification": "Resend email",
+    "Verification sent": "Confirmation email sent. Check your inbox.",
+    "Verification sent short": "Email sent",
+    "Wait a minute": "We just sent one. Wait a minute before asking again.",
+    "Already verified": "Your email is already confirmed."
+  },
+  "Email": {
+    "Hi": "Hi {name},",
+    "View your order": "View your order",
+    "Button not working": "If the button doesn't work, copy this link into your browser:",
+    "Footer": "You're getting this email because you have an account at {store}.",
+    "Footer help": "Questions? Reply to this email or write to {email}.",
+    "Items n": "{count, plural, one {# item} other {# items}}",
+    "Discount": "Discount",
+    "Standard shipping": "Standard shipping",
+    "Express shipping": "Express shipping",
+    "Free": "Free",
+    "Tax": "Tax",
+    "Total": "Total",
+    "Qty": "Qty",
+    "Ship to": "Ship to",
+    "placed": {
+      "subject": "Order {number} confirmed",
+      "heading": "Thanks for your order",
+      "intro": "We've received order {number} and we're getting it ready. You'll pay {total} in cash when it arrives."
+    },
+    "shipped": {
+      "subject": "Order {number} has shipped",
+      "heading": "Your order is on its way",
+      "intro": "Good news — order {number} has left our warehouse. Have {total} ready in cash for the courier."
+    },
+    "delivered": {
+      "subject": "Order {number} was delivered",
+      "heading": "Your order was delivered",
+      "intro": "Order {number} was delivered. We hope you love it — you can review your items from your order page."
+    },
+    "cancelled": {
+      "subject": "Order {number} was cancelled",
+      "heading": "Your order was cancelled",
+      "intro": "Order {number} has been cancelled and nothing was charged. If you didn't expect this, reply to this email."
+    },
+    "reset-password": {
+      "subject": "Reset your {store} password",
+      "heading": "Reset your password",
+      "intro": "We got a request to reset the password for {email}. The link works for 1 hour and can be used once.",
+      "cta": "Choose a new password",
+      "ignore": "Didn't ask for this? You can ignore this email — your password stays the same."
+    },
+    "verify-email": {
+      "subject": "Confirm your email for {store}",
+      "heading": "Confirm your email",
+      "intro": "Confirm that {email} is yours so your order updates reach you. The link works for 2 days.",
+      "cta": "Confirm email",
+      "ignore": "Didn't create an account? You can ignore this email."
+    }
   },
   "Validation": {
     "Email is required": "Email is required",
@@ -617,7 +699,9 @@
     "Problem with order": "Problem with this order? Get help",
     "Wishlist help": "Items you saved on this device.",
     "Wishlist empty": "Your wishlist is empty",
-    "Wishlist empty help": "Tap the heart on any product to save it here."
+    "Wishlist empty help": "Tap the heart on any product to save it here.",
+    "Verify email title": "Confirm your email.",
+    "Verify email body": "We sent a link to <email></email> so order updates reach you. Didn't get it?"
   },
   "Help": {
     "Help title": "Help & Customer Service",

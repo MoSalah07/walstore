@@ -7,6 +7,7 @@ import { UserSignUpSchema } from "@/interfaces/validator/validator";
 import connectToDatabase from "@/lib/connect.db";
 import User from "@/models/user.model";
 import { logActivity } from "@/lib/activity";
+import { sendWelcomeVerification } from "@/lib/email-verification";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
@@ -39,6 +40,7 @@ export async function registerUser(userSignUp: IUserSignUp) {
       entityId: String(created._id),
       entityLabel: created.email,
     });
+    await sendWelcomeVerification(created);
     return { success: true, message: "User created successfully" };
   } catch (error) {
     if (error instanceof ZodError) {

@@ -1,11 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { Types } from "mongoose";
 
 import { auth } from "@/auth";
 import type { OrderDTO } from "@/actions/order.action";
 import { logActivity } from "@/lib/activity";
+import { notifyOrder } from "@/lib/mail/notify";
+import { appUrl } from "@/lib/mail/send";
 import { releasePromo } from "@/lib/promo";
 import connectToDatabase from "@/lib/connect.db";
 import { isAdmin } from "@/lib/roles";
@@ -150,6 +153,11 @@ export async function setOrderStatus(id: string, status: OrderStatus): Promise<{
     entityLabel: `#${order.orderNumber}`,
     diff: `status: ${from} → ${status}`,
   });
+  // The customer hears about the steps they wait for; "processing" is internal.
+  if (status === "shipped" || status === "delivered" || status === "cancelled") {
+    const baseUrl = await appUrl();
+    after(() => notifyOrder(status, id, baseUrl));
+  }
   revalidatePath("/admin", "layout");
   return { ok: true };
 }

@@ -5,6 +5,8 @@ import { getMyAccount } from "@/actions/account.action";
 import { getMyOrderStats } from "@/actions/order.action";
 import { SignOut } from "@/actions/user.action";
 import Container from "@/components/shared/container";
+import ResendVerificationButton from "@/components/shared/auth/resend-verification-button";
+import { Alert } from "@/components/ui/alert";
 import { Avatar } from "@/components/ui/avatar";
 import { cardVariants } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
@@ -46,6 +48,16 @@ export default async function AccountPage() {
           </span>
         </div>
       </div>
+
+      {!account.emailVerified && (
+        <Alert
+          variant="warning"
+          title={t("Verify email title")}
+          action={<ResendVerificationButton size="sm" variant="outline" className="bg-card" />}
+        >
+          {t.rich("Verify email body", { email: () => <span dir="ltr" className="break-all font-semibold">{account.email}</span> })}
+        </Alert>
+      )}
 
       <section aria-label={t("Shortcuts")} className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
         {tiles.map(({ href, icon: Icon, title, sub }) => (

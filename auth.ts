@@ -91,6 +91,8 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         token.sub = user.id;
         token.name = user.name || user.email?.split("@")[0];
         token.role = (user as any).role ?? "user";
+        // Sign-in time; `iat` can't be used as it is renewed on every request.
+        token.authAt = Date.now();
       }
 
       if (trigger === "update" && session?.user?.name) {
@@ -103,8 +105,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       if (!user && token.sub && Date.now() - checked > 60_000) {
         try {
           await connectToDatabase();
-          const fresh = await User.findById(token.sub).select("name role isActive").lean();
+          const fresh = await User.findById(token.sub).select("name role isActive passwordChangedAt").lean();
           if (!fresh || fresh.isActive === false) return null;
+          // Password was reset after this session started.
+          if (fresh.passwordChangedAt && fresh.passwordChangedAt.getTime() > Number(token.authAt ?? 0)) return null;
           token.role = fresh.role ?? "user";
           token.name = fresh.name;
           token.checkedAt = Date.now();

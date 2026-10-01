@@ -13,6 +13,7 @@ import PromoCode from "@/models/promo-code.model";
 import Review, { ReviewStatus } from "@/models/review.model";
 import Settings from "@/models/settings.model";
 import Subscriber from "@/models/subscriber.model";
+import Token from "@/models/token.model";
 import Upload from "@/models/upload.model";
 import User from "@/models/user.model";
 
@@ -105,7 +106,7 @@ async function seed() {
   try {
     await connectToDatabase();
 
-    const all: Model<any>[] = [Product, User, Order, Review, Settings, Subscriber, Activity, Counter, Upload, PromoCode];
+    const all: Model<any>[] = [Product, User, Order, Review, Settings, Subscriber, Activity, Counter, Upload, PromoCode, Token];
     await Promise.all(all.map((m) => m.deleteMany({})));
     await Promise.all(all.map((m) => m.createIndexes()));
     console.log("✓ cleared collections");

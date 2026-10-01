@@ -11,6 +11,7 @@ Requires Node.js 22 (see `.nvmrc`).
    - `DB_URL` — MongoDB connection string
    - `AUTH_SECRET` — random string for sessions
    - `NEXT_PUBLIC_SECRET_KEY_CUREENCY` — exchangerate-api.com key (currency conversion)
+   - Email (optional while developing — see [Emails](#emails)): `RESEND_API_KEY`, `MAIL_FROM`, `APP_URL`
 3. `npm run seed` — **wipes the database** and fills it with a full demo store: 24 products, 14 users,
    ~6 months of orders (`WS-10001`…), reviews (6 waiting for moderation), store settings, newsletter
    subscribers, promo codes and the admin activity log. Don't run it against a database with real customers.
@@ -98,11 +99,29 @@ import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, 
 - **flush**: no padding on the card; `CardHeader`, `CardContent` and `CardFooter` pad themselves instead. `CardSection` bleeds to the edges inside a padded card.
 - `<Card>` stacks its children (`flex-col gap-4`). `cardVariants()` adds only the surface and keeps the element's own layout, so use it on a `section`, `li` or `Link` that already has one.
 
+## Emails
+
+Order updates (placed, shipped, delivered, cancelled), password reset and email confirmation are sent
+through [Resend](https://resend.com). Templates are in `lib/mail/templates.ts`, their wording under
+`Email` in `messages/*.json`, and they go out in the language the customer used.
+
+**Without `RESEND_API_KEY` nothing is sent**: each email is printed to the server console instead,
+links included, so every flow can be tried locally.
+
+| Variable | Example | Notes |
+| --- | --- | --- |
+| `RESEND_API_KEY` | `re_…` | From resend.com → API Keys |
+| `MAIL_FROM` | `WalStore <orders@your-domain.com>` | Must be on a domain verified in Resend. Defaults to Resend's test sender, which only delivers to your own Resend account email |
+| `APP_URL` | `https://your-domain.com` | Base of the links in emails. Without it the current request's host is used |
+
+Replies go to the support email from Admin → Settings.
+
 ## Before going live
 
 - **Fill in the placeholders** in `content/pages.ts` (legal text, return policy, delivery times) — they render as grey italic `[brackets]` until replaced.
 - **Admin → Settings**: set the support email/phone, free-shipping threshold, shipping rates and tax rate (defaults: $300 free shipping, $9.99 standard, $19.99 express, 0% tax).
 - **Payments**: only cash on delivery works. Card and PayPal are shown as "not available yet" until a payment gateway is added.
 - **Promo codes**: managed in Admin → Promo codes. The seed adds demo codes (`WELCOME10`, `SAVE20`, …); delete or deactivate them before launch. A code takes money off the items only (never shipping); free shipping is judged on the subtotal before the discount, and tax on the subtotal after it.
-- Not built (no backend yet): Google sign-in, password reset emails, email verification, email notifications.
+- **Emails**: add `RESEND_API_KEY`, `MAIL_FROM` and `APP_URL` (see [Emails](#emails)) — until then no email reaches customers.
+- Not built yet: Google sign-in.
 - Product photos uploaded from the admin are stored in MongoDB and served from `/api/images/[id]`.

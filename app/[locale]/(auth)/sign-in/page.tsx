@@ -12,12 +12,12 @@ export async function generateMetadata() {
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; reset?: string; email?: string }>;
 }) {
-  const [{ callbackUrl }, t] = await Promise.all([searchParams, getTranslations("Auth")]);
+  const [{ callbackUrl, reset, email }, t] = await Promise.all([searchParams, getTranslations("Auth")]);
   return (
     <AuthShell title={t("Welcome back")} body={t("Sign in body")}>
-      <FormSignIn callbackUrl={callbackUrl} />
+      <FormSignIn callbackUrl={callbackUrl} passwordReset={reset === "1"} email={email} />
     </AuthShell>
   );
 }

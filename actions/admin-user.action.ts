@@ -122,6 +122,8 @@ export async function updateUser(id: string, input: { name: string; email: strin
   if (user.email !== email) diff.push(`email: ${user.email} → ${email}`);
   if (user.name !== parsed.data.name) diff.push("name changed");
   user.name = parsed.data.name;
+  // A new address has to be confirmed again by its owner.
+  if (user.email !== email) user.emailVerified = false;
   user.email = email;
   user.role = parsed.data.role;
   await user.save();
